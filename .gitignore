@@ -1,0 +1,32 @@
+node_modules
+
+# Output
+.output
+.netlify
+dist
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Astro
+.astro/
+
+# Claude Code
+.claude/
+
+# Playwright MCP
+.playwright-mcp/
+
+# Astro (generated)
+website/.astro/
+website/dist/

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 40" fill="none">
+  <!-- 3-node triangle icon — equilateral, indigo on transparent (light-background friendly) -->
+  <line x1="16" y1="9" x2="7" y2="24" stroke="#4f46e5" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="16" y1="9" x2="25" y2="24" stroke="#4f46e5" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="7" y1="24" x2="25" y2="24" stroke="#4f46e5" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="16" cy="9" r="3.5" fill="#6366f1"/>
+  <circle cx="16" cy="9" r="1.5" fill="#e0e7ff"/>
+  <circle cx="7" cy="24" r="3.5" fill="#6366f1"/>
+  <circle cx="7" cy="24" r="1.5" fill="#e0e7ff"/>
+  <circle cx="25" cy="24" r="3.5" fill="#6366f1"/>
+  <circle cx="25" cy="24" r="1.5" fill="#e0e7ff"/>
+  <!-- "DDS" wordmark — dark for light backgrounds -->
+  <text x="42" y="27" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#1e1b4b" letter-spacing="-0.5">DDS</text>
+</svg>

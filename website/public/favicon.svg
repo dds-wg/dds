@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Dark indigo background -->
+  <rect width="32" height="32" rx="6" fill="#1e1b4b"/>
+  <!-- Triangle edges — equilateral, centroid at (16,16) -->
+  <line x1="16" y1="6" x2="7" y2="21" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="16" y1="6" x2="25" y2="21" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="7" y1="21" x2="25" y2="21" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Nodes (outer) -->
+  <circle cx="16" cy="6" r="3" fill="#818cf8"/>
+  <circle cx="7" cy="21" r="3" fill="#818cf8"/>
+  <circle cx="25" cy="21" r="3" fill="#818cf8"/>
+  <!-- Nodes (inner highlight) -->
+  <circle cx="16" cy="6" r="1.4" fill="#ffffff"/>
+  <circle cx="7" cy="21" r="1.4" fill="#ffffff"/>
+  <circle cx="25" cy="21" r="1.4" fill="#ffffff"/>
+</svg>

@@ -1,0 +1,8 @@
+/* Custom overrides for Starlight docs pages */
+
+/* Use indigo as the accent colour to match the site palette */
+:root {
+  --sl-color-accent-low: #e0e7ff;
+  --sl-color-accent: #6366f1;
+  --sl-color-accent-high: #4338ca;
+}

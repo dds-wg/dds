@@ -1,0 +1,32 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const posts = await getCollection("blog", ({ data }) => !data.draft);
+const sorted = posts.sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+);
+---
+
+<BaseLayout title="Blog">
+  <div class="mx-auto max-w-4xl px-6 py-12">
+    <h1 class="mb-8 text-3xl font-bold">Blog</h1>
+    <div class="space-y-8">
+      {
+        sorted.map((post) => (
+          <a
+            href={`/blog/${post.id}`}
+            class="block rounded-xl border border-gray-200 p-6 transition-shadow hover:shadow-md"
+          >
+            <h2 class="mb-2 text-xl font-semibold">{post.data.title}</h2>
+            <p class="mb-3 text-gray-600">{post.data.description}</p>
+            <div class="flex items-center gap-4 text-sm text-gray-400">
+              <span>{post.data.author}</span>
+              <span>{post.data.date}</span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

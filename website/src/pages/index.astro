@@ -1,0 +1,320 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Decentralized Deliberation Standard">
+  <!-- HERO -->
+  <section class="bg-indigo-950 px-6 py-28 text-center text-white">
+    <div class="mx-auto max-w-3xl">
+      <div class="mb-8 flex justify-center">
+        <span class="rounded-full border border-indigo-700 px-3 py-1 text-xs font-medium text-indigo-400">
+          Working Draft
+        </span>
+      </div>
+      <h1 class="mb-5 text-4xl font-bold leading-tight tracking-tight md:text-5xl">
+        Decentralized Deliberation Standard
+      </h1>
+      <p class="mb-10 text-xl leading-relaxed text-indigo-200">
+        An open protocol for secure, interoperable public deliberation.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a
+          href="/spec/0001-dds-protocol"
+          class="rounded-lg bg-white px-7 py-3 font-semibold text-indigo-950 transition hover:bg-indigo-100"
+        >
+          Read the Spec &rarr;
+        </a>
+        <a
+          href="/blog"
+          class="rounded-lg border border-indigo-400 px-7 py-3 font-semibold text-white transition hover:bg-indigo-900"
+        >
+          Blog
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY DDS? -->
+  <section class="bg-white px-6 py-20">
+    <div class="mx-auto max-w-3xl">
+      <h2 class="mb-6 text-3xl font-bold text-gray-900">Why DDS?</h2>
+      <p class="mb-5 text-lg leading-relaxed text-gray-700">
+        Deliberation tools are siloed. A pol.is cluster can't hand off to a voting app
+        without custom integration. Users must trust the platform's moderation with no
+        flexibility and no way to verify results. When a provider disappears,
+        communities lose their data and history.
+      </p>
+      <p class="text-lg leading-relaxed text-gray-700">
+        DDS defines the shared layer: common schemas (Lexicons) on a common data stream
+        (the AT Protocol Firehose). Any app reads any other app's deliberation data —
+        no bilateral integrations. Analyzers re-run on public inputs and commit results
+        on-chain. Users recover their identity and data from decentralized archives
+        regardless of what any operator does.
+      </p>
+    </div>
+  </section>
+
+  <!-- FEATURE GRID -->
+  <section class="bg-gray-50 px-6 py-20">
+    <div class="mx-auto max-w-6xl">
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <!-- Sovereign -->
+        <div class="rounded-xl bg-white p-8 shadow-sm">
+          <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-indigo-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+              />
+            </svg>
+          </div>
+          <h3 class="mb-2 text-xl font-bold text-gray-900">Sovereign</h3>
+          <p class="text-gray-600">
+            You own your participation. Your cryptographic keys are yours — stored in an
+            encrypted vault recoverable from decentralized archives even if every
+            operator disappears.
+          </p>
+        </div>
+
+        <!-- Interoperable -->
+        <div class="rounded-xl bg-white p-8 shadow-sm">
+          <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-indigo-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
+            </svg>
+          </div>
+          <h3 class="mb-2 text-xl font-bold text-gray-900">Interoperable</h3>
+          <p class="text-gray-600">
+            Any app can build on DDS. No bilateral integrations, no walled gardens. One
+            shared conversation legible to every frontend, every analyzer, every
+            governance tool.
+          </p>
+        </div>
+
+        <!-- Verifiable -->
+        <div class="rounded-xl bg-white p-8 shadow-sm">
+          <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-indigo-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+              />
+            </svg>
+          </div>
+          <h3 class="mb-2 text-xl font-bold text-gray-900">Verifiable</h3>
+          <p class="text-gray-600">
+            Publicly auditable by design. Anyone can re-run the analysis and compare
+            against the on-chain commitment. Results are tamper-evident and permanently
+            anchored — independent of any single operator.
+          </p>
+        </div>
+
+        <!-- Universal -->
+        <div class="rounded-xl bg-white p-8 shadow-sm">
+          <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-indigo-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2"
+              />
+            </svg>
+          </div>
+          <h3 class="mb-2 text-xl font-bold text-gray-900">Universal</h3>
+          <p class="text-gray-600">
+            From anonymous guest to cryptographic proof. Open to all, link-gated, or
+            credential-verified. Email, phone, event ticket, ZK passport, EUDI
+            wallet — apps choose what they accept per deliberation.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section class="bg-white px-6 py-20">
+    <div class="mx-auto max-w-5xl">
+      <h2 class="mb-3 text-3xl font-bold text-gray-900">What can you build?</h2>
+      <p class="mb-12 text-lg text-gray-600">
+        DDS is a substrate. The use cases are as broad as human deliberation itself.
+      </p>
+      <div class="grid gap-8 md:grid-cols-3">
+        <!-- Deliberation -->
+        <div class="border-l-4 border-indigo-400 pl-6">
+          <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-indigo-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+              />
+            </svg>
+          </div>
+          <h3 class="mb-2 text-lg font-bold text-gray-900">Deliberation platforms</h3>
+          <p class="text-gray-600">
+            Opinion clustering à la pol.is. AI-facilitated dialogue in the style of
+            Dembrane. Any structured conversation where surfacing consensus matters.
+          </p>
+        </div>
+
+        <!-- Surveys -->
+        <div class="border-l-4 border-indigo-400 pl-6">
+          <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-indigo-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+              />
+            </svg>
+          </div>
+          <h3 class="mb-2 text-lg font-bold text-gray-900">Surveys &amp; consultations</h3>
+          <p class="text-gray-600">
+            Citizen assemblies, public comment periods, participatory budgeting. Collect
+            input at scale while keeping results auditable and participants sovereign.
+          </p>
+        </div>
+
+        <!-- Voting -->
+        <div class="border-l-4 border-indigo-400 pl-6">
+          <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-indigo-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
+          <h3 class="mb-2 text-lg font-bold text-gray-900">Voting &amp; governance</h3>
+          <p class="text-gray-600">
+            Quadratic voting, ranked-choice, token-weighted decisions. DDS handles the
+            deliberation layer and composes cleanly with dedicated voting protocols like
+            Vocdoni.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE TEASER -->
+  <section class="bg-white px-6 py-20">
+    <div class="mx-auto max-w-3xl">
+      <h2 class="mb-6 text-3xl font-bold text-gray-900">Built on proven layers.</h2>
+      <p class="mb-8 text-lg leading-relaxed text-gray-700">
+        DDS doesn't reinvent the wheel. It assembles the right wheels in the right
+        order. AT Protocol handles transport and identity — federated discoverability,
+        persistent repositories, machine-enforceable schemas. Arweave, Filecoin, and
+        Logos Storage archive every deliberation record permanently. Ethereum anchors
+        analysis results on-chain, making them tamper-evident and forever auditable.
+      </p>
+      <div class="mb-6 flex flex-wrap items-center gap-3 text-sm font-medium">
+        <span class="rounded-full bg-indigo-100 px-4 py-2 text-indigo-800"
+          >AT Protocol — transport &amp; identity</span
+        >
+        <span class="text-gray-400">&rarr;</span>
+        <span class="rounded-full bg-indigo-100 px-4 py-2 text-indigo-800"
+          >Arweave / Filecoin / Logos Storage — permanent archive</span
+        >
+        <span class="text-gray-400">&rarr;</span>
+        <span class="rounded-full bg-indigo-100 px-4 py-2 text-indigo-800"
+          >Ethereum — on-chain verification</span
+        >
+      </div>
+      <p class="mb-8 text-base leading-relaxed text-gray-600">
+        DDS focuses on deliberation. For binding on-chain votes, it composes cleanly
+        with dedicated voting protocols like Vocdoni.
+      </p>
+      <a
+        href="/spec/0001-dds-protocol"
+        class="font-semibold text-indigo-700 underline-offset-2 hover:underline"
+      >
+        Explore the full spec &rarr;
+      </a>
+    </div>
+  </section>
+
+  <!-- BOTTOM CTA -->
+  <section class="bg-indigo-950 px-6 py-20 text-center text-white">
+    <div class="mx-auto max-w-2xl">
+      <h2 class="mb-4 text-3xl font-bold">
+        Build the future of collective decision-making.
+      </h2>
+      <p class="mb-10 text-lg text-indigo-200">
+        DDS is an open working draft. Read the spec, join the discussion, implement the
+        protocol.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a
+          href="/spec/0001-dds-protocol"
+          class="rounded-lg bg-white px-7 py-3 font-semibold text-indigo-950 transition hover:bg-indigo-100"
+        >
+          Read the Spec
+        </a>
+        <a
+          href="https://github.com/dds-wg/dds"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="rounded-lg border border-indigo-400 px-7 py-3 font-semibold text-white transition hover:bg-indigo-900"
+        >
+          GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
