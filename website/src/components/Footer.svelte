@@ -10,7 +10,7 @@
   <p class="mt-2">
     <a href="https://github.com/dds-wg/dds" class="hover:text-gray-700">GitHub</a>
     <span class="mx-1">&middot;</span>
-    <a href="/spec" class="hover:text-gray-700">Spec</a>
+    <a href="/spec/0001-dds-protocol" class="hover:text-gray-700">Spec</a>
     <span class="mx-1">&middot;</span>
     <a href="/blog" class="hover:text-gray-700">Blog</a>
   </p>
