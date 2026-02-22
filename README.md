@@ -2,7 +2,7 @@
 
 # Decentralized Deliberation Standard (DDS)
 
-A vendor-neutral protocol for secure, censorship-resistant public deliberation.
+A vendor-neutral protocol for sovereign, verifiable, and interoperable public deliberation.
 
 Part of the [DDS Working Group](https://github.com/dds-wg/.github).
 

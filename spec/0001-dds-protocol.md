@@ -17,7 +17,7 @@ order: 1
 
 ## 1. Design Philosophy
 
-The **Decentralized Deliberation Standard (DDS)** is a vendor-neutral protocol for secure, censorship-resistant public deliberation. The protocol leverages **AT Protocol** for transport, **Arweave/Filecoin/Logos Storage** for archival, and **Ethereum** for verification.
+The **Decentralized Deliberation Standard (DDS)** is a vendor-neutral protocol for sovereign, verifiable, and interoperable public deliberation. The protocol leverages **AT Protocol** for transport, **Arweave/Filecoin/Logos Storage** for archival, and **Ethereum** for verification.
 
 DDS is organized around **four design tensions**:
 
