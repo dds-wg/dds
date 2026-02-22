@@ -5,8 +5,6 @@ created: "2026-02-05"
 order: 2
 ---
 
-# Addendum: Anonymity Considerations for Decentralized Deliberation
-
 **Related:** [DDS: Verifiable Deliberation on AT Protocol](./0001-dds-protocol.md)
 **Date:** 2026-02-05
 **Status:** Discussion notes

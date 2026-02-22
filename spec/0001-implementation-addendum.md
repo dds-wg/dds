@@ -5,8 +5,6 @@ created: "2026-01-13"
 order: 3
 ---
 
-# DDS — Implementation Addendum
-
 | Metadata       | Value                                                    |
 | :------------- | :------------------------------------------------------- |
 | **Parent**     | [DDS Spec](./0001-dds-protocol.md)             |
