@@ -15,7 +15,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         Decentralized Deliberation Standard
       </h1>
       <p class="mb-10 text-xl leading-relaxed text-indigo-200">
-        Plan, collect, and analyze — an open protocol for sovereign, verifiable, and interoperable public deliberation.
+        An open protocol for sovereign, verifiable, and interoperable public deliberation.
       </p>
       <div class="flex flex-wrap justify-center gap-4">
         <a
@@ -30,6 +30,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         >
           Blog
         </a>
+        <span
+          class="cursor-default rounded-lg border border-indigo-700 px-7 py-3 font-semibold text-indigo-400 opacity-60"
+        >
+          SDK &mdash; Coming Soon
+        </span>
       </div>
     </div>
   </section>
@@ -51,6 +56,194 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         on-chain. Users recover their identity and data from decentralized archives
         regardless of what any operator does.
       </p>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="bg-indigo-50 px-6 py-20">
+    <div class="mx-auto max-w-5xl">
+      <h2 class="mb-3 text-3xl font-bold text-gray-900">How it works</h2>
+      <p class="mb-12 text-lg text-gray-600">
+        DDS organizes deliberation as a composable lifecycle. Each phase is an
+        open interface &mdash; any app or service can plug in.
+      </p>
+
+      <!-- Three phase cards with arrow connectors -->
+      <div class="flex flex-col items-stretch gap-8 md:flex-row md:items-start">
+        <!-- Plan -->
+        <div class="rounded-xl bg-white p-8 shadow-sm md:flex-1 md:min-w-0">
+          <div
+            class="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white"
+          >
+            1
+          </div>
+          <div
+            class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-indigo-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+              />
+            </svg>
+          </div>
+          <h3 class="mb-2 text-xl font-bold text-gray-900">Plan</h3>
+          <p class="mb-4 text-gray-600">
+            Design the consultation: define rounds, modules, eligibility rules,
+            and how analysis from one round informs the next.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span
+              class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700"
+              >Governance tools</span
+            >
+            <span
+              class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700"
+              >Community platforms</span
+            >
+            <span
+              class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700"
+              >DAOs</span
+            >
+          </div>
+        </div>
+
+        <!-- Arrow 1→2 -->
+        <div class="hidden items-center md:flex">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </div>
+
+        <!-- Collect -->
+        <div class="rounded-xl bg-white p-8 shadow-sm md:flex-1 md:min-w-0">
+          <div
+            class="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white"
+          >
+            2
+          </div>
+          <div
+            class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-indigo-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+              />
+            </svg>
+          </div>
+          <h3 class="mb-2 text-xl font-bold text-gray-900">Collect</h3>
+          <p class="mb-4 text-gray-600">
+            Gather participant input &mdash; opinions, votes, comments &mdash;
+            and import external data from social media and other tools.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span
+              class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700"
+              >pol.is</span
+            >
+            <span
+              class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700"
+              >Survey tools</span
+            >
+            <span
+              class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700"
+              >Data importers</span
+            >
+          </div>
+        </div>
+
+        <!-- Arrow 2→3 -->
+        <div class="hidden items-center md:flex">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </div>
+
+        <!-- Analyze -->
+        <div class="rounded-xl bg-white p-8 shadow-sm md:flex-1 md:min-w-0">
+          <div
+            class="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white"
+          >
+            3
+          </div>
+          <div
+            class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-indigo-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
+            </svg>
+          </div>
+          <h3 class="mb-2 text-xl font-bold text-gray-900">Analyze</h3>
+          <p class="mb-4 text-gray-600">
+            Process data and derive insights. Multiple analyzers can process the
+            same data with different algorithms.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span
+              class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700"
+              >Clustering agents</span
+            >
+            <span
+              class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700"
+              >Peer review</span
+            >
+            <span
+              class="rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700"
+              >AI summarizers</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Cycle indicator -->
+      <div class="mt-10 flex items-center justify-center gap-3">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 shrink-0 text-indigo-500"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+        <p class="text-sm text-gray-500">
+          Iterative by design &mdash; analysis from one round triggers the next.
+          All phases are loosely coupled via the Firehose.
+        </p>
+      </div>
     </div>
   </section>
 
@@ -276,10 +469,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           >Ethereum — on-chain verification</span
         >
       </div>
-      <p class="mb-8 text-base leading-relaxed text-gray-600">
-        DDS focuses on deliberation. For binding on-chain votes, it composes cleanly
-        with dedicated voting protocols like Vocdoni.
-      </p>
       <a
         href="/spec/0001-dds-protocol"
         class="font-semibold text-indigo-700 underline-offset-2 hover:underline"
@@ -314,6 +503,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         >
           GitHub
         </a>
+        <span
+          class="cursor-default rounded-lg border border-indigo-700 px-7 py-3 font-semibold text-indigo-400 opacity-60"
+        >
+          SDK &mdash; Coming Soon
+        </span>
       </div>
     </div>
   </section>

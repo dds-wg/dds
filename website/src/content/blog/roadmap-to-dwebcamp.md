@@ -25,11 +25,11 @@ Proof-of-concept implementations built on AT Protocol. Three focus areas:
 
 **Privacy models.** Loosely private conversations shared via links among invited participants.
 
-Each PoC validates a design direction -- not a commitment.
+Each PoC validates a design direction -- not a commitment. Collectively, these explorations will prepare the ground for a developer SDK and shape the future roadmap: what we learn from building will determine the priorities, sequencing, and scope of what comes next.
 
 ## Phase 3: Convergence (May -- July)
 
-- Consolidate PoC learnings into spec revisions.
+- Consolidate PoC learnings into spec revisions and a concrete future roadmap.
 - Build working demonstrations.
 - Prepare a public presentation for DWebCamp.
 
@@ -37,6 +37,7 @@ Each PoC validates a design direction -- not a commitment.
 
 Not the immediate focus, but part of the broader vision:
 
+- A developer SDK for building on the DDS lifecycle.
 - Verifiable analysis via zero-knowledge machine learning (zkML).
 - On-chain verification on Ethereum.
 - Archival strategies for long-term data preservation.
