@@ -52,9 +52,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <p class="text-lg leading-relaxed text-gray-700">
         DDS defines the shared layer: common schemas (Lexicons) on a common data stream
         (the AT Protocol Firehose). Any app reads any other app's deliberation data —
-        no bilateral integrations. Analyzers re-run on public inputs and commit results
-        on-chain. Users recover their identity and data from decentralized archives
-        regardless of what any operator does.
+        no bilateral integrations. Analyzers can re-run on public inputs and optionally
+        commit results on-chain. Users recover their identity and data from
+        decentralized archives regardless of what any operator does.
       </p>
     </div>
   </section>
@@ -64,8 +64,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <div class="mx-auto max-w-5xl">
       <h2 class="mb-3 text-3xl font-bold text-gray-900">How it works</h2>
       <p class="mb-12 text-lg text-gray-600">
-        DDS organizes deliberation as a composable lifecycle. Each phase is an
-        open interface &mdash; any app or service can plug in.
+        DDS separates deliberation into three open interfaces. Different tools
+        from different teams handle each one &mdash; composing freely through
+        shared schemas.
       </p>
 
       <!-- Three phase cards with arrow connectors -->
@@ -99,8 +100,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           </div>
           <h3 class="mb-2 text-xl font-bold text-gray-900">Plan</h3>
           <p class="mb-4 text-gray-600">
-            Design the consultation: define rounds, modules, eligibility rules,
-            and how analysis from one round informs the next.
+            Design the consultation: rounds, modules, eligibility, feedback
+            loops. This interface is open &mdash; a community platform, a DAO,
+            or a government portal can each define the process their way.
           </p>
           <div class="flex flex-wrap gap-2">
             <span
@@ -154,8 +156,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           </div>
           <h3 class="mb-2 text-xl font-bold text-gray-900">Collect</h3>
           <p class="mb-4 text-gray-600">
-            Gather participant input &mdash; opinions, votes, comments &mdash;
-            and import external data from social media and other tools.
+            Gather participant input &mdash; opinions, votes, comments.
+            Different collection tools write to the same shared format, so you
+            can swap or combine sources freely.
           </p>
           <div class="flex flex-wrap gap-2">
             <span
@@ -209,8 +212,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           </div>
           <h3 class="mb-2 text-xl font-bold text-gray-900">Analyze</h3>
           <p class="mb-4 text-gray-600">
-            Process data and derive insights. Multiple analyzers can process the
-            same data with different algorithms.
+            Derive insights from collected data. Multiple independent analyzers
+            can process the same inputs with different algorithms &mdash;
+            competing on quality, not on data access.
           </p>
           <div class="flex flex-wrap gap-2">
             <span
@@ -281,9 +285,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           </div>
           <h3 class="mb-2 text-xl font-bold text-gray-900">Sovereign</h3>
           <p class="text-gray-600">
-            You own your participation. Your cryptographic keys are yours &mdash; stored in an
-            encrypted vault recoverable from decentralized archives even if every
-            operator disappears.
+            You own your participation. Your cryptographic keys are yours &mdash; stored in
+            an encrypted vault. With optional decentralized archival, your data survives
+            even if every operator disappears.
           </p>
         </div>
 
@@ -333,9 +337,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           </div>
           <h3 class="mb-2 text-xl font-bold text-gray-900">Verifiable</h3>
           <p class="text-gray-600">
-            Publicly auditable by design. Anyone can re-run the analysis and compare
-            against the on-chain commitment. Results are tamper-evident and permanently
-            anchored &mdash; independent of any single operator.
+            Publicly auditable by design. Anyone can re-run the analysis. Optionally
+            anchor results on-chain for tamper-evident, permanent auditability &mdash;
+            independent of any single operator.
           </p>
         </div>
 
@@ -368,35 +372,54 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </div>
   </section>
 
-  <!-- AUTH FLEXIBILITY -->
+  <!-- FLEXIBLE PARTICIPATION -->
   <section class="bg-white px-6 py-20">
     <div class="mx-auto max-w-3xl">
-      <h2 class="mb-3 text-3xl font-bold text-gray-900">Bring your own auth.</h2>
+      <h2 class="mb-3 text-3xl font-bold text-gray-900">Flexible participation.</h2>
       <p class="mb-12 text-lg text-gray-600">
-        DDS standardizes how credentials are represented &mdash; not which ones are
-        valid. Each app chooses what it accepts per deliberation, from open
-        guest access to cryptographic proof of citizenship.
+        DDS separates three concerns that traditional platforms bundle together.
+        Mix and match per deliberation.
       </p>
 
-      <div class="space-y-6">
+      <div class="space-y-8">
+        <!-- Credentials -->
         <div>
-          <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Lightweight</p>
-          <div class="flex flex-wrap gap-2">
-            <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Guest &mdash; no login</span>
-            <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Email</span>
-            <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Phone</span>
-            <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Link-gated</span>
-            <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Social login</span>
+          <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Credentials &mdash; how participants prove who they are</p>
+          <div class="space-y-3">
+            <div class="flex flex-wrap gap-2">
+              <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Guest &mdash; no login</span>
+              <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Email</span>
+              <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Phone</span>
+              <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Link-gated</span>
+              <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Social login</span>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">Zupass event tickets</span>
+              <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">ZK Passport</span>
+              <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">EUDI Wallet</span>
+              <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">Ethereum wallet</span>
+              <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">W3C Verifiable Credentials</span>
+            </div>
           </div>
         </div>
+
+        <!-- Conversation access -->
         <div>
-          <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Cryptographic</p>
+          <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Conversation access &mdash; who can see and participate</p>
           <div class="flex flex-wrap gap-2">
-            <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">Zupass event tickets</span>
-            <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">ZK Passport</span>
-            <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">EUDI Wallet</span>
-            <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">Ethereum wallet</span>
-            <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">W3C Verifiable Credentials</span>
+            <span class="rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">Public</span>
+            <span class="rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">Link-gated (invite link)</span>
+            <span class="rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">Restricted (encrypted)</span>
+          </div>
+        </div>
+
+        <!-- Participant identity -->
+        <div>
+          <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Participant identity &mdash; whether participants are identifiable</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800">Identified</span>
+            <span class="rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800">Pseudonymous</span>
+            <span class="rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800">Per-conversation anonymous</span>
           </div>
         </div>
       </div>
@@ -495,24 +518,24 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <div class="mx-auto max-w-3xl">
       <h2 class="mb-6 text-3xl font-bold text-gray-900">Built on proven layers.</h2>
       <p class="mb-8 text-lg leading-relaxed text-gray-700">
-        DDS doesn't reinvent the wheel. It assembles the right wheels in the right
-        order. AT Protocol handles transport and identity — federated discoverability,
-        persistent repositories, machine-enforceable schemas. Arweave, Filecoin, and
-        Logos Storage archive every deliberation record permanently. Ethereum anchors
-        analysis results on-chain, making them tamper-evident and forever auditable.
+        DDS doesn't reinvent the wheel. AT Protocol is the foundation &mdash;
+        federated transport, identity, machine-enforceable schemas. Beyond that,
+        every layer is opt-in. Add permanent archival when you need it. Anchor
+        results on-chain when verifiability matters. Or keep things simple and
+        process data internally.
       </p>
       <div class="mb-6 divide-y divide-indigo-100 rounded-xl border border-indigo-100 bg-indigo-50 text-sm">
         <div class="flex items-baseline justify-between gap-4 px-5 py-3">
           <span class="font-semibold text-indigo-900">AT Protocol</span>
-          <span class="text-gray-600">Transport &amp; identity</span>
+          <span class="text-gray-600">Transport &amp; identity (required)</span>
         </div>
         <div class="flex items-baseline justify-between gap-4 px-5 py-3">
           <span class="font-semibold text-indigo-900">Arweave / Filecoin / Logos Storage</span>
-          <span class="text-gray-600">Permanent archive</span>
+          <span class="text-gray-600">Permanent archive (optional)</span>
         </div>
         <div class="flex items-baseline justify-between gap-4 px-5 py-3">
           <span class="font-semibold text-indigo-900">Ethereum</span>
-          <span class="text-gray-600">Verification &middot; optional identity</span>
+          <span class="text-gray-600">Verification &middot; identity (opt-in)</span>
         </div>
       </div>
       <a
