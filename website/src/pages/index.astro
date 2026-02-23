@@ -256,6 +256,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <!-- FEATURE GRID -->
   <section class="bg-gray-50 px-6 py-20">
     <div class="mx-auto max-w-6xl">
+      <h2 class="mb-3 text-3xl font-bold text-gray-900">What makes DDS different.</h2>
+      <p class="mb-12 text-lg text-gray-600">
+        Four properties that set DDS apart from existing deliberation tools.
+      </p>
       <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
         <!-- Sovereign -->
         <div class="rounded-xl bg-white p-8 shadow-sm">
@@ -277,7 +281,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           </div>
           <h3 class="mb-2 text-xl font-bold text-gray-900">Sovereign</h3>
           <p class="text-gray-600">
-            You own your participation. Your cryptographic keys are yours — stored in an
+            You own your participation. Your cryptographic keys are yours &mdash; stored in an
             encrypted vault recoverable from decentralized archives even if every
             operator disappears.
           </p>
@@ -331,7 +335,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <p class="text-gray-600">
             Publicly auditable by design. Anyone can re-run the analysis and compare
             against the on-chain commitment. Results are tamper-evident and permanently
-            anchored — independent of any single operator.
+            anchored &mdash; independent of any single operator.
           </p>
         </div>
 
@@ -355,17 +359,52 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           </div>
           <h3 class="mb-2 text-xl font-bold text-gray-900">Universal</h3>
           <p class="text-gray-600">
-            From anonymous guest to cryptographic proof. Open to all, link-gated, or
-            credential-verified. Email, phone, event ticket, ZK passport, EUDI
-            wallet — apps choose what they accept per deliberation.
+            Open to everyone. No walled garden decides who can participate. From
+            casual guests to credential-verified citizens &mdash; each deliberation
+            sets its own rules.
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- USE CASES -->
+  <!-- AUTH FLEXIBILITY -->
   <section class="bg-white px-6 py-20">
+    <div class="mx-auto max-w-3xl">
+      <h2 class="mb-3 text-3xl font-bold text-gray-900">Bring your own auth.</h2>
+      <p class="mb-12 text-lg text-gray-600">
+        DDS standardizes how credentials are represented &mdash; not which ones are
+        valid. Each app chooses what it accepts per deliberation, from open
+        guest access to cryptographic proof of citizenship.
+      </p>
+
+      <div class="space-y-6">
+        <div>
+          <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Lightweight</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Guest &mdash; no login</span>
+            <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Email</span>
+            <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Phone</span>
+            <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Link-gated</span>
+            <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Social login</span>
+          </div>
+        </div>
+        <div>
+          <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Cryptographic</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">Zupass event tickets</span>
+            <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">ZK Passport</span>
+            <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">EUDI Wallet</span>
+            <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">Ethereum wallet</span>
+            <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">W3C Verifiable Credentials</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section class="bg-gray-50 px-6 py-20">
     <div class="mx-auto max-w-5xl">
       <h2 class="mb-3 text-3xl font-bold text-gray-900">What can you build?</h2>
       <p class="mb-12 text-lg text-gray-600">
@@ -390,7 +429,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               />
             </svg>
           </div>
-          <h3 class="mb-2 text-lg font-bold text-gray-900">Deliberation platforms</h3>
+          <h3 class="mb-2 text-xl font-bold text-gray-900">Deliberation platforms</h3>
           <p class="text-gray-600">
             Opinion clustering à la pol.is. AI-facilitated dialogue in the style of
             Dembrane. Any structured conversation where surfacing consensus matters.
@@ -415,7 +454,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               />
             </svg>
           </div>
-          <h3 class="mb-2 text-lg font-bold text-gray-900">Surveys &amp; consultations</h3>
+          <h3 class="mb-2 text-xl font-bold text-gray-900">Surveys &amp; consultations</h3>
           <p class="text-gray-600">
             Citizen assemblies, public comment periods, participatory budgeting. Collect
             input at scale while keeping results auditable and participants sovereign.
@@ -440,7 +479,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               />
             </svg>
           </div>
-          <h3 class="mb-2 text-lg font-bold text-gray-900">Voting &amp; governance</h3>
+          <h3 class="mb-2 text-xl font-bold text-gray-900">Voting &amp; governance</h3>
           <p class="text-gray-600">
             Quadratic voting, ranked-choice, token-weighted decisions. DDS handles the
             deliberation layer and composes cleanly with dedicated voting protocols like
