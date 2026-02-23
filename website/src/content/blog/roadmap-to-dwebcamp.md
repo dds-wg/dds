@@ -5,7 +5,7 @@ author: "Nicolas Gimenez"
 date: "2026-02-22"
 ---
 
-The DDS Working Group targets [DWebCamp](https://dwebcamp.org/) in July 2026 as its first public milestone. Here's the roadmap.
+The DDS Working Group aims for [DWebCamp](https://dwebcamp.org/) in July 2026 as its first public milestone. Here's the roadmap.
 
 ## Phase 1: Foundation (February -- March)
 
@@ -31,7 +31,7 @@ Each PoC validates a design direction -- not a commitment. Collectively, these e
 
 - Consolidate PoC learnings into spec revisions and a concrete future roadmap.
 - Build working demonstrations.
-- Prepare a public presentation for DWebCamp.
+- Aim for a public presentation at DWebCamp.
 
 ## Beyond July
 
@@ -45,4 +45,4 @@ Not the immediate focus, but part of the broader vision:
 
 ## Get Involved
 
-The [specification](/spec/0001-dds-protocol) is a working draft -- feedback is welcome. Development happens on [GitHub](https://github.com/dds-wg/dds). If you're headed to [DWebCamp](https://dwebcamp.org/) in July, that's where DDS makes its first public appearance.
+The [specification](/spec/0001-dds-protocol) is a working draft -- feedback is welcome. Development happens on [GitHub](https://github.com/dds-wg/dds). If you're headed to [DWebCamp](https://dwebcamp.org/) in July, we hope to see you there.
