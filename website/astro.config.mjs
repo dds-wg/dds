@@ -29,11 +29,19 @@ function rehypeFixMdLinks() {
       const href = tree.properties && tree.properties.href;
       if (
         typeof href === "string" &&
-        href.endsWith(".md") &&
         !href.startsWith("http") &&
         !href.startsWith("//")
       ) {
-        tree.properties.href = href.slice(0, -3);
+        // Strip .md (with optional #fragment) and fix relative paths for trailing-slash routing
+        const mdMatch = href.match(/^(.*)\.md(#.*)?$/);
+        if (mdMatch) {
+          let newHref = mdMatch[1] + (mdMatch[2] || "");
+          // ./foo → ../foo so relative links resolve as siblings under trailing-slash URLs
+          if (newHref.startsWith("./")) {
+            newHref = "../" + newHref.slice(2);
+          }
+          tree.properties.href = newHref;
+        }
       }
     }
     if (tree.children) {

@@ -138,7 +138,7 @@ We rely on the **did:plc 72-hour Grace Period**. If a malicious PDS or compromis
 
 ### 3.4 Privacy Trade-off
 
-Managed PDS hosts can technically access user data (signing keys, posts). Users requiring full data privacy should self-host their PDS. DDS provides the _capability_ to walk away and self-host, making it a credible choice when needed. Note that data privacy (keeping content secret) is distinct from participant anonymity (hiding who said what) — the latter does not require self-hosting. See [Anonymity Addendum](./0013-anonymity-addendum.md) for deeper analysis.
+Managed PDS hosts can technically access user data (signing keys, posts). Users requiring full data privacy should self-host their PDS. DDS provides the _capability_ to walk away and self-host, making it a credible choice when needed. Note that data privacy (keeping content secret) is distinct from participant anonymity (hiding who said what) — the latter does not require self-hosting. See [Anonymity Addendum](./0001-anonymity-addendum.md) for deeper analysis.
 
 ## 4. Open Issues
 
@@ -322,7 +322,7 @@ TIER 0 (REVISED — WORK IN PROGRESS):
 
 ### 5.6 Connection to Privacy Model
 
-This connects to the [Anonymity Addendum](./0013-anonymity-addendum.md):
+This connects to the [Anonymity Addendum](./0001-anonymity-addendum.md):
 
 - **Pseudonymous (Level 1)**: One `did:plc`, full history — best for committed users
 - **Per-conversation anonymous**: Ephemeral `did:key` per context — needed for ticket-gated events and external imports
@@ -432,7 +432,7 @@ Voting has requirements that deliberation doesn't — ballot secrecy, coercion r
 
 > **Status**: Open design question
 >
-> Distinct from participant anonymity ([Anonymity Addendum](./0013-anonymity-addendum.md)). Conversation privacy restricts who can participate in or access a deliberation.
+> Distinct from participant anonymity ([Anonymity Addendum](./0001-anonymity-addendum.md)). Conversation privacy restricts who can participate in or access a deliberation.
 
 ### 7.1 The Problem
 

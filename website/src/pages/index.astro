@@ -72,14 +72,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div class="flex flex-col items-stretch gap-8 md:flex-row md:items-start">
         <!-- Plan -->
         <div class="rounded-xl bg-white p-8 shadow-sm md:flex-1 md:min-w-0">
-          <div
-            class="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white"
-          >
-            1
-          </div>
-          <div
-            class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100"
-          >
+          <div class="mb-4 flex items-center gap-3">
+            <div
+              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white"
+            >
+              1
+            </div>
+            <div
+              class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-indigo-100"
+            >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-6 w-6 text-indigo-700"
@@ -94,6 +95,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
               />
             </svg>
+            </div>
           </div>
           <h3 class="mb-2 text-xl font-bold text-gray-900">Plan</h3>
           <p class="mb-4 text-gray-600">
@@ -125,28 +127,30 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
         <!-- Collect -->
         <div class="rounded-xl bg-white p-8 shadow-sm md:flex-1 md:min-w-0">
-          <div
-            class="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white"
-          >
-            2
-          </div>
-          <div
-            class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-indigo-700"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
+          <div class="mb-4 flex items-center gap-3">
+            <div
+              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-              />
-            </svg>
+              2
+            </div>
+            <div
+              class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-indigo-100"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-indigo-700"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                />
+              </svg>
+            </div>
           </div>
           <h3 class="mb-2 text-xl font-bold text-gray-900">Collect</h3>
           <p class="mb-4 text-gray-600">
@@ -178,28 +182,30 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
         <!-- Analyze -->
         <div class="rounded-xl bg-white p-8 shadow-sm md:flex-1 md:min-w-0">
-          <div
-            class="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white"
-          >
-            3
-          </div>
-          <div
-            class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-indigo-700"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
+          <div class="mb-4 flex items-center gap-3">
+            <div
+              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              />
-            </svg>
+              3
+            </div>
+            <div
+              class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-indigo-100"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-indigo-700"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+            </div>
           </div>
           <h3 class="mb-2 text-xl font-bold text-gray-900">Analyze</h3>
           <p class="mb-4 text-gray-600">
@@ -456,18 +462,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         Logos Storage archive every deliberation record permanently. Ethereum anchors
         analysis results on-chain, making them tamper-evident and forever auditable.
       </p>
-      <div class="mb-6 flex flex-wrap items-center gap-3 text-sm font-medium">
-        <span class="rounded-full bg-indigo-100 px-4 py-2 text-indigo-800"
-          >AT Protocol — transport &amp; identity</span
-        >
-        <span class="text-gray-400">&rarr;</span>
-        <span class="rounded-full bg-indigo-100 px-4 py-2 text-indigo-800"
-          >Arweave / Filecoin / Logos Storage — permanent archive</span
-        >
-        <span class="text-gray-400">&rarr;</span>
-        <span class="rounded-full bg-indigo-100 px-4 py-2 text-indigo-800"
-          >Ethereum — on-chain verification</span
-        >
+      <div class="mb-6 divide-y divide-indigo-100 rounded-xl border border-indigo-100 bg-indigo-50 text-sm">
+        <div class="flex items-baseline justify-between gap-4 px-5 py-3">
+          <span class="font-semibold text-indigo-900">AT Protocol</span>
+          <span class="text-gray-600">Transport &amp; identity</span>
+        </div>
+        <div class="flex items-baseline justify-between gap-4 px-5 py-3">
+          <span class="font-semibold text-indigo-900">Arweave / Filecoin / Logos Storage</span>
+          <span class="text-gray-600">Permanent archive</span>
+        </div>
+        <div class="flex items-baseline justify-between gap-4 px-5 py-3">
+          <span class="font-semibold text-indigo-900">Ethereum</span>
+          <span class="text-gray-600">Verification &middot; optional identity</span>
+        </div>
       </div>
       <a
         href="/spec/0001-dds-protocol"
