@@ -110,6 +110,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   output: "static",
+  trailingSlash: "always",
   markdown: {
     remarkPlugins: [remarkMermaid],
     rehypePlugins: [rehypeFixMdLinks],
