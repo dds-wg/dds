@@ -8,23 +8,24 @@
   <line x1="400" y1="0" x2="400" y2="630" stroke="#312e81" stroke-width="1" opacity="0.4"/>
   <line x1="800" y1="0" x2="800" y2="630" stroke="#312e81" stroke-width="1" opacity="0.4"/>
 
-  <!-- Decorative large faint triangle in background (top-right) -->
-  <line x1="950" y1="60" x2="1150" y2="500" stroke="#4f46e5" stroke-width="1" opacity="0.12"/>
-  <line x1="950" y1="60" x2="1160" y2="280" stroke="#4f46e5" stroke-width="1" opacity="0.12"/>
-  <line x1="1160" y1="280" x2="1150" y2="500" stroke="#4f46e5" stroke-width="1" opacity="0.12"/>
+  <!-- Decorative large faint square in background (top-right) -->
+  <rect x="940" y="80" rx="8" width="200" height="200" stroke="#4f46e5" stroke-width="1" fill="none" opacity="0.12"/>
+  <rect x="980" y="350" rx="6" width="140" height="140" stroke="#4f46e5" stroke-width="1" fill="none" opacity="0.08"/>
 
-  <!-- Main logo icon — equilateral triangle, centroid centered on left area -->
-  <!-- Scale: R=100, centroid at (170,310) -->
-  <!-- top=(170,210), bottom-left=(83.6,360), bottom-right=(256.4,360) → approx (84,360),(256,360) -->
-  <line x1="170" y1="210" x2="84" y2="360" stroke="#6366f1" stroke-width="8" stroke-linecap="round"/>
-  <line x1="170" y1="210" x2="256" y2="360" stroke="#6366f1" stroke-width="8" stroke-linecap="round"/>
-  <line x1="84" y1="360" x2="256" y2="360" stroke="#6366f1" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="170" cy="210" r="22" fill="#818cf8"/>
-  <circle cx="170" cy="210" r="10" fill="#ffffff"/>
-  <circle cx="84" cy="360" r="22" fill="#818cf8"/>
-  <circle cx="84" cy="360" r="10" fill="#ffffff"/>
-  <circle cx="256" cy="360" r="22" fill="#818cf8"/>
-  <circle cx="256" cy="360" r="10" fill="#ffffff"/>
+  <!-- Main logo icon — square with 4 nodes, center at (170,310) -->
+  <line x1="90" y1="230" x2="250" y2="230" stroke="#6366f1" stroke-width="8" stroke-linecap="round"/>
+  <line x1="250" y1="230" x2="250" y2="390" stroke="#6366f1" stroke-width="8" stroke-linecap="round"/>
+  <line x1="250" y1="390" x2="90" y2="390" stroke="#6366f1" stroke-width="8" stroke-linecap="round"/>
+  <line x1="90" y1="390" x2="90" y2="230" stroke="#6366f1" stroke-width="8" stroke-linecap="round"/>
+  <!-- Nodes -->
+  <circle cx="90" cy="230" r="22" fill="#818cf8"/>
+  <circle cx="90" cy="230" r="10" fill="#ffffff"/>
+  <circle cx="250" cy="230" r="22" fill="#818cf8"/>
+  <circle cx="250" cy="230" r="10" fill="#ffffff"/>
+  <circle cx="250" cy="390" r="22" fill="#818cf8"/>
+  <circle cx="250" cy="390" r="10" fill="#ffffff"/>
+  <circle cx="90" cy="390" r="22" fill="#818cf8"/>
+  <circle cx="90" cy="390" r="10" fill="#ffffff"/>
 
   <!-- "DDS" large title -->
   <text x="340" y="290" font-family="system-ui, -apple-system, sans-serif" font-size="110" font-weight="800" fill="#ffffff" letter-spacing="-3">DDS</text>
@@ -33,7 +34,7 @@
   <text x="344" y="345" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="500" fill="#a5b4fc" letter-spacing="0.5">Decentralized Deliberation Standard</text>
 
   <!-- Tagline -->
-  <text x="344" y="400" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="400" fill="#c7d2fe" opacity="0.85">An open protocol for secure, interoperable public deliberation.</text>
+  <text x="344" y="400" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="400" fill="#c7d2fe" opacity="0.85">An open protocol for sovereign, verifiable, interoperable deliberation.</text>
 
   <!-- Working Draft badge -->
   <rect x="344" y="440" width="160" height="36" rx="18" fill="#4f46e5" opacity="0.7"/>

@@ -1,15 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 40" fill="none">
-  <!-- 3-node triangle icon — equilateral, centroid at (16,20), scaled to fit 32×32 area in 40-high viewBox -->
-  <!-- Nodes at: top(16,9), bottom-left(7,24), bottom-right(25,24) within a 32×32 icon area, y-offset by +3 to center vertically -->
-  <line x1="16" y1="9" x2="7" y2="24" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"/>
-  <line x1="16" y1="9" x2="25" y2="24" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"/>
-  <line x1="7" y1="24" x2="25" y2="24" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"/>
-  <circle cx="16" cy="9" r="3.5" fill="#818cf8"/>
-  <circle cx="16" cy="9" r="1.5" fill="#ffffff"/>
-  <circle cx="7" cy="24" r="3.5" fill="#818cf8"/>
-  <circle cx="7" cy="24" r="1.5" fill="#ffffff"/>
-  <circle cx="25" cy="24" r="3.5" fill="#818cf8"/>
-  <circle cx="25" cy="24" r="1.5" fill="#ffffff"/>
+  <!-- Square icon — 4 nodes for 4 tensions -->
+  <line x1="7" y1="9" x2="25" y2="9" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="25" y1="9" x2="25" y2="27" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="25" y1="27" x2="7" y2="27" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="7" y1="27" x2="7" y2="9" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="7" cy="9" r="3.5" fill="#818cf8"/>
+  <circle cx="7" cy="9" r="1.5" fill="#ffffff"/>
+  <circle cx="25" cy="9" r="3.5" fill="#818cf8"/>
+  <circle cx="25" cy="9" r="1.5" fill="#ffffff"/>
+  <circle cx="25" cy="27" r="3.5" fill="#818cf8"/>
+  <circle cx="25" cy="27" r="1.5" fill="#ffffff"/>
+  <circle cx="7" cy="27" r="3.5" fill="#818cf8"/>
+  <circle cx="7" cy="27" r="1.5" fill="#ffffff"/>
   <!-- "DDS" wordmark -->
   <text x="42" y="27" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#1e1b4b" letter-spacing="-0.5">DDS</text>
 </svg>
