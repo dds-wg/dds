@@ -314,4 +314,4 @@ IRONY:
 This is why privacy + sovereignty + usability together is a hard problem in decentralized systems.
 ```
 
-DDS chooses sovereignty over strong anonymity for the default mode. This is the right choice for mainstream deliberation. Users with high-threat models can be served by a future hardcore anonymity mode with appropriate engineering investment.
+DDS chooses usability over strong anonymity for the default mode. This is the right choice for mainstream deliberation. Users with high-threat models can be served by a future hardcore anonymity mode with appropriate engineering investment.
