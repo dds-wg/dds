@@ -4,7 +4,7 @@
       href="https://github.com/dds-wg/dds/blob/main/COPYING"
       class="underline hover:text-gray-700"
       target="_blank"
-      rel="noopener noreferrer">BSD-2-Clause-Patent</a
+      rel="noopener noreferrer">MPL-2.0</a
     >.
   </p>
   <p class="mt-2">

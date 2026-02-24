@@ -25,4 +25,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) and the [working group governance](http
 
 ## License
 
-[BSD-2-Clause-Patent](./COPYING)
+[MPL-2.0](./COPYING)
