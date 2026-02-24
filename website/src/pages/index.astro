@@ -68,7 +68,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         from different teams handle each one, composing freely through
         shared schemas.
       </p>
-
+    </div>
+    <div class="mx-auto max-w-7xl">
       <!-- Three phase cards with arrow connectors -->
       <div class="flex flex-col items-stretch gap-8 md:flex-row md:items-stretch">
         <!-- Plan -->
@@ -340,8 +341,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <h3 class="mb-2 text-xl font-bold text-gray-900">Verifiable</h3>
           <p class="text-gray-600">
             Publicly auditable by design. Anyone can re-run the analysis. Optionally
-            anchor results on-chain for tamper-evident, permanent auditability,
-            independent of any single operator.
+            anchor results on-chain for tamper-evident, permanent auditability.
+            Long-term, <a href="https://arxiv.org/abs/2502.18535" target="_blank" rel="noopener noreferrer" class="underline-offset-2 hover:underline">zkML</a> could let any device verify analysis correctness
+            directly, no re-execution needed.
           </p>
         </div>
 
