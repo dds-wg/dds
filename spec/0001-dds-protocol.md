@@ -330,7 +330,7 @@ DDS supports any consultation type via pluggable modules. Each module defines it
 - **Opinion**: `{ text: string }`
 - **Vote**: `{ targetCid: string, value: -1|0|1 }`
 
-Other product lexicons follow the same pattern: a sensemaking module, a survey module, or any future consultation format. Data from external sources, such as social media APIs, LLM-based listening platforms (e.g., [Dembrane](https://www.dembrane.com/)), and existing pol.is exports, is translated into the appropriate module's lexicons during the Collect phase (e.g., tweets become `org.dds.module.polis` opinions, conversation transcripts become `org.dds.module.sense` records). The exact mappings are TBD.
+Other product lexicons follow the same pattern: a sensemaking module, a survey module, or any future consultation format. Data from external sources, such as social media APIs, LLM-based listening platforms, and existing pol.is exports, is translated into the appropriate module's lexicons during the Collect phase (e.g., tweets become `org.dds.module.polis` opinions, conversation transcripts become `org.dds.module.sense` records). The exact mappings are TBD.
 
 ### 6.4 Cross-App Interoperability
 
