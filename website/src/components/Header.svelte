@@ -1,9 +1,18 @@
 <script>
 	let menuOpen = $state(false);
+
+	function handleKeydown(event) {
+		if (event.key === 'Escape' && menuOpen) {
+			menuOpen = false;
+		}
+	}
 </script>
 
+<svelte:window onkeydown={handleKeydown} />
+
 <header class="sticky top-0 z-50 w-full border-b border-gray-200 bg-white">
-	<div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+	<div class="mx-auto flex max-w-5xl items-center px-4 py-3">
+		<!-- Logo + desktop nav grouped on the left -->
 		<a href="/" class="flex items-center gap-2">
 			<svg
 				width="28"
@@ -29,8 +38,7 @@
 			<span class="text-xl font-bold text-indigo-950">DDS</span>
 		</a>
 
-		<!-- Desktop nav -->
-		<nav class="hidden items-center gap-6 md:flex">
+		<nav class="ml-8 hidden items-center gap-6 md:flex">
 			<a href="/spec/0001-dds-protocol/" class="text-sm text-gray-700 hover:text-gray-900">Spec</a>
 			<a href="/blog/" class="text-sm text-gray-700 hover:text-gray-900">Blog</a>
 			<a
@@ -43,9 +51,19 @@
 			</a>
 		</nav>
 
-		<!-- Mobile hamburger button -->
+		<!-- Discussion link (pushed to right on desktop) -->
+		<a
+			href="https://github.com/dds-wg/dds/issues/new"
+			target="_blank"
+			rel="noopener noreferrer"
+			class="ml-auto hidden rounded-full bg-indigo-600 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-indigo-500 md:block"
+		>
+			Open a Discussion &rarr;
+		</a>
+
+		<!-- Mobile hamburger (pushed to right) -->
 		<button
-			class="flex items-center justify-center md:hidden"
+			class="ml-auto flex items-center justify-center md:hidden"
 			onclick={() => (menuOpen = !menuOpen)}
 			aria-label="Toggle menu"
 			aria-expanded={menuOpen}
@@ -80,16 +98,29 @@
 		</button>
 	</div>
 
-	<!-- Mobile menu -->
+	<!-- Mobile dropdown panel -->
 	{#if menuOpen}
 		<nav class="border-t border-gray-200 px-4 py-2 md:hidden">
-			<a href="/spec/0001-dds-protocol/" class="block py-2 text-sm text-gray-700 hover:text-gray-900">Spec</a>
-			<a href="/blog/" class="block py-2 text-sm text-gray-700 hover:text-gray-900">Blog</a>
+			<a
+				href="/spec/0001-dds-protocol/"
+				class="block rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+				onclick={() => (menuOpen = false)}
+			>
+				Spec
+			</a>
+			<a
+				href="/blog/"
+				class="block rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+				onclick={() => (menuOpen = false)}
+			>
+				Blog
+			</a>
 			<a
 				href="https://github.com/dds-wg/dds"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="block py-2 text-sm text-gray-700 hover:text-gray-900"
+				class="block rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+				onclick={() => (menuOpen = false)}
 			>
 				GitHub
 			</a>
