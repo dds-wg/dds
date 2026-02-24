@@ -50,8 +50,10 @@ function rehypeFixMdLinks() {
   };
 }
 
+const site = "https://www.dds.xyz";
+
 export default defineConfig({
-  site: "https://dds-wg.org",
+  site,
   integrations: [
     starlight({
       title: "DDS",
@@ -100,6 +102,22 @@ export default defineConfig({
             mermaid.initialize({ startOnLoad: false });
             await mermaid.run({ querySelector: '.mermaid' });
           `,
+        },
+        {
+          tag: "meta",
+          attrs: { property: "og:image", content: `${site}/og-image.png` },
+        },
+        {
+          tag: "meta",
+          attrs: { property: "og:image:width", content: "1200" },
+        },
+        {
+          tag: "meta",
+          attrs: { property: "og:image:height", content: "630" },
+        },
+        {
+          tag: "meta",
+          attrs: { property: "og:image:type", content: "image/png" },
         },
       ],
       customCss: ["./src/styles/starlight.css"],

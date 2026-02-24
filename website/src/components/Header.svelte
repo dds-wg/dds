@@ -13,15 +13,18 @@
 				xmlns="http://www.w3.org/2000/svg"
 				aria-hidden="true"
 			>
-				<line x1="16" y1="6" x2="7" y2="21" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" />
-				<line x1="16" y1="6" x2="25" y2="21" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" />
-				<line x1="7" y1="21" x2="25" y2="21" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" />
-				<circle cx="16" cy="6" r="3" fill="#818cf8" />
-				<circle cx="16" cy="6" r="1.4" fill="#ffffff" />
-				<circle cx="7" cy="21" r="3" fill="#818cf8" />
-				<circle cx="7" cy="21" r="1.4" fill="#ffffff" />
-				<circle cx="25" cy="21" r="3" fill="#818cf8" />
-				<circle cx="25" cy="21" r="1.4" fill="#ffffff" />
+				<line x1="8" y1="8" x2="24" y2="8" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" />
+				<line x1="24" y1="8" x2="24" y2="24" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" />
+				<line x1="24" y1="24" x2="8" y2="24" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" />
+				<line x1="8" y1="24" x2="8" y2="8" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" />
+				<circle cx="8" cy="8" r="3" fill="#818cf8" />
+				<circle cx="8" cy="8" r="1.4" fill="#ffffff" />
+				<circle cx="24" cy="8" r="3" fill="#818cf8" />
+				<circle cx="24" cy="8" r="1.4" fill="#ffffff" />
+				<circle cx="24" cy="24" r="3" fill="#818cf8" />
+				<circle cx="24" cy="24" r="1.4" fill="#ffffff" />
+				<circle cx="8" cy="24" r="3" fill="#818cf8" />
+				<circle cx="8" cy="24" r="1.4" fill="#ffffff" />
 			</svg>
 			<span class="text-xl font-bold text-indigo-950">DDS</span>
 		</a>
