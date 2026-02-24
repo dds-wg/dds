@@ -75,7 +75,7 @@ export default defineConfig({
           items: [
             {
               label: "DDS Protocol",
-              link: "/spec/0001-dds-protocol",
+              link: "/spec/0001-dds-protocol/",
             },
           ],
         },
@@ -84,11 +84,11 @@ export default defineConfig({
           items: [
             {
               label: "Anonymity Addendum",
-              link: "/spec/0001-anonymity-addendum",
+              link: "/spec/0001-anonymity-addendum/",
             },
             {
               label: "Implementation Addendum",
-              link: "/spec/0001-implementation-addendum",
+              link: "/spec/0001-implementation-addendum/",
             },
           ],
         },

@@ -31,8 +31,8 @@
 
 		<!-- Desktop nav -->
 		<nav class="hidden items-center gap-6 md:flex">
-			<a href="/spec/0001-dds-protocol" class="text-sm text-gray-700 hover:text-gray-900">Spec</a>
-			<a href="/blog" class="text-sm text-gray-700 hover:text-gray-900">Blog</a>
+			<a href="/spec/0001-dds-protocol/" class="text-sm text-gray-700 hover:text-gray-900">Spec</a>
+			<a href="/blog/" class="text-sm text-gray-700 hover:text-gray-900">Blog</a>
 			<a
 				href="https://github.com/dds-wg/dds"
 				target="_blank"
@@ -83,8 +83,8 @@
 	<!-- Mobile menu -->
 	{#if menuOpen}
 		<nav class="border-t border-gray-200 px-4 py-2 md:hidden">
-			<a href="/spec/0001-dds-protocol" class="block py-2 text-sm text-gray-700 hover:text-gray-900">Spec</a>
-			<a href="/blog" class="block py-2 text-sm text-gray-700 hover:text-gray-900">Blog</a>
+			<a href="/spec/0001-dds-protocol/" class="block py-2 text-sm text-gray-700 hover:text-gray-900">Spec</a>
+			<a href="/blog/" class="block py-2 text-sm text-gray-700 hover:text-gray-900">Blog</a>
 			<a
 				href="https://github.com/dds-wg/dds"
 				target="_blank"
