@@ -290,112 +290,6 @@ The choice of AT Protocol vs. alternatives should be made on **other criteria**:
 
 ---
 
-## 9. What DDS Actually Provides
-
-DDS should be clear about what it provides and doesn't provide:
-
-### DDS Guarantees ✅
-
-1. **Sovereignty**: You control your identity (walkaway capability)
-2. **Trust-minimization**: Don't need to trust any single operator forever
-3. **Pseudonymity**: Your DID is not your real name
-4. **Data ownership**: You can export and verify your data
-5. **Censorship resistance**: Data survives operator failure/malice
-
-### DDS Limitations ❌
-
-1. **Cross-conversation linkability**: Same DID used everywhere (by design, in default mode)
-2. **Public activity**: Votes visible on Firehose (for verifiability)
-3. **Operator observation**: Current PDS operator can see your activity
-4. **Network correlation**: Determined adversary can correlate via traffic analysis
-
-### Honest User Communication
-
-```
-Suggested privacy statement for users:
-
-"Your participation in Agora is pseudonymous. Your username and
-activity are visible to other participants, but we don't require
-your real name.
-
-Your activity across different conversations is linked to your
-account. This is necessary for you to see your own history and
-for the system to prevent duplicate voting.
-
-You can leave Agora at any time and take your identity with you
-(walkaway capability). Your data is not locked to any single
-operator.
-
-For users facing serious threats (journalists, activists in
-authoritarian contexts), our standard platform may not provide
-sufficient anonymity. A future 'hardcore anonymity' mode may
-address these use cases."
-```
-
----
-
-## 10. Future Research Directions
-
-If stronger privacy becomes a priority, these areas could be explored:
-
-### 10.1 Zero-Knowledge Eligibility
-```
-User proves: "I'm eligible to participate"
-Without revealing: Which specific identifier they used
-Requires: ZK credential issuance infrastructure
-```
-
-### 10.2 Encrypted Vote Aggregation
-```
-Votes encrypted, only aggregation revealed
-Approach: Homomorphic encryption or MPC for analysis
-Challenge: PCA/clustering and LLM inference are complex computation
-```
-
-### 10.3 Mixnet Integration
-```
-Requests routed through anonymity network (Tor, Nym)
-Challenge: Latency, reliability
-Required for: Level 3 anonymity
-```
-
-### 10.4 Local-First Sync with Privacy
-```
-Device-to-device sync without server learning
-Approach: End-to-end encrypted sync, careful relay design
-Challenge: Non-trivial protocol design, NAT traversal
-Required for: Level 3 anonymity with cross-device support
-```
-
-### 10.5 Private Information Retrieval
-```
-Client fetches data without revealing what it's fetching
-Challenge: Bandwidth overhead, complexity
-Research area: Active in crypto/privacy community
-```
-
----
-
-## 11. Conclusion
-
-Privacy in decentralized, trust-minimized deliberation is a **hard problem with no simple solution**. The fundamental tension is:
-
-```
-Trust operators     → Privacy is their promise (fragile)
-Don't trust operators → Activity flows through public channels (observable)
-```
-
-DDS correctly prioritizes **sovereignty** (walkaway capability) over strong anonymity for v1. The recommendation:
-
-1. **Be honest** about privacy limitations
-2. **Default to pseudonymity** (one DID, full history, trust-minimized)
-3. **Defer strong anonymity** to future "hardcore mode" as separate app
-4. **Acknowledge** that Level 3 privacy IS achievable but requires significant engineering (local-first sync, Tor, careful protocol design)
-
-The choice of protocol (AT Protocol, custom, etc.) should be based on sovereignty, usability, and interoperability, **not privacy**, because privacy challenges are inherent to the trust-minimized public infrastructure model, not to any specific protocol.
-
----
-
 ## Appendix: The Irony of Decentralization and Privacy
 
 ```
@@ -417,8 +311,7 @@ IRONY:
   Unless you add careful cryptographic/protocol design
   Which requires significant engineering investment
 
-This is why privacy + sovereignty + usability together
-is the hard problem in decentralized systems.
+This is why privacy + sovereignty + usability together is a hard problem in decentralized systems.
 ```
 
 DDS chooses sovereignty over strong anonymity for the default mode. This is the right choice for mainstream deliberation. Users with high-threat models can be served by a future hardcore anonymity mode with appropriate engineering investment.
