@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 40" fill="none">
-  <!-- Square icon — 4 nodes for 4 tensions -->
+  <!-- Square icon, 4 nodes for 4 tensions -->
   <line x1="7" y1="9" x2="25" y2="9" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"/>
   <line x1="25" y1="9" x2="25" y2="27" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"/>
   <line x1="25" y1="27" x2="7" y2="27" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"/>

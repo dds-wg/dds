@@ -11,9 +11,9 @@ order: 3
 | **Status**     | Draft                                                    |
 | **Created**    | 2026-01-13                                               |
 
-This addendum contains implementation-level details for DDS. These are preliminary designs requiring further investigation — they represent directional intent, not finalized specifications.
+This addendum contains implementation-level details for DDS. These are preliminary designs requiring further investigation: they represent directional intent, not finalized specifications.
 
-## 1. Encrypted Key Vault — Cryptographic Design
+## 1. Encrypted Key Vault: Cryptographic Design
 
 > **Draft**: The vault designs below (Type A and Type B) are a first proposal. The specific cryptographic primitives (HKDF-SHA256, AES-GCM, did:key exchange keys), key derivation flows, and Lockbox protocol need formal security review before implementation.
 
@@ -65,7 +65,7 @@ For users without a global key (Email/Phone/Guest):
 2. **Device A (existing)**: Scans QR, validates fingerprint (MITM protection), encrypts $K_{account}$ for Device B.
 3. **Transport**: Device A uploads Lockbox to PDS. Device B downloads, decrypts, accesses Vault.
 
-> **Security**: QR Code verification is MANDATORY. If PDS is known-malicious, don't sync—decrypt Rotation Key and migrate immediately.
+> **Security**: QR Code verification is MANDATORY. If PDS is known-malicious, don't sync. Decrypt Rotation Key and migrate immediately.
 
 ```mermaid
 flowchart TD
@@ -91,7 +91,7 @@ flowchart TD
     style GetRotationKey fill:#9f9,stroke:#333
 ```
 
-> **Critical**: Users MUST save a Recovery Code (raw $K_{account}$) at signup. Without this or a device, the Rotation Key is irrecoverable — the user loses walkaway capability (cannot migrate to a new PDS) but retains normal PDS access via Email/Phone.
+> **Critical**: Users MUST save a Recovery Code (raw $K_{account}$) at signup. Without this or a device, the Rotation Key is irrecoverable: the user loses walkaway capability (cannot migrate to a new PDS) but retains normal PDS access via Email/Phone.
 
 ## 2. PDS Hosting & Authentication
 
@@ -105,7 +105,7 @@ flowchart TD
 
 A single Managed PDS instance is multi-tenant, capable of hosting thousands of accounts (similar to Bluesky PDS architecture).
 
-> **Note**: The Tier 0 design is an open question — see §5 (Guest Identity and Account Upgrade) for detailed analysis of the trade-offs between managed `did:plc` and `did:key` for guest participation.
+> **Note**: The Tier 0 design is an open question. See §5 (Guest Identity and Account Upgrade) for detailed analysis of the trade-offs between managed `did:plc` and `did:key` for guest participation.
 
 ### 2.2 Authentication
 
@@ -133,12 +133,12 @@ We rely on the **did:plc 72-hour Grace Period**. If a malicious PDS or compromis
 
 ### 3.3 Lost Rotation Key
 
-- **Risk**: Type B users lose all devices and have no Recovery Code. They can still authenticate to the PDS (via Email/Phone) and use the account normally, but the Rotation Key is irrecoverable — they lose walkaway capability and cannot migrate if the PDS fails or turns malicious.
+- **Risk**: Type B users lose all devices and have no Recovery Code. They can still authenticate to the PDS (via Email/Phone) and use the account normally, but the Rotation Key is irrecoverable: they lose walkaway capability and cannot migrate if the PDS fails or turns malicious.
 - **Mitigation**: Users MUST save Recovery Code at signup. The UI should clearly communicate that this code protects their ability to leave the PDS, not just account access.
 
 ### 3.4 Privacy Trade-off
 
-Managed PDS hosts can technically access user data (signing keys, posts). Users requiring full data privacy should self-host their PDS. DDS provides the _capability_ to walk away and self-host, making it a credible choice when needed. Note that data privacy (keeping content secret) is distinct from participant anonymity (hiding who said what) — the latter does not require self-hosting. See [Anonymity Addendum](./0001-anonymity-addendum.md) for deeper analysis.
+Managed PDS hosts can technically access user data (signing keys, posts). Users requiring full data privacy should self-host their PDS. DDS provides the _capability_ to walk away and self-host, making it a credible choice when needed. Note that data privacy (keeping content secret) is distinct from participant anonymity (hiding who said what). The latter does not require self-hosting. See [Anonymity Addendum](./0001-anonymity-addendum.md) for deeper analysis.
 
 ## 4. Open Issues
 
@@ -162,9 +162,9 @@ Managed PDS hosts can technically access user data (signing keys, posts). Users 
 
 ## 5. Guest Identity and Account Upgrade
 
-> **Status**: Open design question — first priority to resolve
+> **Status**: Open design question, first priority to resolve
 >
-> This is a problem worth solving at the AT Protocol level, not just for DDS. A standardized Guest Mode pattern — potentially as a Lexicon — would be reusable by any AT Protocol application that needs to support lightweight participation with upgrade to persistent accounts.
+> This is a problem worth solving at the AT Protocol level, not just for DDS. A standardized Guest Mode pattern, potentially as a Lexicon, would be reusable by any AT Protocol application that needs to support lightweight participation with upgrade to persistent accounts.
 
 ### 5.1 The Problem
 
@@ -178,21 +178,21 @@ Three factors complicate the design:
 1. INFRASTRUCTURE OVERHEAD:
    AT Protocol requires: PLC directory entry + PDS account + repository
    Nostr requires:       Generate secp256k1 keypair (client-side only,
-                          but secp256k1 not in Web Crypto API — private
+                          but secp256k1 not in Web Crypto API, private
                           key unavoidably exposed to JS for guests)
    Logos Messaging requires: Nothing (P2P, no identity infrastructure,
-                          but ecosystem uses secp256k1 — same Web Crypto
+                          but ecosystem uses secp256k1, same Web Crypto
                           limitation as Nostr)
 
    For a conference attendee who votes once via Zupass ticket,
    did:plc is overengineered. Rotation keys, recovery vaults,
-   PDS provisioning — none of this matters for a one-off interaction.
+   PDS provisioning: none of this matters for a one-off interaction.
 
 2. PER-CONVERSATION ANONYMITY:
    Ticket-gated conversations use ZK nullifiers scoped per event/conversation
    (e.g., externalNullifier = "agora-${eventSlug}-v1").
    Design: 1 ticket = 1 person for THIS conversation, unlinkable across conversations.
-   A single did:plc is linkable across conversations — it defeats the purpose.
+   A single did:plc is linkable across conversations, defeating the purpose.
    Per-conversation anonymity requires per-conversation identifiers (did:key).
 
 3. EXTERNAL DATA:
@@ -214,7 +214,7 @@ APPROACH A: Managed did:plc for guests
      (guest did:plc:A proved ticket → email account did:plc:B can't re-prove
       same ticket → nullifier collision → two accounts, same person, stuck)
   ❌ PLC directory overhead, rotation keys unnecessary for ephemeral use
-  ❌ Single did:plc is linkable across conversations — breaks per-conversation anonymity
+  ❌ Single did:plc is linkable across conversations, breaks per-conversation anonymity
   ❌ Doesn't work for external data imports (participants without PDS)
 
 APPROACH B: did:key "soft accounts" within lexicon data
@@ -222,7 +222,7 @@ APPROACH B: did:key "soft accounts" within lexicon data
   • Records stored in app's PDS, attributed to guest's did:key in the data
   • Per-conversation did:key enables unlinkable ticket-gated participation
   • Works for external data imports (assign did:key to external participants)
-  ✅ Lightweight — no PDS provisioning, no PLC directory
+  ✅ Lightweight: no PDS provisioning, no PLC directory
   ✅ Supports per-conversation anonymity (different did:key per context)
   ✅ Works for external data (Twitter/X users, other app SDK data)
   ❌ did:key is second-class in AT Protocol ecosystem
@@ -296,7 +296,7 @@ Full moderation compatibility, walkaway capability, Firehose integration.
 - Trade-off: `did:plc` merge preserves more AT Protocol compatibility; `did:key` attestation may be simpler but requires moderation tool adaptation
 
 **Guest Mode as AT Protocol pattern:**
-The likely solution is a "Guest Mode" managed by an AppView — a standardized Lexicon pattern where:
+The likely solution is a "Guest Mode" managed by an AppView, a standardized Lexicon pattern where:
 - The AppView manages guest identities (whether `did:plc` or `did:key`)
 - Guest records are properly represented and discoverable on the Firehose
 - Upgrade to a full account follows a standardized attestation/merge protocol
@@ -309,7 +309,7 @@ This is a contribution to the AT Protocol ecosystem, not just a DDS implementati
 The Tier 0 definition in §2.1 ("Guest user with no verified identifier. Lightweight PDS authenticated by local `did:key`") is a starting point. The analysis above shows that Tier 0 may need to be a richer concept:
 
 ```
-TIER 0 (REVISED — WORK IN PROGRESS):
+TIER 0 (REVISED, WORK IN PROGRESS):
   • Guest identity may be did:key (for per-conversation anonymity, external data)
     OR managed did:plc (for persistent pseudonymous guest participation)
   • AppView manages guest records in its PDS
@@ -324,21 +324,21 @@ TIER 0 (REVISED — WORK IN PROGRESS):
 
 This connects to the [Anonymity Addendum](./0001-anonymity-addendum.md):
 
-- **Pseudonymous (Level 1)**: One `did:plc`, full history — best for committed users
-- **Per-conversation anonymous**: Ephemeral `did:key` per context — needed for ticket-gated events and external imports
-- These are NOT competing models — they serve different use cases. DDS needs both, with a bridge between them.
+- **Pseudonymous (Level 1)**: One `did:plc`, full history, best for committed users
+- **Per-conversation anonymous**: Ephemeral `did:key` per context, needed for ticket-gated events and external imports
+- These are NOT competing models. They serve different use cases. DDS needs both, with a bridge between them.
 
-The pseudonymous model remains the right **default**. But per-conversation anonymity via `did:key` is not just a future "hardcore mode" — it's a practical need for ticket-gated events and external data integration today.
+The pseudonymous model remains the right **default**. But per-conversation anonymity via `did:key` is not just a future "hardcore mode". It's a practical need for ticket-gated events and external data integration today.
 
 ## 6. Result Commitment Protocol
 
-> **Status**: Draft design — needs smart contract specification
+> **Status**: Draft design, needs smart contract specification
 >
 > Inspired by [Vocdoni](https://vocdoni.io/)'s DAVINCI architecture for notarizing election results on Ethereum. Adapted for DDS where AT Protocol serves as the data layer.
 
 ### 6.1 Motivation
 
-DDS publishes deliberation results (`org.dds.result.*` — e.g., PCA clustering, LLM summaries) to the AT Protocol Firehose. But Firehose records can be updated or deleted by the originating PDS. For finished consultations, results should be **permanent and tamper-evident** — anchored to a commitment that no single operator can modify.
+DDS publishes deliberation results (`org.dds.result.*`, e.g., PCA clustering, LLM summaries) to the AT Protocol Firehose. But Firehose records can be updated or deleted by the originating PDS. For finished consultations, results should be **permanent and tamper-evident**, anchored to a commitment that no single operator can modify.
 
 This is distinct from the fraud proving problem (§4.1). Fraud proving asks: "was the computation correct?" Result commitment asks: "has the result been modified since publication?" The former requires ZK proofs or re-execution. The latter requires only a hash.
 
@@ -351,7 +351,7 @@ ANALYZER AGENT:
   1. Publishes result record to AT Protocol (e.g., org.dds.result.pca, org.dds.result.summary)
   2. Constructs commitment record:
      - conversation_uri: AT Protocol URI of the deliberation process
-     - scope: { start_time, end_time } — time window of analysis
+     - scope: { start_time, end_time } (time window of analysis)
      - input_hash: Merkle root of all input records in scope
        (e.g., org.dds.module.polis.vote + opinion, or any module's records)
      - algorithm: identifier + version (e.g., "reddwarf@2.1.0", "summarizer@1.0.0")
@@ -360,7 +360,7 @@ ANALYZER AGENT:
   3. Submits commitment hash to Ethereum smart contract
 
   Note: The commitment transaction can be submitted by the Analyzer,
-  the Organizer, or any party — the data is public on the Firehose.
+  the Organizer, or any party, as the data is public on the Firehose.
 
 VERIFIER (any party):
   1. Downloads all input records from AT Protocol Firehose for the scope
@@ -394,38 +394,38 @@ KEY DIFFERENCE:
   Vocdoni uses ZK proofs for computation correctness (trustless)
   DDS uses deterministic re-execution (spot-check, ZK future work)
   Vocdoni is purpose-built for voting
-  DDS reuses AT Protocol — a general-purpose social data layer
+  DDS reuses AT Protocol, a general-purpose social data layer
 ```
 
 ### 6.4 Potential Collaboration
 
-DDS and DAVINCI address different phases of governance: DDS handles deliberation (surfacing opinions, clustering, sensemaking), DAVINCI handles voting (secure, anonymous, verifiable decisions). They're complementary — and the most natural collaboration point is shared semantic data on AT Protocol.
+DDS and DAVINCI address different phases of governance: DDS handles deliberation (surfacing opinions, clustering, sensemaking), DAVINCI handles voting (secure, anonymous, verifiable decisions). They're complementary, and the most natural collaboration point is shared semantic data on AT Protocol.
 
 ```
 DATA INTEROPERABILITY:
   • DDS publishes consultation results as AT Protocol records (lexicons)
   • DAVINCI could publish election configs, census criteria, and results
-    as AT Protocol records — shared data lake, voting-specific infra
+    as AT Protocol records, creating a shared data lake with voting-specific infra
   • DDS analysis results inform ballot design (what gets voted on)
   • Vote results flow back as records that DDS apps can reference
 
 SHARED INFRASTRUCTURE:
   • Ethereum: Both use it as coordination/commitment layer
-    — DDS for result hashes, DAVINCI for election settlement
+    (DDS for result hashes, DAVINCI for election settlement)
   • AT Protocol identity: DDS credentials (Zupass, ZK passport, DIDs)
     could feed DAVINCI voter eligibility / census
 ```
 
-Voting has requirements that deliberation doesn't — ballot secrecy, coercion resistance, exact tallying with ZK proofs. DAVINCI's architecture is purpose-built for these constraints. The collaboration pattern is at the data layer (shared lexicons, shared identity), not infrastructure merging — and it generalizes beyond Vocdoni to any voting protocol that could publish metadata and results as AT Protocol records.
+Voting has requirements that deliberation doesn't: ballot secrecy, coercion resistance, exact tallying with ZK proofs. DAVINCI's architecture is purpose-built for these constraints. The collaboration pattern is at the data layer (shared lexicons, shared identity), not infrastructure merging, and it generalizes beyond Vocdoni to any voting protocol that could publish metadata and results as AT Protocol records.
 
 ### 6.5 Open Questions
 
-- **Chain selection**: Ethereum L1 vs L2 (Optimism, Base, etc.) — trade-off between cost and security guarantees
+- **Chain selection**: Ethereum L1 vs L2 (Optimism, Base, etc.), trade-off between cost and security guarantees
 - **Smart contract design**: Minimal contract that stores commitment hashes, indexed by conversation URI
 - **Input hash construction**: Exact Merkle tree specification for deterministic input hashing (ordering, canonicalization)
 - **Timing**: When exactly is a consultation "finished"? Who triggers the commitment? Can multiple Analyzers' results be committed? How are competing results handled?
-- **Who commits?**: The Analyzer, the Organizer, or any party? This is a governance question — the protocol should define the commitment format but leave the committer open.
-- **Cost**: Gas optimization — batching multiple consultation commitments, or using blob transactions (EIP-4844)
+- **Who commits?**: The Analyzer, the Organizer, or any party? This is a governance question. The protocol should define the commitment format but leave the committer open.
+- **Cost**: Gas optimization, batching multiple consultation commitments, or using blob transactions (EIP-4844)
 - **Relationship to archival**: Archive Agents (Arweave/Filecoin) store full data; Ethereum stores only hashes. Both serve durability but at different layers.
 
 ## 7. Conversation Privacy
@@ -444,7 +444,7 @@ On AT Protocol, records are published to the Firehose. A cleartext password/toke
 
 #### Participation-gated (common need)
 
-The conversation is publicly viewable — viewing is fine. Only people with the link can submit opinions and votes.
+The conversation is publicly viewable, viewing is fine. Only people with the link can submit opinions and votes.
 
 ```
 MECHANISM:
@@ -454,7 +454,7 @@ MECHANISM:
   • Public key published in conversation metadata (not secret)
   • Participants sign their submissions with the private key
   • Analyzer/AppView only accepts records with valid signatures
-  • Signing key never appears in AT Protocol records —
+  • Signing key never appears in AT Protocol records,
     only signatures do
 
 PROPERTIES:
@@ -479,11 +479,11 @@ MECHANISM:
   • Having K = having access (no gatekeeper)
 
 PROPERTIES:
-  ✅ Trust-minimized — PDS/Firehose see nothing
+  ✅ Trust-minimized: PDS/Firehose see nothing
   ❌ Analyzer Agent needs K (organizer must share explicitly)
   ❌ Revoking access is impossible (key is symmetric,
      already distributed)
-  ❌ Not a current need — no use case observed yet
+  ❌ Not a current need, no use case observed yet
 ```
 
 ### 7.3 Link Structure

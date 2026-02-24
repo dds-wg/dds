@@ -15,13 +15,13 @@ order: 2
 
 This addendum explores the anonymity challenges inherent in any decentralized deliberation system. The key finding is that **achieving strong cross-conversation unlinkability is fundamentally difficult**, regardless of which underlying protocol (AT Protocol, custom federation, pure P2P) is chosen.
 
-> **Scope**: This addendum covers **participant anonymity** — pseudonymity, cross-conversation unlinkability, correlation resistance, and metadata leakage. Conversation privacy (restricting who can participate) is a separate concern addressed in the [main spec §6](./0001-dds-protocol.md) and [Implementation Addendum §7](./0001-implementation-addendum.md#7-conversation-privacy).
+> **Scope**: This addendum covers **participant anonymity**: pseudonymity, cross-conversation unlinkability, correlation resistance, and metadata leakage. Conversation privacy (restricting who can participate) is a separate concern addressed in the [main spec §6](./0001-dds-protocol.md) and [Implementation Addendum §7](./0001-implementation-addendum.md#7-conversation-privacy).
 
-This is not a limitation of AT Protocol specifically — it's a property of any system that:
+This is not a limitation of AT Protocol specifically. It's a property of any system that:
 
 1. Allows users to participate across multiple conversations
 2. Uses **public or semi-public** infrastructure for data distribution
-3. Adopts a **trust-minimized mindset** — doesn't want to trust third-party server operators
+3. Adopts a **trust-minimized mindset**: doesn't want to trust third-party server operators
 
 The tension is between **sovereignty** (not trusting operators) and **privacy** (hiding activity from observers). Achieving both simultaneously is the hard problem.
 
@@ -392,7 +392,7 @@ DDS correctly prioritizes **sovereignty** (walkaway capability) over strong anon
 3. **Defer strong anonymity** to future "hardcore mode" as separate app
 4. **Acknowledge** that Level 3 privacy IS achievable but requires significant engineering (local-first sync, Tor, careful protocol design)
 
-The choice of protocol (AT Protocol, custom, etc.) should be based on sovereignty, usability, and interoperability — **not privacy**, because privacy challenges are inherent to the trust-minimized public infrastructure model, not to any specific protocol.
+The choice of protocol (AT Protocol, custom, etc.) should be based on sovereignty, usability, and interoperability, **not privacy**, because privacy challenges are inherent to the trust-minimized public infrastructure model, not to any specific protocol.
 
 ---
 

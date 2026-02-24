@@ -12,7 +12,7 @@
   <rect x="940" y="80" rx="8" width="200" height="200" stroke="#4f46e5" stroke-width="1" fill="none" opacity="0.12"/>
   <rect x="980" y="350" rx="6" width="140" height="140" stroke="#4f46e5" stroke-width="1" fill="none" opacity="0.08"/>
 
-  <!-- Main logo icon — square with 4 nodes, center at (170,310) -->
+  <!-- Main logo icon: square with 4 nodes, center at (170,310) -->
   <line x1="90" y1="230" x2="250" y2="230" stroke="#6366f1" stroke-width="8" stroke-linecap="round"/>
   <line x1="250" y1="230" x2="250" y2="390" stroke="#6366f1" stroke-width="8" stroke-linecap="round"/>
   <line x1="250" y1="390" x2="90" y2="390" stroke="#6366f1" stroke-width="8" stroke-linecap="round"/>

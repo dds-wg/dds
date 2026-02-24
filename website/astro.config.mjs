@@ -5,7 +5,7 @@ import { defineConfig } from "astro/config";
 
 // Convert mermaid code blocks to plain divs before Shiki runs, preserving exact source.
 // HTML-escape the content so characters like `<br>` aren't interpreted as HTML by the
-// browser — mermaid reads textContent which decodes entities back to the original source.
+// browser: mermaid reads textContent which decodes entities back to the original source.
 function remarkMermaid() {
   return function walk(node) {
     if (node.type === "code" && node.lang === "mermaid") {
@@ -57,6 +57,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "DDS",
+      favicon: "/favicon.svg",
       logo: {
         src: "./public/icon.svg",
         alt: "DDS",
