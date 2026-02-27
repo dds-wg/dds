@@ -75,36 +75,31 @@ DDS uses a hybrid three-layer architecture. Each layer uses the protocol best su
 
 ```mermaid
 flowchart TB
-    subgraph User["User Layer"]
-        Discover[Discover via AppView]
-        Participate[Participate via PDS]
-        Verify[Verify on-chain]
-    end
+    User["User<br/>Discover · Participate · Verify"]
 
     subgraph Transport["Transport Layer (hot path): AT Protocol"]
-        PDS["PDS<br/>did:plc • Encrypted Vault • OAuth"]
-        Firehose["Firehose<br/>Permissionless indexing"]
-        AppView["AppViews<br/>SQL search • SSE notifications"]
+        PDS["PDS<br/>did:plc · Encrypted Vault · OAuth"]
+        Firehose["Firehose<br/>Permissionless real-time stream"]
+        AppView["AppViews<br/>Search · Notifications"]
         PDS --> Firehose --> AppView
     end
 
-    subgraph Archive["Archive Layer (cold path): Arweave/Filecoin/Logos Storage"]
+    subgraph Archive["Archive Layer (cold path): Arweave / Filecoin / Logos Storage"]
         ArchiveAgents["Archive Agents<br/>Pin org.dds.* records"]
     end
 
     subgraph Verification["Verification Layer: Ethereum"]
-        Truth["Verification<br/>On-chain proofs • Dispute resolution"]
+        OnChain["Result hashes for tamper-evidence"]
     end
 
-    subgraph Analyzer["Analyzer Agents"]
-        Compute["Read Firehose → Run analysis → Publish results"]
-    end
+    AnalyzerAgents["Analyzer Agents<br/>Read Firehose · Run analysis · Publish results"]
 
-    User --> Transport
-    Firehose -->|archival| Archive
-    Firehose -->|analysis| Analyzer
-    Analyzer -->|commit hash| Verification
-    Archive -->|recovery| PDS
+    User --> PDS
+    User --> AppView
+    Firehose -->|archival| ArchiveAgents
+    Firehose -->|analysis| AnalyzerAgents
+    AnalyzerAgents -->|commit hash| OnChain
+    ArchiveAgents -->|walkaway recovery| PDS
 ```
 
 - **Transport Layer (hot path)**: AT Protocol handles discovery, search, and real-time interaction. PDSes host data, the Firehose enables permissionless indexing, and AppViews provide query APIs.
@@ -135,30 +130,35 @@ The following example shows a two-round consultation, Polis-style clustering fol
 sequenceDiagram
     participant Org as Organizer
     participant Delib as Deliberation Platform
+    participant FH as Firehose
     participant Analyzer as Analyzer Agent
     participant Ext as External Consumer
 
     Note over Org: PLAN
-    Org->>Delib: Create consultation<br/>(org.dds.process)
+    Org->>Delib: Create consultation (org.dds.process)
 
     rect rgb(240, 240, 255)
-    Note over Delib,Analyzer: ROUND 1 (Collect → Analyze)
-    Delib->>Delib: Gather opinions<br/>(org.dds.module.polis.opinion)
-    Delib->>Delib: Record reactions<br/>(org.dds.module.polis.vote)
-    Analyzer->>Delib: Read via Firehose
+    Note over Delib,Analyzer: ROUND 1 (Collect, then Analyze)
+    Delib->>Delib: Gather opinions (org.dds.module.polis.opinion)
+    Delib->>Delib: Record reactions (org.dds.module.polis.vote)
+    Delib->>FH: Publish records
+    Analyzer->>FH: Read org.dds.* records
     Analyzer->>Analyzer: Run clustering
-    Analyzer->>Analyzer: Publish result<br/>(org.dds.result.pca)
+    Analyzer->>FH: Publish result (org.dds.result.pca)
     end
 
     rect rgb(240, 255, 240)
-    Note over Delib,Analyzer: ROUND 2 (Collect → Analyze)
-    Delib->>Delib: Survey on cluster topics<br/>(org.dds.module.survey)
-    Analyzer->>Analyzer: Summarize responses<br/>(org.dds.result.summary)
+    Note over Delib,Analyzer: ROUND 2 (Collect, then Analyze)
+    Delib->>Delib: Survey on cluster topics (org.dds.module.survey)
+    Delib->>FH: Publish records
+    Analyzer->>FH: Read org.dds.* records
+    Analyzer->>Analyzer: Summarize responses
+    Analyzer->>FH: Publish result (org.dds.result.summary)
     end
 
     Note over Ext: EXTERNAL CONSUMER
-    Ext->>Analyzer: Read results via Firehose
-    Ext->>Ext: Create ballot from consensus<br/>(external voting protocol)
+    Ext->>FH: Read results
+    Ext->>Ext: Create ballot from consensus (external voting protocol)
 ```
 
 ## 5. Identity and Authentication
@@ -326,6 +326,18 @@ DDS solves this by separating **computation** from **verification**:
 2. **Process**: Agent reads all Repositories from the Firehose matching the Scope.
 3. **Compute**: Runs analysis (e.g., Reddwarf clustering, LLM summarization).
 4. **Output**: Publishes result (e.g., `org.dds.result.pca`, `org.dds.result.summary`).
+
+```mermaid
+flowchart LR
+    Input["1. Input<br/>Define Scope"]
+    Process["2. Process<br/>Read from Firehose"]
+    Compute["3. Compute<br/>Run analysis"]
+    Output["4. Output<br/>Publish result"]
+    Ethereum["Ethereum<br/>On-chain commitment"]
+
+    Input --> Process --> Compute --> Output
+    Output -->|commit hash| Ethereum
+```
 
 Because inputs (data on the Firehose) and algorithm (open-source) are public, **anyone can re-run the computation to verify an Analyzer's results**. This makes the system auditable without requiring every user to run their own analyzer.
 

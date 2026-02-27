@@ -40,18 +40,16 @@ For users logging in with an Ethereum Wallet, we use the **"Sign-to-Derive"** pa
 
 ```mermaid
 flowchart TD
-    Wallet["Ethereum Wallet Signature"]
-    Wallet --> HKDF["HKDF-SHA256"]
-    Wallet --> OAuth["Sign OAuth Challenge"]
+    Wallet["Ethereum Wallet"]
+    Wallet --> Sign1["Sign deterministic message"]
+    Wallet --> Sign2["Sign OAuth challenge"]
+    Sign1 --> HKDF["HKDF-SHA256"]
+    Sign2 --> PDSAccess["PDS Login"]
     HKDF --> AES["AES-GCM Key"]
-    OAuth --> PDSAccess["PDS Login"]
     AES --> Decrypt["Decrypt org.dds.key.wrapped"]
     Decrypt --> RotationKey["did:plc Rotation Key"]
-    RotationKey --> Control["Control DID document<br/>(rotate to new PDS)"]
-    RotationKey --> Recover["Recover from any device<br/>with just wallet"]
-
-    style Wallet fill:#f9f,stroke:#333
-    style RotationKey fill:#9f9,stroke:#333
+    RotationKey --> Migrate["Rotate to new PDS"]
+    RotationKey --> Recover["Recover from any device"]
 ```
 
 ### 1.2 Type B: Device Graph Vault
@@ -74,23 +72,20 @@ flowchart TD
     subgraph Setup["Setup Phase"]
         Master["Master Secret K_account"]
         Master --> EncryptRK["Encrypt Rotation Key"]
-        EncryptRK --> Vault["Vault: org.dds.key.wrapped"]
-        Master --> PerDevice["Encrypt for each device → Lockbox"]
+        EncryptRK --> Vault["Vault: org.dds.key.wrapped (in Repository)"]
+        Master --> PerDevice["Encrypt for each device (Lockbox)"]
     end
 
-    subgraph WalkawaySec["Walkaway Options"]
+    subgraph Walkaway["Walkaway Options"]
         ExistingDevice["Option 1: Existing Device<br/>Has K_account locally"]
         RecoveryCode["Option 2: Recovery Code<br/>Saved at signup"]
 
         ExistingDevice --> DecryptVault["Decrypt Vault"]
-        RecoveryCode --> RetrieveIPFS["Retrieve Vault from IPFS"]
-        RetrieveIPFS --> DecryptVault
+        RecoveryCode --> RetrieveVault["Retrieve Vault from decentralized archive"]
+        RetrieveVault --> DecryptVault
         DecryptVault --> GetRotationKey["Get Rotation Key"]
         GetRotationKey --> Rotate["Rotate did:plc to new PDS"]
     end
-
-    style Master fill:#ff9,stroke:#333
-    style GetRotationKey fill:#9f9,stroke:#333
 ```
 
 > **Critical**: Users MUST save a Recovery Code (raw $K_{account}$) at signup. Without this or a device, the Rotation Key is irrecoverable: the user loses walkaway capability (cannot migrate to a new PDS) but retains normal PDS access via Email/Phone.
@@ -189,6 +184,26 @@ zkML and result commitment ([§6](#6-result-commitment-protocol)) are complement
 - Result commitment proves **integrity**: "this result hasn't been modified since publication" (hash on-chain)
 - zkML proves **correctness**: "the computation that produced this result was executed faithfully" (ZK proof on-chain)
 - Together: end-to-end verifiability. The result is both correct and immutable.
+
+```mermaid
+sequenceDiagram
+    participant Analyzer as Analyzer Agent
+    participant Eth as Ethereum
+    participant Client as Any Client
+
+    Note over Analyzer: Expensive (done once)
+    Analyzer->>Analyzer: Run analysis on dataset
+    Analyzer->>Analyzer: Convert pipeline to arithmetic circuit (EZKL)
+    Analyzer->>Analyzer: Generate ZK proof (~kilobytes)
+    Analyzer->>Eth: Post result hash (integrity)
+    Analyzer->>Eth: Post ZK proof + input/output commitments (correctness)
+
+    Note over Client: Cheap (done by anyone, ~50ms)
+    Client->>Eth: Fetch result hash + ZK proof
+    Client->>Client: Run verification function
+    Note right of Client: No data access needed,<br/>no re-running the algorithm.<br/>Just math.
+    Client->>Client: Confirmed: result is correct and unmodified
+```
 
 **References:**
 - [A Survey of Zero-Knowledge Proof Based Verifiable Machine Learning](https://arxiv.org/abs/2502.18535)
@@ -412,6 +427,29 @@ VERIFIER (any party):
   3. Runs algorithm (open-source) on the inputs
   4. Hashes the output, compares against on-chain output_hash
   5. If mismatch → Analyzer either computed incorrectly or results were modified
+```
+
+```mermaid
+sequenceDiagram
+    participant Analyzer as Analyzer Agent
+    participant FH as Firehose
+    participant Eth as Ethereum Contract
+    participant Verifier as Verifier (any party)
+
+    Note over Analyzer: After Analyze phase completes
+
+    Analyzer->>FH: Publish result (org.dds.result.*)
+    Analyzer->>Analyzer: Construct commitment record
+    Note right of Analyzer: deliberation_uri, scope,<br/>input_hash, algorithm,<br/>output_hash, analyzer_did
+    Analyzer->>Eth: Submit commitment hash
+
+    Note over Verifier: Verification (spot check)
+    Verifier->>FH: Download input records for scope
+    Verifier->>Verifier: Compute input Merkle root
+    Verifier->>Eth: Verify against on-chain input_hash
+    Verifier->>Verifier: Run open-source algorithm on inputs
+    Verifier->>Verifier: Hash output
+    Verifier->>Eth: Compare against on-chain output_hash
 ```
 
 ### 6.3 Comparison with Vocdoni (DAVINCI)
