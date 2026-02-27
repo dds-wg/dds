@@ -186,38 +186,36 @@ Given the constraints above, here are the achievable privacy levels:
 • Trust-minimized: Can walkaway from any operator
 • Appropriate for: Most deliberation use cases
 • Threat model: Protects against casual deanonymization
-• Note: Guest accounts may operate at Level 1 (managed did:plc) or at Level 1c
+• Note: Guest accounts may operate at Level 1 (managed did:plc) or at Level 3
   (per-deliberation identifier for ticket-gated anonymity).
   See [Implementation Addendum §5](./0001-implementation-addendum.md#5-guest-identity-and-account-upgrade) for design exploration.
 ```
 
-### Level 1b: Anonymous Participation (Nullifier-based)
+### Level 2: Anonymous Participation (Persistent)
 
 ```
 • Persistent DID across the network, associated with a ZK nullifier
-• Proves uniqueness (one-person-one-identity) without revealing who you are
+• Proves eligibility (e.g., one-person-one-identity, event ticket, membership) without revealing who you are
 • No strong identifiers (email, phone, wallet) attached
 • Same DID used across deliberations (linkable by DID) but no deanonymization path via credentials
 • Appropriate for: Participation where accountability is not required but sybil resistance is needed
 • Threat model: Same as Level 1, but with no credential-based deanonymization path. The DID itself is still linkable across deliberations, so behavioral correlation remains possible.
 ```
 
-### Level 1c: Per-deliberation Anonymous
+### Level 3: Anonymous (Per-deliberation)
 ```
 • Fresh ephemeral identifier per deliberation (DID method TBD — see Implementation Addendum §5)
 • Unlinkable across deliberations: participation in deliberation A cannot be correlated
   with deliberation B
-• ZK nullifiers scoped per deliberation ensure one-person-one-vote per context
+• ZK nullifiers scoped per deliberation ensure eligibility per context
+  (e.g., one-person-one-vote, event ticket, membership)
 • Appropriate for: Ticket-gated events, sensitive consultations, any context requiring unlinkability
 • Trade-off: User must RE-PROVE ELIGIBILITY for each deliberation (e.g., re-present ticket,
-  re-do ZK proof). This is the core UX cost compared to persistent anonymous (Level 1b),
+  re-do ZK proof). This is the core UX cost compared to persistent anonymous (Level 2),
   where a single verification is reused across contexts.
-• Note: This is distinct from Level 2 (Crowd Anonymity), which also uses per-deliberation
-  identifiers but adds infrastructure-level protections (large multi-tenant PDS to hide
-  among other users).
 ```
 
-### Level 2: Crowd Anonymity
+### Level 4: Crowd Anonymity
 ```
 • Per-deliberation DIDs on large multi-tenant PDS
 • DIDs hidden among thousands of others
@@ -227,7 +225,7 @@ Given the constraints above, here are the achievable privacy levels:
 • Threat model: Resists public observation, not operator collusion
 ```
 
-### Level 3: Strong Anonymity
+### Level 5: Strong Anonymity
 ```
 • Per-deliberation DIDs
 • Tor for all network requests
@@ -238,7 +236,7 @@ Given the constraints above, here are the achievable privacy levels:
 • Practical: Challenging UX, but achievable with significant engineering effort
 ```
 
-**The gap between Level 2 and Level 3 is significant.** Level 2 requires trusting the PDS operator (crowd anonymity). Level 3 is achievable but requires substantial engineering investment in local-first sync, Tor integration, and careful protocol design.
+**The gap between Level 4 and Level 5 is significant.** Level 4 requires trusting the PDS operator (crowd anonymity). Level 5 is achievable but requires substantial engineering investment in local-first sync, Tor integration, and careful protocol design.
 
 ---
 

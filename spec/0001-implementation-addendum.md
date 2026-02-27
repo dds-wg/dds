@@ -365,8 +365,8 @@ TIER 0 (REVISED, WORK IN PROGRESS):
 This connects to the [Anonymity Addendum](./0001-anonymity-addendum.md):
 
 - **Pseudonymous (Level 1)**: One `did:plc`, full history, credentials attached, best for committed users
-- **Anonymous (Level 1b)**: One `did:plc` + nullifier, no credentials attached, persistent but unidentifiable. User verifies eligibility once.
-- **Per-deliberation anonymous (Level 1c)**: Ephemeral identifier per context (DID method TBD), needed for ticket-gated events and external imports. User must re-verify eligibility for each deliberation, which is the core UX trade-off vs Level 1b.
+- **Anonymous (Level 2)**: One `did:plc` + nullifier, no credentials attached, persistent but unidentifiable. User verifies eligibility once.
+- **Per-deliberation anonymous (Level 3)**: Ephemeral identifier per context (DID method TBD), needed for ticket-gated events and external imports. User must re-verify eligibility for each deliberation, which is the core UX trade-off vs Level 2.
 - These are NOT competing models. They serve different use cases. DDS needs all of them, with a bridge between them.
 
 The pseudonymous model remains the right **default**. Per-deliberation anonymity is not just a future "hardcore mode". It's a practical need for ticket-gated events and external data integration today. The specific DID method for per-deliberation identifiers is an open design question (see [§5.2](#52-design-approaches)).
