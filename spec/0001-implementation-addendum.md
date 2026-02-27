@@ -321,7 +321,7 @@ Neither eliminates it entirely.
 
 This is an open design question requiring prototyping. Current thinking:
 
-**Per-deliberation ticket-gated participation → ephemeral per-deliberation identifier (DID method TBD; `did:key` is the current candidate, but managed `did:plc` or other approaches remain possible).**
+**Per-deliberation anonymous participation → ephemeral per-deliberation identifier (DID method TBD; `did:key` is the current candidate, but managed `did:plc` or other approaches remain possible).**
 A single persistent identifier is linkable across deliberations and defeats the purpose of per-deliberation anonymity. The ZK nullifier model aligns with ephemeral per-deliberation identifiers.
 
 **External data imports → `did:key` (or reference identifiers).**
@@ -366,10 +366,9 @@ This connects to the [Anonymity Addendum](./0001-anonymity-addendum.md):
 
 - **Pseudonymous (Level 1)**: One `did:plc`, full history, credentials attached, best for committed users
 - **Anonymous (Level 2)**: One `did:plc` + nullifier, no credentials attached, persistent but unidentifiable. User verifies eligibility once.
-- **Per-deliberation anonymous (Level 3)**: Ephemeral identifier per context (DID method TBD), needed for ticket-gated events and external imports. User must re-verify eligibility for each deliberation, which is the core UX trade-off vs Level 2.
-- These are NOT competing models. They serve different use cases. DDS needs all of them, with a bridge between them.
+- **Per-deliberation anonymous (Level 3)**: Ephemeral identifier per context (DID method TBD), needed for contexts requiring unlinkability (e.g., sensitive consultations, activist coordination) and external imports. User must re-verify eligibility for each deliberation, which is the core UX cost vs Level 2.
 
-The pseudonymous model remains the right **default**. Per-deliberation anonymity is not just a future "hardcore mode". It's a practical need for ticket-gated events and external data integration today. The specific DID method for per-deliberation identifiers is an open design question (see [§5.2](#52-design-approaches)).
+The Anonymity Addendum defines two architecturally distinct implementation paths: a **pseudonymity path** (Levels 0-2, persistent identity, standard AT Protocol) and a **strong anonymity path** (Level 3 + metadata privacy, Tor, local-first sync). These paths should not be mixed in the same application because their infrastructure choices are opposed. Most deliberation use cases lean towards pseudonymity. Per-deliberation anonymity addresses serious privacy needs (journalists, activists, whistleblowers), but requires a fundamentally different architecture. The specific DID method for per-deliberation identifiers is an open design question (see [§5.2](#52-design-approaches)).
 
 ## 6. Result Commitment Protocol
 
