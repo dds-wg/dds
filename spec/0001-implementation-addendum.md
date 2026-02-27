@@ -168,9 +168,9 @@ Managed PDS hosts can technically access user data (signing keys, posts). Users 
 
 ### 5.1 The Problem
 
-Agora currently provisions guest accounts as UUID + device-bound `did:key`. When a guest upgrades (adds phone, ZK passport), `mergeGuestIntoVerifiedUser()` transfers all their data to the verified account. This works in a centralized database because records aren't cryptographically bound to the guest's identity.
+In centralized deliberation platforms, guest accounts are straightforward: a temporary identifier is created, and when a guest later upgrades to a verified account (e.g., adds phone or ZK passport), the platform transfers all their data to the new account. This works because records aren't cryptographically bound to the guest's identity.
 
-On AT Protocol, records are signed by the originating DID. This makes the equivalent merge operation fundamentally harder.
+On AT Protocol, records are signed by the originating DID. The protocol doesn't currently account for this kind of identity merge.
 
 Three factors complicate the design:
 
@@ -190,7 +190,7 @@ Three factors complicate the design:
 
 2. PER-DELIBERATION ANONYMITY:
    Ticket-gated deliberations use ZK nullifiers scoped per event/deliberation
-   (e.g., externalNullifier = "agora-${eventSlug}-v1").
+   (e.g., externalNullifier = "dds-${eventSlug}-v1").
    Design: 1 ticket = 1 person for THIS deliberation, unlinkable across deliberations.
    A single did:plc is linkable across deliberations, defeating the purpose.
    Per-deliberation anonymity requires per-deliberation identifiers (did:key).
