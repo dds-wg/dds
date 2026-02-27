@@ -55,7 +55,7 @@ These levels describe what other participants see about a user. They are indepen
 | Level | Name                      | Description                                                                                                  |
 | ----- | ------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | **0** | Identified                | Credentials attached to DID reveal real-world identity. Fully linkable across deliberations.                 |
-| **1** | Pseudonymous (default)    | DID not linked to real name. Same DID across deliberations (linkable by DID). Protects against casual deanonymization. |
+| **1** | Pseudonymous (default)    | User authenticates with identifiers (email, phone, social login), but the AppView does not expose them to other participants. Same DID across deliberations (linkable by DID). |
 | **2** | Anonymous (persistent)    | Persistent DID with ZK nullifier. No strong identifiers attached. Linkable by DID but no credential-based deanonymization path. In practice, closer to pseudonymity with credential hiding than true anonymity. |
 | **3** | Anonymous (per-deliberation) | Fresh ephemeral identifier per deliberation (DID method TBD). Unlinkable across deliberations. ZK nullifiers scoped per context. |
 
@@ -131,7 +131,7 @@ Apps choose which credential types to accept for each deliberation. Users range 
 The four identity levels defined in [§2](#2-terminology) describe what other participants see about a user:
 
 - **Level 0 (Identified)**: Real-world identity visible. Maximum accountability.
-- **Level 1 (Pseudonymous)**: DDS default. DID not linked to real name. Linkable across deliberations by DID.
+- **Level 1 (Pseudonymous)**: DDS default. User authenticates with identifiers (email, phone, etc.), but the AppView does not expose them to other participants. Consistent DID across deliberations.
 - **Level 2 (Anonymous, persistent)**: Persistent DID with ZK nullifier, no strong identifiers attached. Proves eligibility without revealing identity. Linkable by DID (see [Anonymity Addendum, Level 2 caveat](./anonymity-addendum.md#level-2-anonymous-participation-persistent) for limitations).
 - **Level 3 (Anonymous, per-deliberation)**: Ephemeral identifier per deliberation. Unlinkable across contexts. ZK nullifiers scoped per deliberation. DID method TBD. Requires re-verification per deliberation.
 

@@ -175,11 +175,15 @@ These levels describe **what other participants see about you**. This is indepen
 
 ### Level 1: Pseudonymous Participation (DDS Default)
 ```
-* DID is pseudonymous (not trivially linked to real name)
+* User authenticates with identifiers (email, phone, social login), but
+  the AppView does not expose them to other participants
+* Other participants see only the DID
 * Same DID used across deliberations (linkable by DID)
 * Trust-minimized: Can walkaway from any operator
 * Appropriate for: Most deliberation use cases
-* Threat model: Protects against casual deanonymization
+* Threat model: Protects against casual deanonymization by peers. The PDS
+  operator knows the user's identifiers; pseudonymity is from the
+  participant perspective, not from the operator perspective.
 * Note: Guest accounts may operate at Level 1 (managed did:plc) or at Level 3
   (per-deliberation identifier for contexts requiring unlinkability).
   See [Implementation Addendum §5](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for design exploration.
