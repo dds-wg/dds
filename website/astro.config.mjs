@@ -102,6 +102,10 @@ export default defineConfig({
             import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
             mermaid.initialize({ startOnLoad: false });
             await mermaid.run({ querySelector: '.mermaid' });
+            if (location.hash) {
+              const el = document.getElementById(location.hash.slice(1));
+              if (el) el.scrollIntoView();
+            }
           `,
         },
         {
