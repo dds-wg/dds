@@ -175,8 +175,9 @@ These levels describe **what other participants see about you**. This is indepen
 
 ### Level 1: Pseudonymous Participation (DDS Default)
 ```
-* User authenticates with identifiers (email, phone, social login), but
-  the AppView does not expose them to other participants
+* User authenticates with identifiers (email, phone, social login) or
+  linkable credentials (EUDI wallet, W3C VC without ZK), but the AppView
+  does not expose them to other participants
 * Other participants see only the DID
 * Same DID used across deliberations (linkable by DID)
 * Trust-minimized: Can walkaway from any operator
