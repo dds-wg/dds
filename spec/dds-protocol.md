@@ -113,117 +113,7 @@ flowchart TB
 
 See the [Design Rationale, Protocol Selection](./design-rationale.md#2-protocol-selection-why-at-protocol) for the reasoning behind this architecture.
 
-## 4. Identity and Authentication
-
-### 4.1 Flexible Authentication
-
-DDS defines a shared authentication interface, not a fixed set of identity methods. Any app can accept any credential type: the protocol standardizes how credentials are represented and shared across tools, not which credentials are valid.
-
-The spectrum ranges from simple auth to cryptographic proofs:
-
-- **Simple authentication**: Email, phone, social login. A way to connect to the PDS. No cryptographic binding to a real-world attribute.
-- **Cryptographic proofs**: ZK passport, ZKPass, [Rarimo](https://rarimo.com/), Zupass event tickets, [W3C Verifiable Credentials](https://www.w3.org/TR/vc-data-model-2.0/), [eIDAS](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/) eWallets, wallet signatures. Two-way binding with verifiable properties (e.g., "is a citizen," "holds an event ticket," "is over 18").
-
-Apps choose which credential types to accept for each deliberation. Users range from self-hosted (own PDS) to lightweight guests (ephemeral `did:key`). Every participant has a DID and can attach credentials from any accepted method.
-
-### 4.2 Participant Identity Levels
-
-The four identity levels defined in [§2](#2-terminology) describe what other participants see about a user:
-
-- **Level 0 (Identified)**: Real-world identity visible. Maximum accountability.
-- **Level 1 (Pseudonymous)**: DDS default. User authenticates with identifiers (email, phone) or linkable credentials ([EUDI wallet](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/), [W3C VC](https://www.w3.org/TR/vc-data-model-2.0/) without ZK), but the AppView does not expose them to other participants. Consistent DID across deliberations.
-- **Level 2 (Anonymous, ZK-verified, persistent)**: Persistent DID with ZK nullifier, no strong identifiers attached. Proves eligibility without revealing identity. Linkable by DID (see [Anonymity Addendum, Level 2 caveat](./anonymity-addendum.md#level-2-anonymous-zk-verified-participation-persistent) for limitations).
-- **Level 3 (Anonymous, ZK-verified, per-deliberation)**: Ephemeral identifier per deliberation. Unlinkable across contexts. ZK nullifiers scoped per deliberation. DID method TBD. Requires re-verification per deliberation.
-
-**Note on "Anonymous" vs. "Guest":** A guest with no login (ephemeral `did:key`) is trivially unidentified, but has no verified eligibility. Levels 2 and 3 are fundamentally different: they use zero-knowledge proofs to verify that a participant meets access requirements (e.g., is a citizen, holds an event ticket, is over 18) without revealing which specific credential or person is behind the proof. The "anonymous" in these levels means **verified but private**: the system confirms you qualify while mathematically guaranteeing it learns nothing else about you.
-
-The [Anonymity Addendum](./anonymity-addendum.md) provides correlation vector analysis, threat models, and the recommendation of two distinct implementation paths (pseudonymity vs. strong anonymity).
-
-### 4.3 Shared Organizations
-
-Organizations, including teams, DAOs, communities, and coalitions, are defined at the protocol level via base lexicons (`org.dds.org.*`). Membership, roles, and permissions are readable by any tool on the Firehose. An org created in one app is visible to every other app, with no bilateral integration needed.
-
-This enables cross-tool workflows: a community platform manages membership, a deliberation tool checks eligibility, a voting app enforces access rights, all reading the same org records.
-
-### 4.4 The Encrypted Key Vault (Optional)
-
-AT Protocol's `did:plc` already enables walkaway: users who control their Rotation Key can migrate to any PDS or self-host. The simplest path is to back up the Rotation Key manually (paper, password manager) or choose a hosting provider you trust.
-
-The **Encrypted Key Vault** is an optional enhancement that removes the burden of manual key backup: the user's Rotation Key is encrypted and stored in their Repository. Since Repositories are archived to decentralized storage ([§5.2](#52-network-archival)), the vault is recoverable even if the PDS vanishes. Two vault designs are proposed, one wallet-derived and one device-based. See the [Implementation Addendum, Encrypted Key Vault](./implementation-addendum.md#1-encrypted-key-vault-cryptographic-design-optional) for cryptographic details.
-
-## 5. Data Transport and Durability
-
-### 5.1 Hybrid Architecture
-
-AT Protocol serves as the hot path (discovery, search, real-time interaction), Arweave/Filecoin/Logos Storage as the cold path (archival, walkaway recovery), and Ethereum as the commitment layer (result hashes for tamper-evidence, and future verification proofs for computation correctness). These three layers compose: AT Protocol stores live data, archival preserves it permanently, and Ethereum anchors verification (hash commitments today, zkML proofs as the technology matures).
-
-### 5.2 Network Archival
-
-- **Role**: Archive Agents listen to the Firehose for `org.dds.*` commits.
-- **Action**: Pin Repository updates to Arweave/Filecoin/Logos Storage.
-- **Keys in Repo**: If the optional Encrypted Key Vault is used, `org.dds.key.wrapped` is in the Repository and automatically archived.
-- **Result**: Even if the provider vanishes, User's Identity (PLC Directory) and data are recoverable from decentralized archives. If the vault is used, the Rotation Key is also recoverable.
-
-### 5.3 Local Resilience
-
-- **Cache**: Client mirrors the Encrypted Vault Blob to `IndexedDB`.
-- **Export**: Users can perform "On-Demand Export" (decrypt in memory) to download CAR file + unlocked keys.
-
-## 6. Analyzer Protocol
-
-> **Note**: The Analyzer Protocol and trust levels below are conceptual. The on-chain verification layer requires significant research into feasibility, gas costs, and proof system selection. This tension is protocol-agnostic: verifiable computation works regardless of the underlying transport layer.
-
-### 6.1 The Cost Problem
-
-Running analysis, including clustering (PCA, Reddwarf), LLM sensemaking, and other methods, requires data access (reading all participant input from the Firehose), compute (running analysis algorithms), and infrastructure (maintaining servers to process deliberations). For a single user to verify results independently, they'd need to replicate this entire pipeline. This is impractical at scale.
-
-### 6.2 Agent Protocol
-
-DDS solves this by separating **computation** from **verification**:
-
-1. **Input**: Agent defines a "Scope" (Deliberation ID + Time Window).
-2. **Process**: Agent reads all Repositories from the Firehose matching the Scope.
-3. **Compute**: Runs analysis (e.g., Reddwarf clustering, LLM summarization).
-4. **Output**: Publishes result (e.g., `org.dds.result.pca`, `org.dds.result.summary`).
-
-Because inputs (data on the Firehose) and algorithm (open-source) are public, **anyone can re-run the computation to verify an Analyzer's results**. This makes the system auditable without requiring every user to run their own analyzer.
-
-### 6.3 Trust Levels
-
-| Level          | Mechanism                                                                           | Cost                     | Guarantee                                                                                                                                  |
-| -------------- | ----------------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Reputation** | Analyzer publishes results to Firehose                                               | Free for users           | Trust the Analyzer's reputation                                                                                                            |
-| **Spot check** | Any party re-runs computation independently                                         | Moderate (compute costs) | Deterministic verification                                                                                                                 |
-| **Trustless**  | Analyzer submits proof on-chain; clients verify cheaply (e.g., ZK proof verification) | Gas fees               | Cryptographic proof: no trust required (see [Implementation Addendum, Fraud Proving Mechanism](./implementation-addendum.md#41-fraud-proving-mechanism-zkml)) |
-
-See the [Design Rationale, zkML](./design-rationale.md#31-zkml-the-trustless-level) for the Trustless level and the [Design Rationale, Vocdoni / DAVINCI Comparison](./design-rationale.md#32-vocdoni--davinci-comparison) for verification layer context.
-
-### 6.4 Result Commitment
-
-> **Note**: The result commitment protocol below is a first proposal. Smart contract design, chain selection (L1 vs L2), and gas optimization need further specification.
-
-The trust levels above address **computation correctness**: is the Analyzer's output honest? A separate concern is **result permanence**: can an Analyzer silently modify or retract published results after the fact?
-
-DDS addresses this with **on-chain result commitment**: when a consultation finishes, a cryptographic hash of the result is committed to Ethereum (or an L2). This makes results tamper-evident and permanently anchored, independent of any single operator. The commitment can be made by the Analyzer, the Organizer, or any other party. The protocol defines the commitment format, not who commits.
-
-**What gets committed:**
-
-| Field            | Content                                                |
-| ---------------- | ------------------------------------------------------ |
-| Deliberation URI | AT Protocol reference to the deliberation process      |
-| Scope            | Time window of the analysis                            |
-| Input hash       | Merkle root of all input records in scope              |
-| Algorithm        | Identifier + version (e.g., `reddwarf@2.1.0`, `summarizer@1.0.0`) |
-| Output hash      | Hash of the published result record                    |
-| Analyzer DID     | Identity of the computing agent                        |
-
-**Verification**: Anyone downloads the inputs from the Firehose (public), re-runs the algorithm (open-source), and compares the result hash against the on-chain commitment. No ZK proofs required, just deterministic re-execution.
-
-Result commitment **enhances Spot Check**: the on-chain hash makes tampering detectable without requiring re-computation upfront. The **Trustless** level (ZK proof of computation correctness without re-execution) remains future work, with some analysis types (vote tallying, clustering) already feasible.
-
-See [Implementation Addendum, Result Commitment Protocol](./implementation-addendum.md#6-result-commitment-protocol) for protocol details and open questions.
-
-## 7. Deliberation Lifecycle
+## 4. Deliberation Lifecycle
 
 DDS organizes deliberation as an iterative cycle of three phases, each potentially handled by different applications:
 
@@ -271,9 +161,47 @@ sequenceDiagram
     Ext->>Ext: Create ballot from consensus<br/>(external voting protocol)
 ```
 
-## 8. Lexicons and Interoperability
+## 5. Identity and Authentication
 
-### 8.1 Layered Lexicons
+### 5.1 Flexible Authentication
+
+DDS defines a shared authentication interface, not a fixed set of identity methods. Any app can accept any credential type: the protocol standardizes how credentials are represented and shared across tools, not which credentials are valid.
+
+The spectrum ranges from simple auth to cryptographic proofs:
+
+- **Simple authentication**: Email, phone, social login. A way to connect to the PDS. No cryptographic binding to a real-world attribute.
+- **Cryptographic proofs**: ZK passport, ZKPass, [Rarimo](https://rarimo.com/), Zupass event tickets, [W3C Verifiable Credentials](https://www.w3.org/TR/vc-data-model-2.0/), [eIDAS](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/) eWallets, wallet signatures. Two-way binding with verifiable properties (e.g., "is a citizen," "holds an event ticket," "is over 18").
+
+Apps choose which credential types to accept for each deliberation. Users range from self-hosted (own PDS) to lightweight guests (ephemeral `did:key`). Every participant has a DID and can attach credentials from any accepted method.
+
+### 5.2 Participant Identity Levels
+
+The four identity levels defined in [§2](#2-terminology) describe what other participants see about a user:
+
+- **Level 0 (Identified)**: Real-world identity visible. Maximum accountability.
+- **Level 1 (Pseudonymous)**: DDS default. User authenticates with identifiers (email, phone) or linkable credentials ([EUDI wallet](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/), [W3C VC](https://www.w3.org/TR/vc-data-model-2.0/) without ZK), but the AppView does not expose them to other participants. Consistent DID across deliberations.
+- **Level 2 (Anonymous, ZK-verified, persistent)**: Persistent DID with ZK nullifier, no strong identifiers attached. Proves eligibility without revealing identity. Linkable by DID (see [Anonymity Addendum, Level 2 caveat](./anonymity-addendum.md#level-2-anonymous-zk-verified-participation-persistent) for limitations).
+- **Level 3 (Anonymous, ZK-verified, per-deliberation)**: Ephemeral identifier per deliberation. Unlinkable across contexts. ZK nullifiers scoped per deliberation. DID method TBD. Requires re-verification per deliberation.
+
+**Note on "Anonymous" vs. "Guest":** A guest with no login (ephemeral `did:key`) is trivially unidentified, but has no verified eligibility. Levels 2 and 3 are fundamentally different: they use zero-knowledge proofs to verify that a participant meets access requirements (e.g., is a citizen, holds an event ticket, is over 18) without revealing which specific credential or person is behind the proof. The "anonymous" in these levels means **verified but private**: the system confirms you qualify while mathematically guaranteeing it learns nothing else about you.
+
+The [Anonymity Addendum](./anonymity-addendum.md) provides correlation vector analysis, threat models, and the recommendation of two distinct implementation paths (pseudonymity vs. strong anonymity).
+
+### 5.3 Shared Organizations
+
+Organizations, including teams, DAOs, communities, and coalitions, are defined at the protocol level via base lexicons (`org.dds.org.*`). Membership, roles, and permissions are readable by any tool on the Firehose. An org created in one app is visible to every other app, with no bilateral integration needed.
+
+This enables cross-tool workflows: a community platform manages membership, a deliberation tool checks eligibility, a voting app enforces access rights, all reading the same org records.
+
+### 5.4 The Encrypted Key Vault (Optional)
+
+AT Protocol's `did:plc` already enables walkaway: users who control their Rotation Key can migrate to any PDS or self-host. The simplest path is to back up the Rotation Key manually (paper, password manager) or choose a hosting provider you trust.
+
+The **Encrypted Key Vault** is an optional enhancement that removes the burden of manual key backup: the user's Rotation Key is encrypted and stored in their Repository. Since Repositories are archived to decentralized storage ([§7.2](#72-network-archival)), the vault is recoverable even if the PDS vanishes. Two vault designs are proposed, one wallet-derived and one device-based. See the [Implementation Addendum, Encrypted Key Vault](./implementation-addendum.md#1-encrypted-key-vault-cryptographic-design-optional) for cryptographic details.
+
+## 6. Lexicons and Interoperability
+
+### 6.1 Layered Lexicons
 
 DDS uses a layered lexicon design enabling permissionless interoperability:
 
@@ -324,7 +252,7 @@ DDS uses a layered lexicon design enabling permissionless interoperability:
 - `org.dds.result.pca`: Clustering analysis outputs
 - `org.dds.result.summary`: LLM-generated summaries, sensemaking outputs
 
-### 8.2 Modular Inputs
+### 6.2 Modular Inputs
 
 DDS supports any consultation type via pluggable modules. Each module defines its own record types:
 
@@ -335,7 +263,7 @@ DDS supports any consultation type via pluggable modules. Each module defines it
 
 Other product lexicons follow the same pattern: a sensemaking module, a survey module, or any future consultation format. Data from external sources, such as social media APIs, LLM-based listening platforms, and existing pol.is exports, is translated into the appropriate module's lexicons during the Collect phase (e.g., tweets become `org.dds.module.polis` opinions, conversation transcripts become `org.dds.module.sense` records). The exact mappings are TBD.
 
-### 8.3 Cross-App Interoperability
+### 6.3 Cross-App Interoperability
 
 Any app can **read** another app's product lexicons via the Firehose. The `org.dds.ref.*` lexicon enables explicit references:
 
@@ -363,6 +291,78 @@ Any app can **read** another app's product lexicons via the Firehose. The `org.d
 | **Sequential Handoff**  | Deliberation, then Analysis, then External consumer (voting, governance) |
 | **Parallel Collection** | Multiple collection apps feed the same analysis     |
 | **Context Import**      | New process imports conclusions from a previous one |
+
+## 7. Data Transport and Durability
+
+### 7.1 Hybrid Architecture
+
+AT Protocol serves as the hot path (discovery, search, real-time interaction), Arweave/Filecoin/Logos Storage as the cold path (archival, walkaway recovery), and Ethereum as the commitment layer (result hashes for tamper-evidence, and future verification proofs for computation correctness). These three layers compose: AT Protocol stores live data, archival preserves it permanently, and Ethereum anchors verification (hash commitments today, zkML proofs as the technology matures).
+
+### 7.2 Network Archival
+
+- **Role**: Archive Agents listen to the Firehose for `org.dds.*` commits.
+- **Action**: Pin Repository updates to Arweave/Filecoin/Logos Storage.
+- **Keys in Repo**: If the optional Encrypted Key Vault is used, `org.dds.key.wrapped` is in the Repository and automatically archived.
+- **Result**: Even if the provider vanishes, User's Identity (PLC Directory) and data are recoverable from decentralized archives. If the vault is used, the Rotation Key is also recoverable.
+
+### 7.3 Local Resilience
+
+- **Cache**: Client mirrors the Encrypted Vault Blob to `IndexedDB`.
+- **Export**: Users can perform "On-Demand Export" (decrypt in memory) to download CAR file + unlocked keys.
+
+## 8. Analyzer Protocol
+
+> **Note**: The Analyzer Protocol and trust levels below are conceptual. The on-chain verification layer requires significant research into feasibility, gas costs, and proof system selection. This tension is protocol-agnostic: verifiable computation works regardless of the underlying transport layer.
+
+### 8.1 The Cost Problem
+
+Running analysis, including clustering (PCA, Reddwarf), LLM sensemaking, and other methods, requires data access (reading all participant input from the Firehose), compute (running analysis algorithms), and infrastructure (maintaining servers to process deliberations). For a single user to verify results independently, they'd need to replicate this entire pipeline. This is impractical at scale.
+
+### 8.2 Agent Protocol
+
+DDS solves this by separating **computation** from **verification**:
+
+1. **Input**: Agent defines a "Scope" (Deliberation ID + Time Window).
+2. **Process**: Agent reads all Repositories from the Firehose matching the Scope.
+3. **Compute**: Runs analysis (e.g., Reddwarf clustering, LLM summarization).
+4. **Output**: Publishes result (e.g., `org.dds.result.pca`, `org.dds.result.summary`).
+
+Because inputs (data on the Firehose) and algorithm (open-source) are public, **anyone can re-run the computation to verify an Analyzer's results**. This makes the system auditable without requiring every user to run their own analyzer.
+
+### 8.3 Trust Levels
+
+| Level          | Mechanism                                                                           | Cost                     | Guarantee                                                                                                                                  |
+| -------------- | ----------------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Reputation** | Analyzer publishes results to Firehose                                               | Free for users           | Trust the Analyzer's reputation                                                                                                            |
+| **Spot check** | Any party re-runs computation independently                                         | Moderate (compute costs) | Deterministic verification                                                                                                                 |
+| **Trustless**  | Analyzer submits proof on-chain; clients verify cheaply (e.g., ZK proof verification) | Gas fees               | Cryptographic proof: no trust required (see [Implementation Addendum, Fraud Proving Mechanism](./implementation-addendum.md#41-fraud-proving-mechanism-zkml)) |
+
+See the [Design Rationale, zkML](./design-rationale.md#31-zkml-the-trustless-level) for the Trustless level and the [Design Rationale, Vocdoni / DAVINCI Comparison](./design-rationale.md#32-vocdoni--davinci-comparison) for verification layer context.
+
+### 8.4 Result Commitment
+
+> **Note**: The result commitment protocol below is a first proposal. Smart contract design, chain selection (L1 vs L2), and gas optimization need further specification.
+
+The trust levels above address **computation correctness**: is the Analyzer's output honest? A separate concern is **result permanence**: can an Analyzer silently modify or retract published results after the fact?
+
+DDS addresses this with **on-chain result commitment**: when a consultation finishes, a cryptographic hash of the result is committed to Ethereum (or an L2). This makes results tamper-evident and permanently anchored, independent of any single operator. The commitment can be made by the Analyzer, the Organizer, or any other party. The protocol defines the commitment format, not who commits.
+
+**What gets committed:**
+
+| Field            | Content                                                |
+| ---------------- | ------------------------------------------------------ |
+| Deliberation URI | AT Protocol reference to the deliberation process      |
+| Scope            | Time window of the analysis                            |
+| Input hash       | Merkle root of all input records in scope              |
+| Algorithm        | Identifier + version (e.g., `reddwarf@2.1.0`, `summarizer@1.0.0`) |
+| Output hash      | Hash of the published result record                    |
+| Analyzer DID     | Identity of the computing agent                        |
+
+**Verification**: Anyone downloads the inputs from the Firehose (public), re-runs the algorithm (open-source), and compares the result hash against the on-chain commitment. No ZK proofs required, just deterministic re-execution.
+
+Result commitment **enhances Spot Check**: the on-chain hash makes tampering detectable without requiring re-computation upfront. The **Trustless** level (ZK proof of computation correctness without re-execution) remains future work, with some analysis types (vote tallying, clustering) already feasible.
+
+See [Implementation Addendum, Result Commitment Protocol](./implementation-addendum.md#6-result-commitment-protocol) for protocol details and open questions.
 
 ## 9. Deliberation Access
 

@@ -374,7 +374,7 @@ The Anonymity Addendum defines two architecturally distinct implementation paths
 
 ## 6. Result Commitment Protocol
 
-> **Note**: The commitment format is defined in the [main specification, Result Commitment](./dds-protocol.md#64-result-commitment). This section provides the protocol flow and implementation details.
+> **Note**: The commitment format is defined in the [main specification, Result Commitment](./dds-protocol.md#84-result-commitment). This section provides the protocol flow and implementation details.
 >
 > **Status**: Draft design, needs smart contract specification
 >
