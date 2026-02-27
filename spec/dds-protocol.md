@@ -207,7 +207,7 @@ DDS uses a layered lexicon design enabling permissionless interoperability:
 ```
 ┌────────────────────────────────────────────────────────┐
 │                   PRODUCT LEXICONS                      │
-│  (Domain-specific, owned by each app)                  │
+│  (Domain-specific, owned by each component)            │
 │                                                        │
 │  org.dds.module.polis  - Polis-style (opinions, votes) │
 │  org.dds.module.sense  - LLM sensemaking               │
@@ -220,7 +220,7 @@ DDS uses a layered lexicon design enabling permissionless interoperability:
                           ▼
 ┌────────────────────────────────────────────────────────┐
 │                    BASE LEXICONS                        │
-│  (Shared primitives, used by all apps)                 │
+│  (Shared primitives, used by all components)           │
 │                                                        │
 │  org.dds.identity.*   - DID profiles, verification     │
 │  org.dds.auth.*       - Permissions, capabilities      │
@@ -235,14 +235,14 @@ DDS uses a layered lexicon design enabling permissionless interoperability:
 └────────────────────────────────────────────────────────┘
 ```
 
-**Base Lexicons** (shared by all apps):
+**Base Lexicons** (shared by all components):
 
 - `org.dds.identity.*`: DID profiles, verification status
 - `org.dds.auth.*`: Capabilities, permissions, delegation
 - `org.dds.org.*`: Organizations, DAOs, membership
 - `org.dds.ref.*`: Cross-app references (point to records in other namespaces)
 
-**Product Lexicons** (owned by each app):
+**Product Lexicons** (owned by each component: apps, analyzers, etc.):
 
 - `org.dds.module.polis`: Polis-style deliberation (opinions, agree/disagree votes)
 - `org.dds.module.sense`: LLM-based sensemaking (Talk to the City, Jigsaw Sensemaker)
