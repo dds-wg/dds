@@ -68,9 +68,9 @@ flowchart TB
 
 ## 3. Ownership vs Convenience
 
-> **The Walkaway Test**: If all providers vanish, users retain sovereign control of their cryptographic identity and can recover their data from decentralized archives. DDS is designed to pass this test: users control their `did:plc` Rotation Keys (not just Signing Keys), data is archived to censorship-resistant storage, and recovery is possible from any device with the right credentials.
+> **The Walkaway Test**: If all providers vanish, users retain sovereign control of their cryptographic identity and can recover their data from decentralized archives. DDS is designed to pass this test: users control their `did:plc` Rotation Keys (not just Signing Keys), and data is archived to censorship-resistant storage. Users can achieve walkaway by self-hosting their PDS, choosing a provider they trust, or keeping their own rotation key backup. The optional Encrypted Key Vault (§3.3) adds a convenience layer: automatic encrypted backup of rotation keys in the repository.
 >
-> **Why AT Protocol here**: `did:plc` provides portable identity with separate Signing Keys (convenience: PDS manages posting) and Rotation Keys (ownership: user controls migration). Nostr ties identity to a single keypair with no recovery or migration. Logos Messaging has no identity layer. This separation lets us build the Encrypted Key Vault: sovereignty without requiring users to manage keys directly.
+> **Why AT Protocol here**: `did:plc` provides portable identity with separate Signing Keys (convenience: PDS manages posting) and Rotation Keys (ownership: user controls migration). Nostr ties identity to a single keypair with no recovery or migration. Logos Messaging has no identity layer. This separation is what makes walkaway possible: users can migrate to any PDS (or self-host) using their Rotation Key. The optional Encrypted Key Vault (§3.3) builds on this by removing the need to manage keys directly.
 
 ### 3.1 Flexible Authentication
 
@@ -91,11 +91,13 @@ Organizations, including teams, DAOs, communities, and coalitions, are defined a
 
 This enables cross-tool workflows: a community platform manages membership, a deliberation tool checks eligibility, a voting app enforces access rights, all reading the same org records.
 
-### 3.3 The Encrypted Key Vault
+### 3.3 The Encrypted Key Vault (Optional)
 
-While the PDS manages _posting_ (Signing Keys), the user must retain control over _identity_ (Rotation Keys). If the PDS disappears or turns malicious, the user could be locked out without their Recovery Key.
+AT Protocol's `did:plc` already enables walkaway: users who control their Rotation Key can migrate to any PDS or self-host. The simplest path is to back up the Rotation Key manually (paper, password manager) or choose a hosting provider you trust.
 
-The **Encrypted Key Vault** solves this: the user's Rotation Key is encrypted and stored in their Repository. Since Repositories are archived to decentralized storage (Section 4.2), the vault is recoverable even if the PDS vanishes. Two vault designs are proposed, one wallet-derived and one device-based, detailed in the [Implementation Addendum](./0001-implementation-addendum.md).
+The **Encrypted Key Vault** is an optional enhancement that removes the burden of manual key backup: the user's Rotation Key is encrypted and stored in their Repository. Since Repositories are archived to decentralized storage (Section 4.2), the vault is recoverable even if the PDS vanishes. Two vault designs are proposed, one wallet-derived and one device-based, detailed in the [Implementation Addendum](./0001-implementation-addendum.md).
+
+> This pattern is not DDS-specific. An encrypted key vault could benefit any AT Protocol application where users need sovereign control of their Rotation Keys without manual key management. It may be worth proposing as a standardized AT Protocol pattern.
 
 ## 4. Discoverability vs Durability
 
@@ -134,8 +136,8 @@ A related trade-off is **ephemeral identity**. On Nostr, a guest generates a key
 
 - **Role**: Archive Agents listen to the Firehose for `org.dds.*` commits.
 - **Action**: Pin Repository updates to Arweave/Filecoin/Logos Storage.
-- **Keys in Repo**: Since `org.dds.key.wrapped` is in the Repository, it's automatically archived.
-- **Result**: Even if the provider vanishes, User's Identity (PLC Directory) and Vault (decentralized storage) are recoverable.
+- **Keys in Repo**: If the optional Encrypted Key Vault is used, `org.dds.key.wrapped` is in the Repository and automatically archived.
+- **Result**: Even if the provider vanishes, User's Identity (PLC Directory) and data are recoverable from decentralized archives. If the vault is used, the Rotation Key is also recoverable.
 
 ### 4.3 Local Resilience
 

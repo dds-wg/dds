@@ -13,8 +13,10 @@ order: 3
 
 This addendum contains implementation-level details for DDS. These are preliminary designs requiring further investigation: they represent directional intent, not finalized specifications.
 
-## 1. Encrypted Key Vault: Cryptographic Design
+## 1. Encrypted Key Vault: Cryptographic Design (Optional)
 
+> **Status**: Optional enhancement. This pattern is not required for DDS to function — AT Protocol's `did:plc` rotation keys already enable walkaway. The vault adds automatic encrypted backup, removing the burden of manual key management. This pattern could be proposed as a standardized AT Protocol feature.
+>
 > **Draft**: The vault designs below (Type A and Type B) are a first proposal. The specific cryptographic primitives (HKDF-SHA256, AES-GCM, did:key exchange keys), key derivation flows, and Lockbox protocol need formal security review before implementation.
 
 ### Core Concepts

@@ -252,7 +252,7 @@ For the standard DDS implementation:
 • One DID per user
 • Pseudonymous (DID ≠ real name)
 • Linkable across deliberations (by DID)
-• Trust-minimized: Walkaway capability via Encrypted Vault
+• Trust-minimized: Walkaway capability via did:plc Rotation Keys (optionally enhanced by Encrypted Vault)
 • Honest about privacy model
 ```
 
