@@ -175,8 +175,8 @@ These levels describe **what other participants see about you**. This is indepen
 
 ### Level 1: Pseudonymous Participation (DDS Default)
 ```
-* User authenticates with identifiers (email, phone, social login) or
-  linkable credentials ([EUDI wallet](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/), [W3C VC](https://www.w3.org/TR/vc-data-model-2.0/) without ZK), but the AppView
+* User authenticates with identifiers (e.g., email, phone, social login) or
+  linkable credentials (e.g., [EUDI wallet](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/), [W3C VC](https://www.w3.org/TR/vc-data-model-2.0/) without ZK), but the AppView
   does not expose them to other participants
 * Other participants see only the DID
 * Same DID used across deliberations (linkable by DID)
@@ -196,7 +196,7 @@ These levels describe **what other participants see about you**. This is indepen
 * Persistent DID across the network, associated with a ZK nullifier
 * Proves eligibility (e.g., one-person-one-identity, event ticket, membership)
   without revealing who you are
-* No strong identifiers (email, phone, wallet) attached
+* No strong identifiers (e.g., email, phone, wallet) attached
 * Same DID used across deliberations (linkable by DID) but no deanonymization
   path via credentials
 * Appropriate for: Participation where accountability is not required but

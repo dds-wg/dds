@@ -409,7 +409,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div class="space-y-8">
         <!-- Credentials -->
         <div>
-          <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Credentials: how participants prove who they are</p>
+          <a href="/spec/dds-protocol/#51-flexible-authentication" class="mb-3 block text-xs font-semibold uppercase tracking-wider text-gray-400 underline-offset-2 hover:text-gray-600 hover:underline">Credentials: how participants prove who they are</a>
           <div class="space-y-3">
             <div class="flex flex-wrap gap-2">
               <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">Guest (no login)</span>
@@ -432,7 +432,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
         <!-- Deliberation access -->
         <div>
-          <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Deliberation access: who can see and participate</p>
+          <a href="/spec/dds-protocol/#9-deliberation-access" class="mb-3 block text-xs font-semibold uppercase tracking-wider text-gray-400 underline-offset-2 hover:text-gray-600 hover:underline">Deliberation access: who can see and participate</a>
           <div class="flex flex-wrap gap-2">
             <span class="rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">Public</span>
             <span class="rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">Link-gated (invite link)</span>
@@ -442,19 +442,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
         <!-- Participant identity -->
         <div>
-          <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Participant identity: whether participants are identifiable</p>
+          <a href="/spec/dds-protocol/#52-participant-identity-levels" class="mb-3 block text-xs font-semibold uppercase tracking-wider text-gray-400 underline-offset-2 hover:text-gray-600 hover:underline">Participant identity: whether participants are identifiable</a>
           <div class="flex flex-wrap gap-2">
             <span class="rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800">Identified</span>
             <span class="rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800">Pseudonymous</span>
             <span class="rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800">Anonymous</span>
             <span class="rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800">Per-deliberation anonymous</span>
           </div>
-          <p class="mt-3 text-xs text-gray-500">
-            <strong>Identified</strong>: real-world identity visible to other participants (e.g., name, email, organization).
-            <strong>Pseudonymous</strong>: consistent identity across deliberations, but not tied to your real name.
-            <strong>Anonymous</strong>: ZK-verified. Proves eligibility (e.g., event ticket, passport, membership) via zero-knowledge proof, but no one knows who you are.
-            <strong>Per-deliberation anonymous</strong>: fresh ZK-verified identity per deliberation. No one can link your participation across sessions. Trade-off: you re-verify each time.
-          </p>
         </div>
       </div>
     </div>

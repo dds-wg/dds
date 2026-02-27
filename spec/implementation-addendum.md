@@ -99,12 +99,11 @@ flowchart TD
 | Tier | Name | Description |
 |------|------|-------------|
 | **2** | Self-Hosted | User brings their own PDS (e.g., standard Bluesky or self-hosted). Direct authentication. |
-| **1** | Managed | User authenticates via any accepted credential (email, phone, wallet, ZK passport, etc.). Application auto-provisions a PDS account. |
-| **0** | Guest | Guest user with no verified identifier. Identity may be managed `did:plc` (for persistent pseudonymous participation) or `did:key` (for per-deliberation anonymity, external data imports). See [§5](#5-guest-identity-and-account-upgrade) for design exploration. |
+| **1** | Managed | User authenticates via any accepted credential (e.g., email, phone, wallet, ZK passport). Application auto-provisions a PDS account. |
 
 A single Managed PDS instance is multi-tenant, capable of hosting thousands of accounts (similar to Bluesky PDS architecture).
 
-> **Note**: The Tier 0 design is an open question. See [§5](#5-guest-identity-and-account-upgrade) (Guest Identity and Account Upgrade) for detailed analysis of the trade-offs between managed `did:plc` and `did:key` for guest participation.
+> **Note**: Guest participation (no login) is an orthogonal credential/identity concern, not a hosting tier. See [§5](#5-guest-identity-and-account-upgrade) (Guest Identity and Account Upgrade) for detailed analysis of the trade-offs between managed `did:plc` and `did:key` for guest participation.
 
 ### 2.2 Authentication
 
@@ -341,8 +340,8 @@ This is an open design question requiring prototyping. Current thinking:
 **Per-deliberation anonymous participation → ephemeral per-deliberation identifier (DID method TBD; `did:key` is the current candidate, but managed `did:plc` or other approaches remain possible).**
 A single persistent identifier is linkable across deliberations and defeats the purpose of per-deliberation anonymity. The ZK nullifier model aligns with ephemeral per-deliberation identifiers.
 
-**External data imports → `did:key` (or reference identifiers).**
-Participants from other tools and SDK integrations don't have AT Protocol accounts. Their contributions must be representable without PDS provisioning.
+**External data imports → DID method TBD (same open question as guest identity).**
+Participants from other tools and SDK integrations don't have AT Protocol accounts. Their contributions must be representable in the system, whether via managed `did:plc`, `did:key`, or reference identifiers.
 
 **Persistent accounts → `did:plc`.**
 Full moderation compatibility, walkaway capability, Firehose integration.
@@ -361,19 +360,19 @@ The likely solution is a "Guest Mode" managed by an AppView, a standardized Lexi
 
 This is a contribution to the AT Protocol ecosystem, not just a DDS implementation detail.
 
-### 5.5 Relationship to Tier 0
+### 5.5 Relationship to Hosting Tiers
 
-The Tier 0 definition in [§2.1](#21-identity-tiers) ("Guest user with no verified identifier. Lightweight PDS authenticated by local `did:key`") is a starting point. The analysis above shows that Tier 0 may need to be a richer concept:
+Guest participation is orthogonal to hosting tiers. Guests use Managed hosting (Tier 1), but the credential/identity question is separate. The analysis above shows that guest identity is a richer concept than hosting:
 
 ```
-TIER 0 (REVISED, WORK IN PROGRESS):
+GUEST PARTICIPATION (WORK IN PROGRESS):
   • Guest identity may be did:key (for per-deliberation anonymity, external data)
     OR managed did:plc (for persistent pseudonymous guest participation)
   • AppView manages guest records in its PDS
   • Standardized Lexicon for guest identity lifecycle:
     - Guest creation
     - Credential attachment
-    - Upgrade to Tier 1 (merge/attestation)
+    - Upgrade to full account (merge/attestation)
   • Per-deliberation identifiers coexist with persistent guest identity
 ```
 

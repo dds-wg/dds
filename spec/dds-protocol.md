@@ -55,7 +55,7 @@ These levels describe what other participants see about a user. They are indepen
 | Level | Name                      | Description                                                                                                  |
 | ----- | ------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | **0** | Identified                | Credentials attached to DID reveal real-world identity. Fully linkable across deliberations.                 |
-| **1** | Pseudonymous (default)    | User authenticates with identifiers (email, phone, social login) or linkable credentials ([EUDI wallet](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/), [W3C VC](https://www.w3.org/TR/vc-data-model-2.0/) without ZK), but the AppView does not expose them to other participants. Same DID across deliberations (linkable by DID). |
+| **1** | Pseudonymous (default)    | User authenticates with identifiers (e.g., email, phone, social login) or linkable credentials (e.g., [EUDI wallet](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/), [W3C VC](https://www.w3.org/TR/vc-data-model-2.0/) without ZK), but the AppView does not expose them to other participants. Same DID across deliberations (linkable by DID). |
 | **2** | Anonymous, ZK-verified (persistent)    | Persistent DID with ZK nullifier. No strong identifiers attached. Linkable by DID but no credential-based deanonymization path. In practice, closer to pseudonymity with credential hiding than true anonymity. |
 | **3** | Anonymous, ZK-verified (per-deliberation) | Fresh ephemeral identifier per deliberation (DID method TBD). Unlinkable across deliberations. ZK nullifiers scoped per context. |
 
@@ -65,9 +65,8 @@ These levels describe what other participants see about a user. They are indepen
 | ----- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | **2** | Self-Hosted | User brings their own PDS. Direct authentication.                                                                                               |
 | **1** | Managed     | User authenticates via any accepted credential. Application auto-provisions a PDS account.                                                      |
-| **0** | Guest       | Guest user. Identity may be managed `did:plc` (persistent pseudonymous participation) or `did:key` (per-deliberation anonymity, external data). |
 
-See the [Implementation Addendum, PDS Hosting & Authentication](./implementation-addendum.md#2-pds-hosting--authentication) for details and the [Implementation Addendum, Guest Identity and Account Upgrade](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for the Tier 0 design exploration.
+See the [Implementation Addendum, PDS Hosting & Authentication](./implementation-addendum.md#2-pds-hosting--authentication) for details. Guest participation (no login) is an orthogonal credential/identity concern; see [Implementation Addendum, Guest Identity and Account Upgrade](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for the design exploration.
 
 ## 3. Architecture Overview
 
@@ -169,21 +168,21 @@ DDS defines a shared authentication interface, not a fixed set of identity metho
 
 The spectrum ranges from simple auth to cryptographic proofs:
 
-- **Simple authentication**: Email, phone, social login. A way to connect to the PDS. No cryptographic binding to a real-world attribute.
-- **Cryptographic proofs**: ZK passport, ZKPass, [Rarimo](https://rarimo.com/), Zupass event tickets, [W3C Verifiable Credentials](https://www.w3.org/TR/vc-data-model-2.0/), [eIDAS](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/) eWallets, wallet signatures. Two-way binding with verifiable properties (e.g., "is a citizen," "holds an event ticket," "is over 18").
+- **Simple authentication**: e.g., email, phone, social login. A way to connect to the PDS. No cryptographic binding to a real-world attribute.
+- **Cryptographic proofs**: e.g., ZK passport, ZKPass, [Rarimo](https://rarimo.com/), Zupass event tickets, [W3C Verifiable Credentials](https://www.w3.org/TR/vc-data-model-2.0/), [eIDAS](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/) eWallets, wallet signatures. Two-way binding with verifiable properties (e.g., "is a citizen," "holds an event ticket," "is over 18").
 
-Apps choose which credential types to accept for each deliberation. Users range from self-hosted (own PDS) to lightweight guests (ephemeral `did:key`). Every participant has a DID and can attach credentials from any accepted method.
+Apps choose which credential types to accept for each deliberation. Users range from self-hosted (own PDS) to lightweight guests (no login required, DID method TBD). Every participant has a DID and can attach credentials from any accepted method.
 
 ### 5.2 Participant Identity Levels
 
 The four identity levels defined in [§2](#2-terminology) describe what other participants see about a user:
 
 - **Level 0 (Identified)**: Real-world identity visible. Maximum accountability.
-- **Level 1 (Pseudonymous)**: DDS default. User authenticates with identifiers (email, phone) or linkable credentials ([EUDI wallet](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/), [W3C VC](https://www.w3.org/TR/vc-data-model-2.0/) without ZK), but the AppView does not expose them to other participants. Consistent DID across deliberations.
+- **Level 1 (Pseudonymous)**: DDS default. User authenticates with identifiers (e.g., email, phone) or linkable credentials (e.g., [EUDI wallet](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/), [W3C VC](https://www.w3.org/TR/vc-data-model-2.0/) without ZK), but the AppView does not expose them to other participants. Consistent DID across deliberations.
 - **Level 2 (Anonymous, ZK-verified, persistent)**: Persistent DID with ZK nullifier, no strong identifiers attached. Proves eligibility without revealing identity. Linkable by DID (see [Anonymity Addendum, Level 2 caveat](./anonymity-addendum.md#level-2-anonymous-zk-verified-participation-persistent) for limitations).
 - **Level 3 (Anonymous, ZK-verified, per-deliberation)**: Ephemeral identifier per deliberation. Unlinkable across contexts. ZK nullifiers scoped per deliberation. DID method TBD. Requires re-verification per deliberation.
 
-**Note on "Anonymous" vs. "Guest":** A guest with no login (ephemeral `did:key`) is trivially unidentified, but has no verified eligibility. Levels 2 and 3 are fundamentally different: they use zero-knowledge proofs to verify that a participant meets access requirements (e.g., is a citizen, holds an event ticket, is over 18) without revealing which specific credential or person is behind the proof. The "anonymous" in these levels means **verified but private**: the system confirms you qualify while mathematically guaranteeing it learns nothing else about you.
+**Note on "Anonymous" vs. "Guest":** A guest with no login is trivially unidentified, but has no verified eligibility. Levels 2 and 3 are fundamentally different: they use zero-knowledge proofs to verify that a participant meets access requirements (e.g., is a citizen, holds an event ticket, is over 18) without revealing which specific credential or person is behind the proof. The "anonymous" in these levels means **verified but private**: the system confirms you qualify while mathematically guaranteeing it learns nothing else about you.
 
 The [Anonymity Addendum](./anonymity-addendum.md) provides correlation vector analysis, threat models, and the recommendation of two distinct implementation paths (pseudonymity vs. strong anonymity).
 
@@ -318,7 +317,7 @@ AT Protocol serves as the hot path (discovery, search, real-time interaction), A
 
 Running analysis, including clustering (PCA, Reddwarf), LLM sensemaking, and other methods, requires data access (reading all participant input from the Firehose), compute (running analysis algorithms), and infrastructure (maintaining servers to process deliberations). For a single user to verify results independently, they'd need to replicate this entire pipeline. This is impractical at scale.
 
-### 8.2 Agent Protocol
+### 8.2 How Analyzers Work
 
 DDS solves this by separating **computation** from **verification**:
 
@@ -378,13 +377,17 @@ See [Implementation Addendum, Result Commitment Protocol](./implementation-adden
 
 ## 9. Deliberation Access
 
-Deliberation access restricts who can participate in or view a deliberation. This is distinct from participant anonymity (see [Anonymity Addendum](./anonymity-addendum.md)). DDS defines two access modes:
+Deliberation access restricts who can participate in or view a deliberation. This is distinct from participant anonymity (see [Anonymity Addendum](./anonymity-addendum.md)). DDS defines three access modes:
 
-### 9.1 Participation-Gated (Common)
+### 9.1 Public (Common)
+
+The deliberation is open. Anyone can view and participate. No access restrictions. This is the default for most deliberation use cases.
+
+### 9.2 Link-Gated (Common)
 
 The deliberation is publicly viewable, but only people with the share link can submit opinions and votes. The organizer generates a signing keypair; the private key is embedded in the URL fragment (never sent to the server), and participants sign their submissions with it. The AppView only accepts records with valid signatures.
 
-### 9.2 Restricted (Rare)
+### 9.3 Restricted (Rare)
 
 The deliberation cannot be viewed by outsiders. All records are encrypted with a symmetric key embedded in the share link's URL fragment. The Firehose sees ciphertext only. Having the key means having access.
 

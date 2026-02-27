@@ -21,7 +21,7 @@ Proof-of-concept implementations built on AT Protocol. Three focus areas:
 
 **Deliberation lifecycle lexicon.** Formalize the Plan, Collect, Analyze loop into concrete AT Protocol lexicon definitions. Test the full cycle end-to-end.
 
-**Guest and non-standard login.** "Soft" login via ephemeral `did:key` for guests, "hard" login via persistent `did:plc` for committed participants, merge paths between the two. Zero-knowledge-based authentication for anonymous participation.
+**Guest and non-standard login.** Lightweight login for guests (DID method TBD), persistent `did:plc` for committed participants, merge paths between the two. Zero-knowledge-based authentication for anonymous participation.
 
 **Privacy models.** Loosely private deliberations shared via links among invited participants.
 
