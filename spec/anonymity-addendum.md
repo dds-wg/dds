@@ -176,7 +176,7 @@ These levels describe **what other participants see about you**. This is indepen
 ### Level 1: Pseudonymous Participation (DDS Default)
 ```
 * User authenticates with identifiers (email, phone, social login) or
-  linkable credentials (EUDI wallet, W3C VC without ZK), but the AppView
+  linkable credentials ([EUDI wallet](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/), [W3C VC](https://www.w3.org/TR/vc-data-model-2.0/) without ZK), but the AppView
   does not expose them to other participants
 * Other participants see only the DID
 * Same DID used across deliberations (linkable by DID)
@@ -190,7 +190,7 @@ These levels describe **what other participants see about you**. This is indepen
   See [Implementation Addendum §5](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for design exploration.
 ```
 
-### Level 2: Anonymous Participation (Persistent)
+### Level 2: Anonymous, ZK-verified Participation (Persistent)
 
 ```
 * Persistent DID across the network, associated with a ZK nullifier
@@ -212,7 +212,7 @@ These levels describe **what other participants see about you**. This is indepen
   identity) is required.
 ```
 
-### Level 3: Anonymous (Per-deliberation)
+### Level 3: Anonymous, ZK-verified (Per-deliberation)
 ```
 * Fresh ephemeral identifier per deliberation
   (DID method TBD; see [Implementation Addendum §5](./implementation-addendum.md#5-guest-identity-and-account-upgrade))

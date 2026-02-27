@@ -420,12 +420,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               <span class="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700">SSO</span>
             </div>
             <div class="flex flex-wrap gap-2">
-              <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">Zupass event tickets</span>
-              <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">ZK Passport</span>
-              <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">Rarimo</span>
-              <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">EUDI Wallet</span>
-              <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">Ethereum wallet</span>
-              <span class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800">W3C Verifiable Credentials</span>
+              <a href="https://zupass.org/" target="_blank" rel="noopener noreferrer" class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800 underline-offset-2 hover:underline">Zupass event tickets</a>
+              <a href="https://zkpassport.id/" target="_blank" rel="noopener noreferrer" class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800 underline-offset-2 hover:underline">ZK Passport</a>
+              <a href="https://rarimo.com/" target="_blank" rel="noopener noreferrer" class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800 underline-offset-2 hover:underline">Rarimo</a>
+              <a href="https://eudi.dev/2.4.0/architecture-and-reference-framework-main/" target="_blank" rel="noopener noreferrer" class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800 underline-offset-2 hover:underline">EUDI Wallet</a>
+              <a href="https://ethereum.org/" target="_blank" rel="noopener noreferrer" class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800 underline-offset-2 hover:underline">Ethereum wallet</a>
+              <a href="https://www.w3.org/TR/vc-data-model-2.0/" target="_blank" rel="noopener noreferrer" class="rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-800 underline-offset-2 hover:underline">W3C Verifiable Credentials</a>
             </div>
           </div>
         </div>
@@ -452,8 +452,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <p class="mt-3 text-xs text-gray-500">
             <strong>Identified</strong>: real-world identity visible to other participants (e.g., name, email, organization).
             <strong>Pseudonymous</strong>: consistent identity across deliberations, but not tied to your real name.
-            <strong>Anonymous</strong>: verified via credentials (e.g., event ticket, passport, membership), but no one knows who you are.
-            <strong>Per-deliberation anonymous</strong>: fresh identity per deliberation. No one can link your participation across sessions. Trade-off: you re-verify each time.
+            <strong>Anonymous</strong>: ZK-verified. Proves eligibility (e.g., event ticket, passport, membership) via zero-knowledge proof, but no one knows who you are.
+            <strong>Per-deliberation anonymous</strong>: fresh ZK-verified identity per deliberation. No one can link your participation across sessions. Trade-off: you re-verify each time.
           </p>
         </div>
       </div>
