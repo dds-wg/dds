@@ -180,7 +180,7 @@ These levels describe **what other participants see about you**. This is indepen
 * Threat model: Protects against casual deanonymization
 * Note: Guest accounts may operate at Level 1 (managed did:plc) or at Level 3
   (per-deliberation identifier for contexts requiring unlinkability).
-  See Implementation Addendum §5 for design exploration.
+  See [Implementation Addendum §5](./0001-implementation-addendum.md#5-guest-identity-and-account-upgrade) for design exploration.
 ```
 
 ### Level 2: Anonymous Participation (Persistent)
@@ -195,14 +195,20 @@ These levels describe **what other participants see about you**. This is indepen
 * Appropriate for: Participation where accountability is not required but
   sybil resistance is needed
 * Threat model: Same as Level 1, but with no credential-based deanonymization
-  path. The DID itself is still linkable across deliberations, so behavioral
-  correlation remains possible.
+  path. However, "anonymous" here refers narrowly to credential opacity.
+  The persistent DID is a correlation anchor: an observer who sees the same
+  DID across deliberations can trivially apply the correlation vectors
+  from [§2](#2-correlation-vectors-protocol-agnostic) (activity timing, writing style, voting patterns) to build a
+  behavioral profile and potentially deanonymize the participant. In
+  practice, this level is closer to pseudonymity with credential hiding
+  than true anonymity. For unlinkability, Level 3 (per-deliberation
+  identity) is required.
 ```
 
 ### Level 3: Anonymous (Per-deliberation)
 ```
 * Fresh ephemeral identifier per deliberation
-  (DID method TBD; see Implementation Addendum §5)
+  (DID method TBD; see [Implementation Addendum §5](./0001-implementation-addendum.md#5-guest-identity-and-account-upgrade))
 * Unlinkable across deliberations: participation in deliberation A cannot
   be correlated with deliberation B
 * ZK nullifiers scoped per deliberation ensure eligibility per context
@@ -217,7 +223,7 @@ These levels describe **what other participants see about you**. This is indepen
 * Limitation: Protects against other participants and public observers, but
   NOT against infrastructure operators (PDS, relay) who can correlate via IP,
   timing, and session metadata. For protection from operators, metadata
-  privacy measures are needed (see §5).
+  privacy measures are needed (see [§5](#5-metadata-privacy)).
 ```
 
 ---
