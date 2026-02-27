@@ -9,7 +9,7 @@ The DDS Working Group aims for [DWebCamp](https://dwebcamp.org/) in July 2026 as
 
 ## Phase 1: Foundation (February -- March)
 
-- Launch the website and publish the [specification](/spec/0001-dds-protocol) as a working draft.
+- Launch the website and publish the [specification](/spec/dds-protocol) as a working draft.
 - Set up governance: community consensus, mutual agreement, vendor-neutral [GitHub organization](https://github.com/dds-wg/dds) owned by individuals.
 - Onboard early maintainers and contributors.
 
@@ -45,4 +45,4 @@ Not the immediate focus, but part of the broader vision:
 
 ## Get Involved
 
-The [specification](/spec/0001-dds-protocol) is a working draft -- feedback is welcome. Development happens on [GitHub](https://github.com/dds-wg/dds). If you're headed to [DWebCamp](https://dwebcamp.org/) in July, we hope to see you there.
+The [specification](/spec/dds-protocol) is a working draft -- feedback is welcome. Development happens on [GitHub](https://github.com/dds-wg/dds). If you're headed to [DWebCamp](https://dwebcamp.org/) in July, we hope to see you there.

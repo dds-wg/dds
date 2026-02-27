@@ -4,3 +4,35 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+# Redirects from old 0001- prefixed spec URLs to new clean URLs.
+# Fragments (#anchor) are preserved automatically by browsers across redirects.
+[[redirects]]
+  from = "/spec/0001-dds-protocol"
+  to = "/spec/dds-protocol/"
+  status = 301
+
+[[redirects]]
+  from = "/spec/0001-dds-protocol/*"
+  to = "/spec/dds-protocol/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/spec/0001-anonymity-addendum"
+  to = "/spec/anonymity-addendum/"
+  status = 301
+
+[[redirects]]
+  from = "/spec/0001-anonymity-addendum/*"
+  to = "/spec/anonymity-addendum/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/spec/0001-implementation-addendum"
+  to = "/spec/implementation-addendum/"
+  status = 301
+
+[[redirects]]
+  from = "/spec/0001-implementation-addendum/*"
+  to = "/spec/implementation-addendum/:splat"
+  status = 301

@@ -15,4 +15,4 @@ DDS is now its own project, maintained by the DDS Working Group. The protocol is
 
 Read the full origin story on WhiteWind: [From ZK-first to AT Protocol](https://whtwnd.com/agoracitizen.network/3meq2b36rw42s)
 
-Read the [DDS specification](/spec/0001-dds-protocol) for the full protocol design.
+Read the [DDS specification](/spec/dds-protocol) for the full protocol design.

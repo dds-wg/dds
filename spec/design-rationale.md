@@ -1,0 +1,119 @@
+---
+title: "Design Rationale"
+status: "Informational"
+created: "2026-02-27"
+order: 2
+---
+
+| Metadata    | Value                                                                       |
+| :---------- | :-------------------------------------------------------------------------- |
+| **Title**   | Design Rationale                                                            |
+| **Status**  | Informational                                                               |
+| **Created** | 2026-02-27                                                                  |
+| **Related** | [DDS Protocol](./dds-protocol.md) |
+
+This document explains the reasoning behind key design decisions in the DDS protocol. It is non-normative: the protocol specification defines what DDS does; this document explains why.
+
+## 1. Core Design Decisions
+
+### 1.1 The Walkaway Principle
+
+If all providers vanish, users retain sovereign control of their cryptographic identity and can recover their data from decentralized archives. DDS is designed to pass this test: users control their `did:plc` Rotation Keys (not just Signing Keys), and data is archived to censorship-resistant storage. Users can achieve walkaway by self-hosting their PDS, choosing a provider they trust, or keeping their own rotation key backup. The optional Encrypted Key Vault (see [Implementation Addendum](./implementation-addendum.md)) adds a convenience layer: automatic encrypted backup of rotation keys in the repository.
+
+`did:plc` provides portable identity with separate Signing Keys (convenience: PDS manages posting) and Rotation Keys (ownership: user controls migration). Nostr ties identity to a single keypair with no recovery or migration. Logos Messaging has no identity layer. This separation is what makes walkaway possible: users can migrate to any PDS (or self-host) using their Rotation Key. The optional Encrypted Key Vault builds on this by removing the need to manage keys directly.
+
+An encrypted key vault could benefit any AT Protocol application where users need sovereign control of their Rotation Keys without manual key management. It may be worth proposing as a standardized AT Protocol pattern.
+
+### 1.2 The Four Design Tensions
+
+DDS is organized around four design tensions. The table below expands on each with the reasoning behind it.
+
+| Tension                                | Why                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Ownership vs Convenience**           | Sovereignty requires users to control their cryptographic keys, but requiring hardware wallets or self-hosted infrastructure creates friction that prevents adoption. We need real ownership with a familiar login experience.                                                                                                                                                                                                                                                                                                                                |
+| **Discoverability vs Durability**      | Pure P2P protocols (Logos Messaging (formerly Waku), Nostr) provide censorship-resistant storage and messaging, but struggle at scale with: real-time performance, message ordering and conflict resolution, complex queries and search, moderation, and mobile/resource-constrained devices. Federated protocols solve these but introduce provider dependency. We need the UX of federation with the durability guarantees of P2P.                                                                                                                           |
+| **Provable vs Economical Computation** | Running analysis, including clustering (PCA, Reddwarf), LLM sensemaking, and other methods, requires significant data access, compute, and infrastructure. Asking every user to replicate this pipeline is impractical, but trusting a single provider's results without verification undermines the system.                                                                                                                                                                                                                                                                                                  |
+| **Autonomy vs Interoperability**       | Self-hosted systems give full autonomy but are siloed: you can define any data model, but you can't leverage other teams' distributed components. Standardized schemas over a shared transport enable separation of concerns: distinct building blocks (Plan, Collect, Analyze) built by different teams that compose permissionlessly. This solves hard problems of data communication at scale that pure self-hosted models cannot. |
+
+### 1.3 On Guest Identity
+
+The spectrum from self-hosted PDS to lightweight guest raises an open design question. Provisioning a full `did:plc` (with PLC directory registration, PDS account, and repository) is appropriate for committed users but heavyweight for ephemeral participants, such as a conference attendee who votes once via a Zupass ticket, or with no verification at all, or data imported from an external tool. Whether guests should use managed `did:plc` (full AT Protocol compatibility, simpler moderation, but infrastructure overhead) or `did:key` "soft accounts" within the data (lightweight, supports per-deliberation anonymity, but second-class in the ecosystem) is an active design question. Both approaches require a merge/upgrade mechanism when a guest becomes a permanent user. This is a problem worth solving at the AT Protocol level, not just for DDS. See [Implementation Addendum, Guest Identity and Account Upgrade](./implementation-addendum.md#5-guest-identity-and-account-upgrade).
+
+## 2. Protocol Selection: Why AT Protocol
+
+### 2.1 Transport Layer Comparison
+
+We considered three protocol families for the transport layer:
+
+- **AT Protocol** (Bluesky): Federated, server-based. PDSes host data, Firehose enables permissionless indexing, Lexicons provide semantic schemas.
+- **Logos Messaging** (Status, formerly Waku): P2P gossip messaging. Censorship-resistant relay network, strong privacy properties via P2P gossip, ephemeral by design, no guaranteed ordering.
+- **Nostr**: Relay-based pubsub. Simple keypair identity, privacy-friendly via Tor-compatible relay architecture, informal event-kind taxonomy, no formal schema system, no identity migration.
+
+We respect Logos Messaging and Nostr: their work on censorship-resistant infrastructure is foundational. However, for **public deliberation at scale**, pure P2P and relay-based protocols face fundamental challenges:
+
+| Challenge                   | Nostr / Logos Messaging                                                                                                                             | AT Protocol                                                                                                                                                                                                                                                |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Data availability**       | Nostr: relay-dependent, no completeness guarantee. Logos: messages expire, limited retention                                                        | Always-on PDS servers, persistent repositories                                                                                                                                                                                                             |
+| **Performance**             | Nostr: fast for simple relay queries. Logos: P2P overhead, impractical on mobile                                                                    | Standard HTTPS, millisecond response                                                                                                                                                                                                                       |
+| **Message ordering**        | Nostr: last-write-wins with known race conditions. Logos: no guaranteed ordering                                                                    | Server-side total ordering within each repository                                                                                                                                                                                                          |
+| **Conflict resolution**     | Nostr: replaceable events but no merge semantics, so concurrent edits silently overwrite. Logos: none                                                 | Server-authoritative within each PDS                                                                                                                                                                                                                       |
+| **Search & discovery**      | Nostr: search exists via specialized relays, but fragmented, with no complete index. Logos: no discovery                                                | Firehose enables permissionless indexing, SQL-backed AppViews                                                                                                                                                                                              |
+| **Complex queries**         | Nostr: third-party compute services exist but no standardized query API. Logos: basic message filtering only                                        | AppViews provide precomputed query results with standardized APIs                                                                                                                                                                                          |
+| **Schema**                  | Nostr: event kinds are functional but convention-based, with no machine-readable validation. Logos: application-defined content types, no shared schema | Lexicons provide formal, machine-enforceable, versionable schemas                                                                                                                                                                                          |
+| **Moderation**              | Nostr: labeling and reporting exist but are advisory-only, with no enforcement infrastructure. Logos: rate-limiting for spam, no content moderation     | Labelers with standardized APIs, stackable moderation, speech/reach separation                                                                                                                                                                             |
+| **Mobile**                  | Nostr: lightweight clients possible. Logos: too resource-heavy                                                                                      | Standard web clients, thin mobile apps                                                                                                                                                                                                                     |
+| **Composable architecture** | Nostr: third-party services exist but each sees a partial network view. Logos: limited ecosystem                                                    | Pluggable and composable: base components (AppViews, Labelers, Feed Generators) connect to a complete Firehose, and new components can be built on top of them (e.g., an Analyzer built on the Feed Generator pattern), and any team builds, any user chooses |
+
+These protocols solve real problems. Nostr's ecosystem of relays and third-party services is a genuine innovation, and Logos Messaging's cryptographic spam protection is technically impressive. But for deliberation at scale, the pattern is consistent: AT Protocol provides each capability as protocol-level infrastructure with standardized APIs and a complete data stream, while alternatives solve them through emergent, application-level mechanisms where each service sees a partial view and each client integrates differently. Building a multi-app deliberation ecosystem on these patterns would require reinventing much of what AT Protocol already provides.
+
+### 2.2 Anonymity-First Protocols
+
+Where Nostr and Logos Messaging genuinely excel is **anonymity-first applications**. Nostr's client-relay architecture enables routing through Tor and mixnets. Logos Messaging's P2P gossip means no server ever knows a user's identity. For applications requiring deep anonymity, such as ZK-anonymous voting, whistleblower platforms, and censorship-resistant communication under authoritarian regimes, these protocols are the right foundation. Privacy _can_ be implemented on AT Protocol, but the PDS pattern is an anti-pattern for strong ZK-anonymity: the server inherently knows the user's identity, so anonymity requires workarounds rather than flowing naturally from the architecture. On Nostr and Logos Messaging, anonymity feels native. DDS does not optimize for this.
+
+Earlier work on [Racine](https://github.com/zkorum/racine) (a ZK-first meta-protocol compatible with Logos Messaging (then called Waku), Nostr, and AT Protocol) demonstrated that while ZK anonymous identity is technically superior for privacy, it doesn't match how users actually adopt products: they want familiar identifiers (email, phone, social login), not cryptographic key management. DDS is designed for **public** deliberation, where transparency and verifiability are the point. Participant anonymity where needed is handled at the identity layer (ZK proofs for eligibility without revealing identity), not at the transport layer.
+
+### 2.3 Ephemeral Identity Trade-offs
+
+A related trade-off is **ephemeral identity**. On Nostr, a guest generates a keypair and participates, with no server infrastructure required. On Logos Messaging, messages are P2P with no identity overhead. However, both protocols use secp256k1, which is not in the Web Crypto API, so for guest participation, this means private keys are unavoidably exposed to JavaScript, since non-exportable key storage is only available for Web Crypto-supported curves (P-256, Ed25519).
+
+On AT Protocol, even a managed guest account involves PLC directory registration and PDS provisioning. For ticket-gated deliberations where participants need per-deliberation unlinkability (ZK nullifiers ensure one-person-one-vote per context), a persistent `did:plc` is fundamentally the wrong identifier. It's linkable across deliberations by design. This is the most significant practical trade-off of building on AT Protocol: the same PDS infrastructure that provides moderation, schema enforcement, and a complete Firehose also makes throwaway identities more expensive. DDS needs a "Guest Mode" that works within AT Protocol's architecture while supporting both persistent pseudonymous accounts and per-deliberation ephemeral identities. See [Implementation Addendum, Guest Identity and Account Upgrade](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for the design exploration.
+
+### 2.4 Why Lexicons Over Convention-Based Schemas
+
+Nostr's event kinds and Logos Messaging's content types enable interoperability, but through convention rather than enforceable schemas. AT Protocol's Lexicons are machine-readable and PDS-enforced: data that doesn't match the schema is rejected, not silently malformed. Combined with the Firehose, this means any team can read any other team's records with confidence in data shape, enabling true separation of concerns across the Plan, Collect, and Analyze lifecycle.
+
+## 3. Verification Layer Rationale
+
+### 3.1 zkML: The Trustless Level
+
+The cryptographic proof mechanism for the Trustless level is **zkML (Zero-Knowledge Machine Learning)**, a system where a prover runs ML inference and generates a cryptographic proof of correct computation that anyone can verify in milliseconds without re-running the expensive analysis. The key property is asymmetric verification: proving is expensive (done once by the Analyzer), but verifying is cheap (done by anyone, on any device, without access to the original data). zkML is an active research area with rapid progress. As of early 2025: vote tallying and consensus metrics are provable today, clustering (PCA, K-means) is feasible for deliberation-scale datasets, and LLM summary verification remains future work. See [Implementation Addendum, Fraud Proving Mechanism](./implementation-addendum.md#41-fraud-proving-mechanism) for detailed assessment.
+
+Result commitment and zkML address different trust concerns. Result commitment (hash on-chain) proves **integrity**: "this result hasn't been modified since publication." zkML proves **correctness**: "the computation that produced this result was executed faithfully." Together, they provide end-to-end verifiability: the result is both correct and immutable. Result commitment is implementable today; zkML for the Trustless level is being phased in as the technology matures (see [Implementation Addendum, Fraud Proving Mechanism](./implementation-addendum.md#41-fraud-proving-mechanism)).
+
+### 3.2 Vocdoni / DAVINCI Comparison
+
+DDS is inspired by [Vocdoni](https://vocdoni.io/)'s approach to notarizing election results on Ethereum. In their latest architecture (DAVINCI), raw votes are stored in Ethereum data blobs or IPFS, sequencers process votes off-chain and submit ZK proofs on-chain, and Ethereum smart contracts serve as the coordination layer, with no custom blockchain needed. DDS follows a similar pattern: AT Protocol is the data layer, Ethereum is the commitment layer, and verification is by deterministic re-execution on public data.
+
+More broadly, DDS is designed to complement voting protocols, DAVINCI being one example. DDS consultation results published as AT Protocol records could inform ballot design, and voting protocols could publish election metadata and results back into the shared data lake via AT Protocol lexicons, with each system keeping its own infrastructure while sharing semantic data.
+
+## 4. Interoperability Rationale
+
+### 4.1 Public By Default
+
+DDS is designed for **public** deliberation. All `org.dds.*` records are published to the Firehose in plaintext. This is by design: transparency, verifiability, and interoperability require open data. The goal is not just interoperability between Polis-like tools, but across **all** governance and collective intelligence solutions, including voting apps, DAO governance, participatory budgeting, and tools that don't exist yet. Open data on a shared transport enables an ecosystem that siloed, self-hosted systems cannot. Moreover, AT Protocol's existing social graph, with public figures maintaining official Bluesky accounts, means that their public posts can be imported as deliberation inputs. "How do public personalities think about X?" becomes a query over AT Protocol data, giving deliberation platforms access to a live stream of attributed public discourse.
+
+### 4.2 On Self-Hosting
+
+On AT Protocol, self-hosting means running the full decentralized stack (PDS, Relay, AppView), not just a data server. All DDS components are open source and every user's data lives in their PDS, so self-hosting is always possible. But siloed instances don't interoperate: the real value comes from sharing semantically structured data across a common network, not just between Polis-like tools, but across all governance and collective intelligence solutions, including tools that don't exist yet. Open data means it's not just organizations running infrastructure for their own benefit: the entire community can run whichever components make sense for them, while the shared data lake stays alive. DDS preserves walkaway capability (anyone _can_ self-host everything), but the protocol optimizes for interoperability, not isolation.
+
+### 4.3 On Deliberation Access
+
+Deliberation access restricts _who_ can participate in a deliberation. This is orthogonal to participant anonymity (hiding _who_ said what). A private deliberation can have identified participants; a public deliberation can have anonymous participants. Organizers often need frictionless deliberations (no login required) restricted to a select group of invited people. Two modes: **participation-gated** (the common case: deliberation is publicly viewable, but only invited people can submit, via a secret embedded in the share link) and **restricted** (rare: deliberation can't even be viewed by outsiders, via encryption). For restricted deliberations, AT Protocol currently only handles public data; long-term, end-to-end encryption (Signal model) is the priority, and research in this direction is already underway in the AT Protocol community. That said, this use case is marginal, as most deliberation is public. See [Implementation Addendum, Deliberation Access](./implementation-addendum.md#7-deliberation-access) for design exploration.
+
+### 4.4 On Participant Anonymity
+
+Participant anonymity, hiding _who_ said what, is often important even outside hard-anonymity scenarios. Many participants want to share opinions without them being permanently tied to their identity. DDS supports this at multiple levels: pseudonymity (one DID, not linked to real name) as the default, per-deliberation unlinkability (ephemeral `did:key`) for credential-gated or sensitive contexts, and hard anonymity (Tor, mixnets) as future work for high-threat users. See [Anonymity Addendum](./anonymity-addendum.md) for detailed analysis.
+
+### 4.5 On the Deliberation Lifecycle
+
+The deliberation lifecycle is intentionally general. It serves formal governance (a city running participatory budgeting, a DAO voting on treasury allocation), community self-organization (an open-source project shaping its roadmap, a co-op making collective decisions), and bottom-up movements that channel protest energy into concrete proposals, going from "revolution" to "constitution." The process can be a single open discussion or a multi-step pipeline with eligibility rules, multiple rounds, and different modules.

@@ -2,10 +2,10 @@
 title: "Anonymity Addendum"
 status: "Discussion"
 created: "2026-02-05"
-order: 2
+order: 3
 ---
 
-**Related:** [DDS: Verifiable Deliberation on AT Protocol](./0001-dds-protocol.md)
+**Related:** [DDS: Verifiable Deliberation on AT Protocol](./dds-protocol.md)
 **Date:** 2026-02-05
 **Status:** Discussion notes
 
@@ -15,7 +15,7 @@ order: 2
 
 This addendum explores the anonymity challenges inherent in any decentralized deliberation system. The key finding is that **achieving strong cross-deliberation unlinkability is fundamentally difficult**, regardless of which underlying protocol (AT Protocol, custom federation, pure P2P) is chosen. These challenges are not specific to AT Protocol. They are inherent to any system that uses public infrastructure and aims to minimize trust in operators.
 
-> **Scope**: This addendum covers **participant anonymity**: pseudonymity, cross-deliberation unlinkability, correlation resistance, and metadata leakage. Deliberation access (restricting who can participate) is a separate concern addressed in the [main spec §6](./0001-dds-protocol.md) and [Implementation Addendum §7](./0001-implementation-addendum.md#7-deliberation-access).
+> **Scope**: This addendum covers **participant anonymity**: pseudonymity, cross-deliberation unlinkability, correlation resistance, and metadata leakage. Deliberation access (restricting who can participate) is a separate concern addressed in the [main spec, Deliberation Access](./dds-protocol.md#9-deliberation-access) and [Implementation Addendum, Deliberation Access](./implementation-addendum.md#7-deliberation-access).
 
 Two distinct concerns are often conflated:
 1. **Participant identity**: what other participants learn about you (Levels 0-3, see [§4](#4-participant-identity-levels))
@@ -122,7 +122,7 @@ OPTIONS:
   4. No history view -> Unacceptable UX
 ```
 
-**Note on cross-device sync:** Privacy-preserving sync IS possible via local-first / device-to-device direct sync (similar to the Type B device sync in DDS RFC). However:
+**Note on cross-device sync:** Privacy-preserving sync IS possible via local-first / device-to-device direct sync (similar to the Type B device sync in the Implementation Addendum). However:
 - Must ensure any relay/proxy server doesn't learn the DID linkage
 - Non-trivial to implement correctly
 - Adds significant complexity to achieve both privacy AND sync
@@ -160,6 +160,8 @@ TRADE-OFF:
 
 ## 4. Participant Identity Levels
 
+> **Note**: The canonical summary of identity levels (0-3) is in the [main specification, Terminology](./dds-protocol.md#participant-identity-levels). This section provides extended discussion, threat models, and implementation guidance for each level.
+
 These levels describe **what other participants see about you**. This is independent of metadata privacy (what infrastructure operators can infer); see [§5](#5-metadata-privacy) for that concern.
 
 ### Level 0: Identified Participation
@@ -180,7 +182,7 @@ These levels describe **what other participants see about you**. This is indepen
 * Threat model: Protects against casual deanonymization
 * Note: Guest accounts may operate at Level 1 (managed did:plc) or at Level 3
   (per-deliberation identifier for contexts requiring unlinkability).
-  See [Implementation Addendum §5](./0001-implementation-addendum.md#5-guest-identity-and-account-upgrade) for design exploration.
+  See [Implementation Addendum §5](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for design exploration.
 ```
 
 ### Level 2: Anonymous Participation (Persistent)
@@ -208,7 +210,7 @@ These levels describe **what other participants see about you**. This is indepen
 ### Level 3: Anonymous (Per-deliberation)
 ```
 * Fresh ephemeral identifier per deliberation
-  (DID method TBD; see [Implementation Addendum §5](./0001-implementation-addendum.md#5-guest-identity-and-account-upgrade))
+  (DID method TBD; see [Implementation Addendum §5](./implementation-addendum.md#5-guest-identity-and-account-upgrade))
 * Unlinkable across deliberations: participation in deliberation A cannot
   be correlated with deliberation B
 * ZK nullifiers scoped per deliberation ensure eligibility per context

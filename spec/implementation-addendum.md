@@ -2,12 +2,12 @@
 title: "Implementation Addendum"
 status: "Draft"
 created: "2026-01-13"
-order: 3
+order: 4
 ---
 
 | Metadata       | Value                                                    |
 | :------------- | :------------------------------------------------------- |
-| **Parent**     | [DDS Spec](./0001-dds-protocol.md)             |
+| **Parent**     | [DDS Spec](./dds-protocol.md)             |
 | **Status**     | Draft                                                    |
 | **Created**    | 2026-01-13                                               |
 
@@ -99,6 +99,8 @@ flowchart TD
 
 ### 2.1 Hosting Tiers
 
+> **Note**: The canonical tier definitions are in the [main specification, Hosting Tiers](./dds-protocol.md#hosting-tiers). This section provides implementation details.
+
 | Tier | Name | Description |
 |------|------|-------------|
 | **2** | Self-Hosted | User brings their own PDS (e.g., standard Bluesky or self-hosted). Direct authentication. |
@@ -140,7 +142,7 @@ We rely on the **did:plc 72-hour Grace Period**. If a malicious PDS or compromis
 
 ### 3.4 Privacy Trade-off
 
-Managed PDS hosts can technically access user data (signing keys, posts). Users requiring full data privacy should self-host their PDS. DDS provides the _capability_ to walk away and self-host, making it a credible choice when needed. Note that data privacy (keeping content secret) is distinct from participant anonymity (hiding who said what). The latter does not require self-hosting. See [Anonymity Addendum](./0001-anonymity-addendum.md) for deeper analysis.
+Managed PDS hosts can technically access user data (signing keys, posts). Users requiring full data privacy should self-host their PDS. DDS provides the _capability_ to walk away and self-host, making it a credible choice when needed. Note that data privacy (keeping content secret) is distinct from participant anonymity (hiding who said what). The latter does not require self-hosting. See [Anonymity Addendum](./anonymity-addendum.md) for deeper analysis.
 
 ## 4. Open Issues
 
@@ -362,7 +364,7 @@ TIER 0 (REVISED, WORK IN PROGRESS):
 
 ### 5.6 Connection to Privacy Model
 
-This connects to the [Anonymity Addendum](./0001-anonymity-addendum.md):
+This connects to the [Anonymity Addendum](./anonymity-addendum.md):
 
 - **Pseudonymous (Level 1)**: One `did:plc`, full history, credentials attached, best for committed users
 - **Anonymous (Level 2)**: One `did:plc` + nullifier, no credentials attached, persistent but unidentifiable. User verifies eligibility once.
@@ -372,6 +374,8 @@ The Anonymity Addendum defines two architecturally distinct implementation paths
 
 ## 6. Result Commitment Protocol
 
+> **Note**: The commitment format is defined in the [main specification, Result Commitment](./dds-protocol.md#64-result-commitment). This section provides the protocol flow and implementation details.
+>
 > **Status**: Draft design, needs smart contract specification
 >
 > Inspired by [Vocdoni](https://vocdoni.io/)'s DAVINCI architecture for notarizing election results on Ethereum. Adapted for DDS where AT Protocol serves as the data layer.
@@ -471,9 +475,11 @@ Voting has requirements that deliberation doesn't: ballot secrecy, coercion resi
 
 ## 7. Deliberation Access
 
+> **Note**: The two access modes are defined in the [main specification, Deliberation Access](./dds-protocol.md#9-deliberation-access). This section provides mechanism details and open questions.
+>
 > **Status**: Open design question
 >
-> Distinct from participant anonymity ([Anonymity Addendum](./0001-anonymity-addendum.md)). Deliberation access restricts who can participate in or access a deliberation.
+> Distinct from participant anonymity ([Anonymity Addendum](./anonymity-addendum.md)). Deliberation access restricts who can participate in or access a deliberation.
 
 ### 7.1 The Problem
 
