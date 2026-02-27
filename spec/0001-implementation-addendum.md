@@ -144,15 +144,53 @@ Managed PDS hosts can technically access user data (signing keys, posts). Users 
 
 ## 4. Open Issues
 
-### 4.1 Fraud Proving Mechanism
+### 4.1 Fraud Proving Mechanism (zkML)
 
-> **Status**: Unresolved
->
-> **Draft**: Approaches listed below are speculative. ZK-ML is an active research area with no production-ready solution for analysis-scale computation as of this writing.
+> **Status**: Active research area. Some use-cases are feasible today; others require further progress.
 
-"Fraud Proving" via on-chain re-execution is infeasible for heavy analysis algorithms (PCA, LLM inference) on standard EVM chains. Possible approaches:
-- **ZK-ML**: Zero-Knowledge Machine Learning proofs
-- **Optimistic Dispute**: Committee of human arbiters run code off-chain to resolve disputes
+On-chain re-execution is infeasible for heavy analysis algorithms (PCA, LLM inference) on standard EVM chains. The emerging solution is **zkML (Zero-Knowledge Machine Learning)**.
+
+**The core idea — asymmetric verification**: With zkML, proving is expensive (done once, by the Analyzer), but **verifying is cheap** (done by anyone, instantly, without access to the original data). This is the key property:
+
+1. **Analyzer** (expensive, done once): Runs the full analysis on the dataset, then generates a small cryptographic proof (~kilobytes) alongside the result.
+2. **Any client** (cheap, done by anyone): Fetches the result + the proof. Runs a verification function in ~50 milliseconds. No data access needed, no re-running the algorithm, no infrastructure. Just math.
+
+Without zkML, verifying an Analyzer's result requires downloading ALL the input data from the Firehose and re-running the entire computation (the Spot Check level). With zkML, you just check the proof. The proof is self-contained and mathematically guarantees that the Analyzer ran the claimed algorithm on the claimed inputs and got the claimed output.
+
+**How it works in practice**: An Analyzer Agent converts its analysis pipeline (e.g., an ONNX model) into an arithmetic circuit using a framework like [EZKL](https://github.com/zkonduit/ezkl). It runs the computation and generates a ZK proof (e.g., using Halo2 or zkSTARKs). The proof, along with commitments to the inputs and outputs, is posted on-chain. Anyone can verify the proof cheaply — on a phone, in a browser — with mathematical certainty that the computation was faithful.
+
+**Practical feasibility (as of early 2025):**
+
+| Analysis Type | Feasibility | Proving Time | Notes |
+|---------------|-------------|-------------|-------|
+| Vote tallying / consensus metrics | Ready | Seconds | Arithmetic operations; well-suited to ZK circuits |
+| Clustering (PCA + K-means) | Feasible | 10-30 sec (100-1K participants) | Matrix operations are provable; scales linearly |
+| Small model classification (<18M params) | Ready | ~6 seconds | EZKL can prove any ONNX model |
+| LLM summary verification (7B+ params) | Not yet practical | Minutes per token | Active research ([Lagrange](https://lagrange.dev/), [zkPyTorch](https://github.com/polyhedra-network)); expect 2026+ |
+
+**Leading frameworks:**
+- **[EZKL](https://github.com/zkonduit/ezkl)**: Most production-ready. Converts ONNX models to Halo2 circuits. Generic (any ONNX model). Open source.
+- **[Lagrange](https://lagrange.dev/)**: Focused on large model proving. First to prove full LLM inference end-to-end.
+- **[Giza/Orion](https://www.gizatech.xyz/)**: zkSTARKs via Cairo on Starknet. Distributed proof generation.
+- **[zkPyTorch](https://github.com/polyhedra-network)**: Hierarchical compiler optimizations. Strong benchmark results.
+
+**Phased deployment for DDS:**
+1. **Now**: Hash-based result commitment ([§6](#6-result-commitment-protocol)) + Spot Check (deterministic re-execution). No ZK proofs required.
+2. **Near-term**: Add zkML proofs for vote tallying and clustering verification. These are feasible today and cover the most critical audit need: "was the consensus computed correctly?"
+3. **Future**: zkML proofs for LLM-based analysis as the technology matures.
+
+**Alternative approach — Optimistic Dispute:**
+For analysis types where zkML is not yet feasible (e.g., LLM summaries), an optimistic dispute mechanism remains an option: results are presumed correct unless challenged, and a committee of independent parties re-runs the computation off-chain to resolve disputes. This is less elegant than zkML but practical today.
+
+**Relationship to result commitment:**
+zkML and result commitment ([§6](#6-result-commitment-protocol)) are complementary:
+- Result commitment proves **integrity**: "this result hasn't been modified since publication" (hash on-chain)
+- zkML proves **correctness**: "the computation that produced this result was executed faithfully" (ZK proof on-chain)
+- Together: end-to-end verifiability. The result is both correct and immutable.
+
+**References:**
+- [A Survey of Zero-Knowledge Proof Based Verifiable Machine Learning](https://arxiv.org/abs/2502.18535)
+- [The Definitive Guide to ZKML (2025)](https://blog.icme.io/the-definitive-guide-to-zkml-2025/)
 
 ### 4.2 Data Availability Attack
 
@@ -430,6 +468,7 @@ Voting has requirements that deliberation doesn't: ballot secrecy, coercion resi
 - **Who commits?**: The Analyzer, the Organizer, or any party? This is a governance question. The protocol should define the commitment format but leave the committer open.
 - **Cost**: Gas optimization, batching multiple consultation commitments, or using blob transactions (EIP-4844)
 - **Relationship to archival**: Archive Agents (Arweave/Filecoin) store full data; Ethereum stores only hashes. Both serve durability but at different layers.
+- **Relationship to zkML**: As zkML matures, Analyzer Agents could post both a result hash (integrity) and a zkML proof (correctness) to the same Ethereum commitment. The smart contract design should anticipate an optional proof field alongside the hash. See [§4.1](#41-fraud-proving-mechanism-zkml) for zkML assessment.
 
 ## 7. Deliberation Access
 

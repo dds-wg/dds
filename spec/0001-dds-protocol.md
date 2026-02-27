@@ -130,7 +130,7 @@ Where Nostr and Logos Messaging genuinely excel is **anonymity-first application
 
 A related trade-off is **ephemeral identity**. On Nostr, a guest generates a keypair and participates, with no server infrastructure required. On Logos Messaging, messages are P2P with no identity overhead. However, both protocols use secp256k1, which is not in the Web Crypto API, so for guest participation, this means private keys are unavoidably exposed to JavaScript, since non-exportable key storage is only available for Web Crypto-supported curves (P-256, Ed25519). On AT Protocol, even a managed guest account involves PLC directory registration and PDS provisioning. For ticket-gated deliberations where participants need per-deliberation unlinkability (ZK nullifiers ensure one-person-one-vote per context), a persistent `did:plc` is fundamentally the wrong identifier. It's linkable across deliberations by design. This is the most significant practical trade-off of building on AT Protocol: the same PDS infrastructure that provides moderation, schema enforcement, and a complete Firehose also makes throwaway identities more expensive. DDS needs a "Guest Mode" that works within AT Protocol's architecture while supporting both persistent pseudonymous accounts and per-deliberation ephemeral identities. See [Implementation Addendum §5](./0001-implementation-addendum.md#5-guest-identity-and-account-upgrade) for the design exploration.
 
-**DDS Hybrid Architecture**: AT Protocol for the hot path (discovery, search, real-time interaction), Arweave/Filecoin/Logos Storage for the cold path (archival, walkaway recovery), Ethereum for the commitment layer (result hashes for tamper-evidence, and future verification proofs for computation correctness). Each layer uses the protocol best suited to its role, so no single system needs to do everything.
+**DDS Hybrid Architecture**: AT Protocol for the hot path (discovery, search, real-time interaction), Arweave/Filecoin/Logos Storage for the cold path (archival, walkaway recovery), Ethereum for the commitment layer (result hashes for tamper-evidence, and future verification proofs for computation correctness). Each layer uses the protocol best suited to its role, so no single system needs to do everything. These three layers compose: AT Protocol stores live data, archival preserves it permanently, and Ethereum anchors verification (hash commitments today, zkML proofs as the technology matures). Each layer is independent — losing one doesn't compromise the others.
 
 ### 4.2 Network Archival
 
@@ -179,6 +179,8 @@ Because inputs (data on the Firehose) and algorithm (open-source) are public, **
 | **Spot check** | Any party re-runs computation independently                                         | Moderate (compute costs) | Deterministic verification                                                                                                                 |
 | **Trustless**  | Analyzer submits proof on-chain; clients verify cheaply (e.g., ZK proof verification) | Gas fees               | Cryptographic proof: no trust required (see [Implementation Addendum §4.1](./0001-implementation-addendum.md#41-fraud-proving-mechanism)) |
 
+> **On the Trustless level**: The cryptographic proof mechanism for the Trustless level is **zkML (Zero-Knowledge Machine Learning)** — a system where a prover runs ML inference and generates a cryptographic proof of correct computation that anyone can verify in milliseconds without re-running the expensive analysis. The key property is asymmetric verification: proving is expensive (done once by the Analyzer), but verifying is cheap (done by anyone, on any device, without access to the original data). zkML is an active research area with rapid progress. As of early 2025: vote tallying and consensus metrics are provable today, clustering (PCA, K-means) is feasible for deliberation-scale datasets, and LLM summary verification remains future work. See [Implementation Addendum §4.1](./0001-implementation-addendum.md#41-fraud-proving-mechanism) for detailed assessment.
+
 ### 5.4 Result Commitment
 
 > **Draft**: The result commitment protocol below is a first proposal. Smart contract design, chain selection (L1 vs L2), and gas optimization need further specification.
@@ -202,7 +204,9 @@ DDS addresses this with **on-chain result commitment**: when a consultation fini
 
 **Relationship to trust levels:**
 - Result commitment **enhances Spot Check**: the on-chain hash makes tampering detectable without requiring re-computation upfront, since you only re-run if the hash doesn't match.
-- The **Trustless** level (ZK proof of computation correctness without re-execution) remains future work.
+- The **Trustless** level (ZK proof of computation correctness without re-execution) remains future work, with some analysis types (vote tallying, clustering) already feasible.
+
+> **Two complementary verification layers**: Result commitment and zkML address different trust concerns. Result commitment (hash on-chain) proves **integrity**: "this result hasn't been modified since publication." zkML proves **correctness**: "the computation that produced this result was executed faithfully." Together, they provide end-to-end verifiability: the result is both correct and immutable. Result commitment is implementable today; zkML for the Trustless level is being phased in as the technology matures (see [Implementation Addendum §4.1](./0001-implementation-addendum.md#41-fraud-proving-mechanism)).
 
 **Analogy**: This is inspired by [Vocdoni](https://vocdoni.io/)'s approach to notarizing election results on Ethereum. In their latest architecture (DAVINCI), raw votes are stored in Ethereum data blobs or IPFS, sequencers process votes off-chain and submit ZK proofs on-chain, and Ethereum smart contracts serve as the coordination layer, with no custom blockchain needed. DDS follows a similar pattern: AT Protocol is the data layer, Ethereum is the commitment layer, and verification is by deterministic re-execution on public data.
 
@@ -230,9 +234,9 @@ This lifecycle is intentionally general. It serves formal governance (a city run
 
 | Phase       | Purpose                                                                                                                    | Example Apps                                                 |
 | ----------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| **Plan**    | Design the consultation: define rounds, modules, eligibility, transition rules, how analysis informs the next round         | Community platforms, grassroots organizers, governance tools |
-| **Collect** | Gather participant input (opinions, votes, comments) and import external data (social media, other tools)                  | Deliberation platforms, data importers                       |
-| **Analyze** | Process data and derive insights: clustering, summaries, consensus                                                         | Analyzer Agents, analysis dashboards                         |
+| **Plan**    | Design the consultation: define rounds, modules, eligibility, transition rules, how analysis informs the next round         | Community platforms, grassroots organizers, governance tools, citizen assemblies, DAOs |
+| **Collect** | Gather participant input (opinions, votes, comments) and import external data (social media APIs, other deliberation tools, AI-assisted conversation capture) | Deliberation platforms (wikisurveys, demographic surveys), data importers, AI-assisted listening tools |
+| **Analyze** | Process data and derive insights: opinion mapping, topic clustering, summaries, consensus metrics, peer review              | Analyzer Agents, analysis dashboards                         |
 
 The lifecycle is iterative: Plan defines a sequence of Collect → Analyze rounds. Analysis from one round can trigger the next: new questions, refined topics, deeper dives. The relationship between Collect and Analyze is many-to-many: multiple competing Analyzers can process the same collected data (different algorithms, different perspectives), and multiple Collect streams can feed a single analysis. All are loosely coupled via the Firehose.
 
