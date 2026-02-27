@@ -101,11 +101,11 @@ flowchart TD
 |------|------|-------------|
 | **2** | Self-Hosted | User brings their own PDS (e.g., standard Bluesky or self-hosted). Direct authentication. |
 | **1** | Managed | User authenticates via any accepted credential (email, phone, wallet, ZK passport, etc.). Application auto-provisions a PDS account. |
-| **0** | Guest | Guest user with no verified identifier. Identity may be managed `did:plc` (for persistent pseudonymous participation) or `did:key` (for per-deliberation anonymity, external data imports). See §5 for design exploration. |
+| **0** | Guest | Guest user with no verified identifier. Identity may be managed `did:plc` (for persistent pseudonymous participation) or `did:key` (for per-deliberation anonymity, external data imports). See [§5](#5-guest-identity-and-account-upgrade) for design exploration. |
 
 A single Managed PDS instance is multi-tenant, capable of hosting thousands of accounts (similar to Bluesky PDS architecture).
 
-> **Note**: The Tier 0 design is an open question. See §5 (Guest Identity and Account Upgrade) for detailed analysis of the trade-offs between managed `did:plc` and `did:key` for guest participation.
+> **Note**: The Tier 0 design is an open question. See [§5](#5-guest-identity-and-account-upgrade) (Guest Identity and Account Upgrade) for detailed analysis of the trade-offs between managed `did:plc` and `did:key` for guest participation.
 
 ### 2.2 Authentication
 
@@ -193,7 +193,7 @@ Three factors complicate the design:
    (e.g., externalNullifier = "dds-${eventSlug}-v1").
    Design: 1 ticket = 1 person for THIS deliberation, unlinkable across deliberations.
    A single did:plc is linkable across deliberations, defeating the purpose.
-   Per-deliberation anonymity requires per-deliberation identifiers (did:key).
+   Per-deliberation anonymity requires per-deliberation identifiers (DID method TBD; did:key is one candidate).
 
 3. EXTERNAL DATA:
    Data arrives from other tools (deliberation platforms, voting apps, social media APIs)
@@ -281,8 +281,8 @@ Neither eliminates it entirely.
 
 This is an open design question requiring prototyping. Current thinking:
 
-**Per-deliberation ticket-gated participation → `did:key`.**
-A single `did:plc` is linkable across deliberations and defeats the purpose of per-deliberation anonymity. The ZK nullifier model aligns with ephemeral `did:key` identifiers.
+**Per-deliberation ticket-gated participation → ephemeral per-deliberation identifier (DID method TBD; `did:key` is the current candidate, but managed `did:plc` or other approaches remain possible).**
+A single persistent identifier is linkable across deliberations and defeats the purpose of per-deliberation anonymity. The ZK nullifier model aligns with ephemeral per-deliberation identifiers.
 
 **External data imports → `did:key` (or reference identifiers).**
 Participants from other tools and SDK integrations don't have AT Protocol accounts. Their contributions must be representable without PDS provisioning.
@@ -306,7 +306,7 @@ This is a contribution to the AT Protocol ecosystem, not just a DDS implementati
 
 ### 5.5 Relationship to Tier 0
 
-The Tier 0 definition in §2.1 ("Guest user with no verified identifier. Lightweight PDS authenticated by local `did:key`") is a starting point. The analysis above shows that Tier 0 may need to be a richer concept:
+The Tier 0 definition in [§2.1](#21-identity-tiers) ("Guest user with no verified identifier. Lightweight PDS authenticated by local `did:key`") is a starting point. The analysis above shows that Tier 0 may need to be a richer concept:
 
 ```
 TIER 0 (REVISED, WORK IN PROGRESS):
@@ -325,11 +325,11 @@ TIER 0 (REVISED, WORK IN PROGRESS):
 This connects to the [Anonymity Addendum](./0001-anonymity-addendum.md):
 
 - **Pseudonymous (Level 1)**: One `did:plc`, full history, credentials attached, best for committed users
-- **Anonymous (Level 1b)**: One `did:plc` + nullifier, no credentials attached, persistent but unidentifiable
-- **Per-deliberation anonymous**: Ephemeral `did:key` per context, needed for ticket-gated events and external imports
-- These are NOT competing models. They serve different use cases. DDS needs both, with a bridge between them.
+- **Anonymous (Level 1b)**: One `did:plc` + nullifier, no credentials attached, persistent but unidentifiable. User verifies eligibility once.
+- **Per-deliberation anonymous (Level 1c)**: Ephemeral identifier per context (DID method TBD), needed for ticket-gated events and external imports. User must re-verify eligibility for each deliberation — the core UX trade-off vs Level 1b.
+- These are NOT competing models. They serve different use cases. DDS needs all of them, with a bridge between them.
 
-The pseudonymous model remains the right **default**. But per-deliberation anonymity via `did:key` is not just a future "hardcore mode". It's a practical need for ticket-gated events and external data integration today.
+The pseudonymous model remains the right **default**. Per-deliberation anonymity is not just a future "hardcore mode" — it's a practical need for ticket-gated events and external data integration today. The specific DID method for per-deliberation identifiers is an open design question (see [§5.2](#52-design-approaches)).
 
 ## 6. Result Commitment Protocol
 
@@ -341,7 +341,7 @@ The pseudonymous model remains the right **default**. But per-deliberation anony
 
 DDS publishes deliberation results (`org.dds.result.*`, e.g., PCA clustering, LLM summaries) to the AT Protocol Firehose. But Firehose records can be updated or deleted by the originating PDS. For finished consultations, results should be **permanent and tamper-evident**, anchored to a commitment that no single operator can modify.
 
-This is distinct from the fraud proving problem (§4.1). Fraud proving asks: "was the computation correct?" Result commitment asks: "has the result been modified since publication?" The former requires ZK proofs or re-execution. The latter requires only a hash.
+This is distinct from the fraud proving problem ([§4.1](#41-fraud-proving-mechanism)). Fraud proving asks: "was the computation correct?" Result commitment asks: "has the result been modified since publication?" The former requires ZK proofs or re-execution. The latter requires only a hash.
 
 ### 6.2 Protocol
 
