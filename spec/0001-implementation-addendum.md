@@ -101,7 +101,7 @@ flowchart TD
 |------|------|-------------|
 | **2** | Self-Hosted | User brings their own PDS (e.g., standard Bluesky or self-hosted). Direct authentication. |
 | **1** | Managed | User authenticates via any accepted credential (email, phone, wallet, ZK passport, etc.). Application auto-provisions a PDS account. |
-| **0** | Guest | Guest user with no verified identifier. Identity may be managed `did:plc` (for persistent pseudonymous participation) or `did:key` (for per-conversation anonymity, external data imports). See §5 for design exploration. |
+| **0** | Guest | Guest user with no verified identifier. Identity may be managed `did:plc` (for persistent pseudonymous participation) or `did:key` (for per-deliberation anonymity, external data imports). See §5 for design exploration. |
 
 A single Managed PDS instance is multi-tenant, capable of hosting thousands of accounts (similar to Bluesky PDS architecture).
 
@@ -188,12 +188,12 @@ Three factors complicate the design:
    did:plc is overengineered. Rotation keys, recovery vaults,
    PDS provisioning: none of this matters for a one-off interaction.
 
-2. PER-CONVERSATION ANONYMITY:
-   Ticket-gated conversations use ZK nullifiers scoped per event/conversation
+2. PER-DELIBERATION ANONYMITY:
+   Ticket-gated deliberations use ZK nullifiers scoped per event/deliberation
    (e.g., externalNullifier = "agora-${eventSlug}-v1").
-   Design: 1 ticket = 1 person for THIS conversation, unlinkable across conversations.
-   A single did:plc is linkable across conversations, defeating the purpose.
-   Per-conversation anonymity requires per-conversation identifiers (did:key).
+   Design: 1 ticket = 1 person for THIS deliberation, unlinkable across deliberations.
+   A single did:plc is linkable across deliberations, defeating the purpose.
+   Per-deliberation anonymity requires per-deliberation identifiers (did:key).
 
 3. EXTERNAL DATA:
    Data arrives from other tools (deliberation platforms, voting apps, social media APIs)
@@ -214,16 +214,16 @@ APPROACH A: Managed did:plc for guests
      (guest did:plc:A proved ticket → email account did:plc:B can't re-prove
       same ticket → nullifier collision → two accounts, same person, stuck)
   ❌ PLC directory overhead, rotation keys unnecessary for ephemeral use
-  ❌ Single did:plc is linkable across conversations, breaks per-conversation anonymity
+  ❌ Single did:plc is linkable across deliberations, breaks per-deliberation anonymity
   ❌ Doesn't work for external data imports (participants without PDS)
 
 APPROACH B: did:key "soft accounts" within lexicon data
   • Guests use client-generated did:key (or app-generated on their behalf)
   • Records stored in app's PDS, attributed to guest's did:key in the data
-  • Per-conversation did:key enables unlinkable ticket-gated participation
+  • Per-deliberation did:key enables unlinkable ticket-gated participation
   • Works for external data imports (assign did:key to external participants)
   ✅ Lightweight: no PDS provisioning, no PLC directory
-  ✅ Supports per-conversation anonymity (different did:key per context)
+  ✅ Supports per-deliberation anonymity (different did:key per context)
   ✅ Works for external data (Twitter/X users, other app SDK data)
   ❌ did:key is second-class in AT Protocol ecosystem
   ❌ Moderation tools (Labelers) need adaptation for did:key actors
@@ -281,8 +281,8 @@ Neither eliminates it entirely.
 
 This is an open design question requiring prototyping. Current thinking:
 
-**Per-conversation ticket-gated participation → `did:key`.**
-A single `did:plc` is linkable across conversations and defeats the purpose of per-conversation anonymity. The ZK nullifier model aligns with ephemeral `did:key` identifiers.
+**Per-deliberation ticket-gated participation → `did:key`.**
+A single `did:plc` is linkable across deliberations and defeats the purpose of per-deliberation anonymity. The ZK nullifier model aligns with ephemeral `did:key` identifiers.
 
 **External data imports → `did:key` (or reference identifiers).**
 Participants from other tools and SDK integrations don't have AT Protocol accounts. Their contributions must be representable without PDS provisioning.
@@ -310,25 +310,26 @@ The Tier 0 definition in §2.1 ("Guest user with no verified identifier. Lightwe
 
 ```
 TIER 0 (REVISED, WORK IN PROGRESS):
-  • Guest identity may be did:key (for per-conversation anonymity, external data)
+  • Guest identity may be did:key (for per-deliberation anonymity, external data)
     OR managed did:plc (for persistent pseudonymous guest participation)
   • AppView manages guest records in its PDS
   • Standardized Lexicon for guest identity lifecycle:
     - Guest creation
     - Credential attachment
     - Upgrade to Tier 1 (merge/attestation)
-  • Per-conversation identifiers coexist with persistent guest identity
+  • Per-deliberation identifiers coexist with persistent guest identity
 ```
 
 ### 5.6 Connection to Privacy Model
 
 This connects to the [Anonymity Addendum](./0001-anonymity-addendum.md):
 
-- **Pseudonymous (Level 1)**: One `did:plc`, full history, best for committed users
-- **Per-conversation anonymous**: Ephemeral `did:key` per context, needed for ticket-gated events and external imports
+- **Pseudonymous (Level 1)**: One `did:plc`, full history, credentials attached, best for committed users
+- **Anonymous (Level 1b)**: One `did:plc` + nullifier, no credentials attached, persistent but unidentifiable
+- **Per-deliberation anonymous**: Ephemeral `did:key` per context, needed for ticket-gated events and external imports
 - These are NOT competing models. They serve different use cases. DDS needs both, with a bridge between them.
 
-The pseudonymous model remains the right **default**. But per-conversation anonymity via `did:key` is not just a future "hardcore mode". It's a practical need for ticket-gated events and external data integration today.
+The pseudonymous model remains the right **default**. But per-deliberation anonymity via `did:key` is not just a future "hardcore mode". It's a practical need for ticket-gated events and external data integration today.
 
 ## 6. Result Commitment Protocol
 
@@ -350,7 +351,7 @@ WHEN: After Analyze phase completes
 ANALYZER AGENT:
   1. Publishes result record to AT Protocol (e.g., org.dds.result.pca, org.dds.result.summary)
   2. Constructs commitment record:
-     - conversation_uri: AT Protocol URI of the deliberation process
+     - deliberation_uri: AT Protocol URI of the deliberation process
      - scope: { start_time, end_time } (time window of analysis)
      - input_hash: Merkle root of all input records in scope
        (e.g., org.dds.module.polis.vote + opinion, or any module's records)
@@ -421,22 +422,22 @@ Voting has requirements that deliberation doesn't: ballot secrecy, coercion resi
 ### 6.5 Open Questions
 
 - **Chain selection**: Ethereum L1 vs L2 (Optimism, Base, etc.), trade-off between cost and security guarantees
-- **Smart contract design**: Minimal contract that stores commitment hashes, indexed by conversation URI
+- **Smart contract design**: Minimal contract that stores commitment hashes, indexed by deliberation URI
 - **Input hash construction**: Exact Merkle tree specification for deterministic input hashing (ordering, canonicalization)
 - **Timing**: When exactly is a consultation "finished"? Who triggers the commitment? Can multiple Analyzers' results be committed? How are competing results handled?
 - **Who commits?**: The Analyzer, the Organizer, or any party? This is a governance question. The protocol should define the commitment format but leave the committer open.
 - **Cost**: Gas optimization, batching multiple consultation commitments, or using blob transactions (EIP-4844)
 - **Relationship to archival**: Archive Agents (Arweave/Filecoin) store full data; Ethereum stores only hashes. Both serve durability but at different layers.
 
-## 7. Conversation Privacy
+## 7. Deliberation Access
 
 > **Status**: Open design question
 >
-> Distinct from participant anonymity ([Anonymity Addendum](./0001-anonymity-addendum.md)). Conversation privacy restricts who can participate in or access a deliberation.
+> Distinct from participant anonymity ([Anonymity Addendum](./0001-anonymity-addendum.md)). Deliberation access restricts who can participate in or access a deliberation.
 
 ### 7.1 The Problem
 
-Organizers often need frictionless conversations (no login required) restricted to a select group of invited people. The link to participate shouldn't leak to unintended participants.
+Organizers often need frictionless deliberations (no login required) restricted to a select group of invited people. The link to participate shouldn't leak to unintended participants.
 
 On AT Protocol, records are published to the Firehose. A cleartext password/token in the data would be visible to any Firehose consumer.
 
@@ -444,21 +445,21 @@ On AT Protocol, records are published to the Firehose. A cleartext password/toke
 
 #### Participation-gated (common need)
 
-The conversation is publicly viewable, viewing is fine. Only people with the link can submit opinions and votes.
+The deliberation is publicly viewable, viewing is fine. Only people with the link can submit opinions and votes.
 
 ```
 MECHANISM:
   • Organizer generates a signing keypair
   • Private key embedded in share link (URL fragment after #,
     never sent to server)
-  • Public key published in conversation metadata (not secret)
+  • Public key published in deliberation metadata (not secret)
   • Participants sign their submissions with the private key
   • Analyzer/AppView only accepts records with valid signatures
   • Signing key never appears in AT Protocol records,
     only signatures do
 
 PROPERTIES:
-  ✅ Conversation content remains public and verifiable
+  ✅ Deliberation content remains public and verifiable
   ✅ No encryption complexity
   ✅ Signing key never leaves the client (URL fragment)
   ✅ Anyone can verify signatures against the public key
@@ -468,7 +469,7 @@ PROPERTIES:
 
 #### Restricted (rare, not a current need)
 
-The conversation can't even be viewed by outsiders.
+The deliberation can't even be viewed by outsiders.
 
 ```
 MECHANISM:
@@ -490,10 +491,10 @@ PROPERTIES:
 
 ```
 Participation-gated:
-  https://app.example.com/conversation/slug-id#key=<base64url(signingPrivateKey)>
+  https://app.example.com/deliberation/slug-id#key=<base64url(signingPrivateKey)>
 
 Restricted:
-  https://app.example.com/conversation/slug-id#secret=<base64url(encryptionKey)>
+  https://app.example.com/deliberation/slug-id#secret=<base64url(encryptionKey)>
 
 URL fragment (after #) is:
   • Never sent to the server in HTTP requests
@@ -503,7 +504,7 @@ URL fragment (after #) is:
 ### 7.4 Open Questions
 
 - **Key format**: Which signing algorithm for the participation-gated key? Ed25519 (Web Crypto compatible, non-exportable storage possible) or P-256?
-- **Revocation**: If the link leaks, the conversation is compromised. Acceptable for many use cases (same as password-protected links), but not all.
-- **Analyzer key distribution** (restricted mode only): How does the Analyzer Agent get K? Options: organizer sends it out-of-band, or K is encrypted for the Analyzer's public key in conversation metadata.
+- **Revocation**: If the link leaks, the deliberation is compromised. Acceptable for many use cases (same as password-protected links), but not all.
+- **Analyzer key distribution** (restricted mode only): How does the Analyzer Agent get K? Options: organizer sends it out-of-band, or K is encrypted for the Analyzer's public key in deliberation metadata.
 - **Record format**: How are signed/encrypted records structured in the Lexicon?
-- **Partial restriction**: Can some records be public (conversation title, metadata) while submissions require signing?
+- **Partial restriction**: Can some records be public (deliberation title, metadata) while submissions require signing?

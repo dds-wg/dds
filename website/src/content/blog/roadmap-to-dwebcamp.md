@@ -23,7 +23,7 @@ Proof-of-concept implementations built on AT Protocol. Three focus areas:
 
 **Guest and non-standard login.** "Soft" login via ephemeral `did:key` for guests, "hard" login via persistent `did:plc` for committed participants, merge paths between the two. Zero-knowledge-based authentication for anonymous participation.
 
-**Privacy models.** Loosely private conversations shared via links among invited participants.
+**Privacy models.** Loosely private deliberations shared via links among invited participants.
 
 Each PoC validates a design direction -- not a commitment. Collectively, these explorations will prepare the ground for a developer SDK and shape the future roadmap: what we learn from building will determine the priorities, sequencing, and scope of what comes next.
 

@@ -13,13 +13,13 @@ order: 2
 
 ## Executive Summary
 
-This addendum explores the anonymity challenges inherent in any decentralized deliberation system. The key finding is that **achieving strong cross-conversation unlinkability is fundamentally difficult**, regardless of which underlying protocol (AT Protocol, custom federation, pure P2P) is chosen.
+This addendum explores the anonymity challenges inherent in any decentralized deliberation system. The key finding is that **achieving strong cross-deliberation unlinkability is fundamentally difficult**, regardless of which underlying protocol (AT Protocol, custom federation, pure P2P) is chosen.
 
-> **Scope**: This addendum covers **participant anonymity**: pseudonymity, cross-conversation unlinkability, correlation resistance, and metadata leakage. Conversation privacy (restricting who can participate) is a separate concern addressed in the [main spec §6](./0001-dds-protocol.md) and [Implementation Addendum §7](./0001-implementation-addendum.md#7-conversation-privacy).
+> **Scope**: This addendum covers **participant anonymity**: pseudonymity, cross-deliberation unlinkability, correlation resistance, and metadata leakage. Deliberation access (restricting who can participate) is a separate concern addressed in the [main spec §6](./0001-dds-protocol.md) and [Implementation Addendum §7](./0001-implementation-addendum.md#7-deliberation-access).
 
 This is not a limitation of AT Protocol specifically. It's a property of any system that:
 
-1. Allows users to participate across multiple conversations
+1. Allows users to participate across multiple deliberations
 2. Uses **public or semi-public** infrastructure for data distribution
 3. Adopts a **trust-minimized mindset**: doesn't want to trust third-party server operators
 
@@ -34,7 +34,7 @@ Deliberation platforms face a fundamental tension:
 ```
 USABILITY                              PRIVACY
 ─────────                              ───────
-• See my voting history                • Votes unlinkable across conversations
+• See my voting history                • Votes unlinkable across deliberations
 • Sync across devices                  • No correlation of my activity
 • One login for everything             • Different identity per context
 • Fast, responsive UX                  • No metadata leakage
@@ -79,8 +79,8 @@ Regardless of the underlying protocol, these correlation vectors exist:
 
 | Vector | Attack | Mitigation | Cost |
 |--------|--------|------------|------|
-| **Same identifier** | Email/phone used across conversations | Per-conversation pseudonyms | UX complexity |
-| **Same DID** | DID used across conversations | Per-conversation DIDs | Architecture complexity |
+| **Same identifier** | Email/phone used across deliberations | Per-deliberation pseudonyms | UX complexity |
+| **Same DID** | DID used across deliberations | Per-deliberation DIDs | Architecture complexity |
 | **Same PDS origin** | All DIDs from same server visible on Firehose | Large multi-tenant PDS (crowd) | Must trust PDS crowd |
 
 ### 3.2 Network Linkage
@@ -95,7 +95,7 @@ Regardless of the underlying protocol, these correlation vectors exist:
 
 | Vector | Attack | Mitigation | Cost |
 |--------|--------|------------|------|
-| **Activity patterns** | User active at same times across conversations | Activity noise | Unnatural UX |
+| **Activity patterns** | User active at same times across deliberations | Activity noise | Unnatural UX |
 | **Writing style** | Stylometry on opinions | Style obfuscation | Unnatural writing |
 | **Voting patterns** | Statistical correlation of voting behavior | None practical | Fundamental limit |
 
@@ -104,7 +104,7 @@ Regardless of the underlying protocol, these correlation vectors exist:
 | Vector | Attack | Mitigation | Cost |
 |--------|--------|------------|------|
 | **Firehose/Relay** | Public observer sees all commits from same PDS | Hide in crowd OR encrypt | Trust crowd OR complex crypto |
-| **AppView queries** | History view reveals DID linkage | No cross-conversation history | Terrible UX |
+| **AppView queries** | History view reveals DID linkage | No cross-deliberation history | Terrible UX |
 | **Self-hosted PDS** | Trivially links all your DIDs (you're the only user) | Don't self-host for privacy | Ironic: self-host = less privacy |
 
 ---
@@ -115,7 +115,7 @@ The most fundamental challenge: **users want to see their participation history*
 
 ```
 USER EXPECTATION:
-  "Show me all conversations I've participated in"
+  "Show me all deliberations I've participated in"
   "Show me my votes across all topics"
 
 TECHNICAL REQUIREMENT:
@@ -133,7 +133,7 @@ OPTIONS:
 - Non-trivial to implement correctly
 - Adds significant complexity to achieve both privacy AND sync
 
-**Conclusion:** Any system that provides cross-conversation history while minimizing trust in operators faces a fundamental challenge. Solutions exist but require careful design.
+**Conclusion:** Any system that provides cross-deliberation history while minimizing trust in operators faces a fundamental challenge. Solutions exist but require careful design.
 
 ---
 
@@ -180,18 +180,29 @@ Given the constraints above, here are the achievable privacy levels:
 ### Level 1: Pseudonymous Participation (DDS Default)
 ```
 • DID is pseudonymous (not trivially linked to real name)
-• Same DID used across conversations (linkable by DID)
+• Same DID used across deliberations (linkable by DID)
 • Trust-minimized: Can walkaway from any operator
 • Appropriate for: Most deliberation use cases
 • Threat model: Protects against casual deanonymization
 • Note: Guest accounts may operate at Level 1 (managed did:plc) or use
-  per-conversation did:key for ticket-gated anonymity.
+  per-deliberation did:key for ticket-gated anonymity.
   See Implementation Addendum §5 for design exploration.
+```
+
+### Level 1b: Anonymous Participation (Nullifier-based)
+
+```
+• Persistent DID across the network, associated with a ZK nullifier
+• Proves uniqueness (one-person-one-identity) without revealing who you are
+• No strong identifiers (email, phone, wallet) attached
+• Same DID used across deliberations (linkable by DID) but no deanonymization path via credentials
+• Appropriate for: Participation where accountability is not required but sybil resistance is needed
+• Threat model: Same as Level 1, but with no credential-based deanonymization path. The DID itself is still linkable across deliberations, so behavioral correlation remains possible.
 ```
 
 ### Level 2: Crowd Anonymity
 ```
-• Per-conversation DIDs on large multi-tenant PDS
+• Per-deliberation DIDs on large multi-tenant PDS
 • DIDs hidden among thousands of others
 • Correlation requires traffic analysis
 • Trade-off: Must trust PDS operator won't correlate
@@ -201,7 +212,7 @@ Given the constraints above, here are the achievable privacy levels:
 
 ### Level 3: Strong Anonymity
 ```
-• Per-conversation DIDs
+• Per-deliberation DIDs
 • Tor for all network requests
 • Local-first sync only (device-to-device, no server proxy learning)
 • No server-side history aggregation
@@ -223,7 +234,7 @@ For the standard DDS implementation:
 ```
 • One DID per user
 • Pseudonymous (DID ≠ real name)
-• Linkable across conversations (by DID)
+• Linkable across deliberations (by DID)
 • Trust-minimized: Walkaway capability via Encrypted Vault
 • Honest about privacy model
 ```
@@ -244,7 +255,7 @@ HARDCORE ANONYMITY APP (Future Work)
 
 Characteristics:
 • Separate app (not just a setting)
-• Per-conversation DIDs
+• Per-deliberation DIDs
 • Tor integration for all network requests
 • Local-first sync (device-to-device, no server learning)
 • Careful design to prevent proxy/relay correlation
