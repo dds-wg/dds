@@ -59,6 +59,8 @@ These levels describe what other participants see about a user. They are indepen
 | **2** | Anonymous, ZK-verified (persistent)    | Persistent DID with ZK nullifier. No strong identifiers attached. Linkable by DID but no credential-based deanonymization path. In practice, closer to pseudonymity with credential hiding than true anonymity (see [Anonymity Addendum, Level 2 caveat](./anonymity-addendum.md#level-2-anonymous-zk-verified-participation-persistent) for limitations). |
 | **3** | Anonymous, ZK-verified (per-deliberation) | Fresh ephemeral identifier per deliberation (DID method TBD). Unlinkable across deliberations. ZK nullifiers scoped per context. Requires re-verification per deliberation. |
 
+> **On Guest Participation:** Guests (no login) participate at Level 2 or 3: no personal data is associated with their account, and eligibility is verified via ZK proofs. "Anonymous" in these levels means **verified but private**: the system confirms you qualify while mathematically guaranteeing it learns nothing else about you. Guest participation is trivial to use but must be supported by the protocol. See [Implementation Addendum, Guest Identity](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for the design exploration.
+
 ### Hosting Tiers
 
 | Tier  | Name        | Description                                                                                                                                     |
@@ -173,21 +175,13 @@ The spectrum ranges from simple auth to cryptographic proofs:
 
 Apps choose which credential types to accept for each deliberation. Users range from self-hosted (own PDS) to lightweight guests (no login required, DID method TBD). Every participant has a DID and can attach credentials from any accepted method.
 
-### 5.2 Participant Identity Levels
-
-DDS defines four participant identity levels (0-3); see [Participant Identity Levels](#participant-identity-levels) in the Terminology for the canonical definitions.
-
-**Note on "Anonymous" vs. "Guest":** A guest with no login is trivially unidentified, but has no verified eligibility. Levels 2 and 3 are fundamentally different: they use zero-knowledge proofs to verify that a participant meets access requirements (e.g., is a citizen, holds an event ticket, is over 18) without revealing which specific credential or person is behind the proof. The "anonymous" in these levels means **verified but private**: the system confirms you qualify while mathematically guaranteeing it learns nothing else about you.
-
-The [Anonymity Addendum](./anonymity-addendum.md) provides correlation vector analysis, threat models, and the recommendation of two distinct implementation paths (pseudonymity vs. strong anonymity).
-
-### 5.3 Shared Organizations
+### 5.2 Shared Organizations
 
 Organizations, including teams, DAOs, communities, and coalitions, are defined at the protocol level via base lexicons (`org.dds.org.*`). Membership, roles, and permissions are readable by any tool on the Firehose. An org created in one app is visible to every other app, with no bilateral integration needed.
 
 This enables cross-tool workflows: a community platform manages membership, a deliberation tool checks eligibility, a voting app enforces access rights, all reading the same org records.
 
-### 5.4 The Encrypted Key Vault (Optional)
+### 5.3 The Encrypted Key Vault (Optional)
 
 AT Protocol's `did:plc` already enables walkaway: users who control their Rotation Key can migrate to any PDS or self-host. The simplest path is to back up the Rotation Key manually (paper, password manager) or choose a hosting provider you trust.
 

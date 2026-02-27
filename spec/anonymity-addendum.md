@@ -185,8 +185,8 @@ These levels describe **what other participants see about you**. This is indepen
 * Threat model: Protects against casual deanonymization by peers. The PDS
   operator knows the user's identifiers; pseudonymity is from the
   participant perspective, not from the operator perspective.
-* Note: Guest accounts may operate at Level 1 (managed did:plc) or at Level 3
-  (per-deliberation identifier for contexts requiring unlinkability).
+* Note: Guest accounts (no login) operate at Level 2 or Level 3, not Level 1,
+  since no personal data is associated with the account.
   See [Implementation Addendum §5](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for design exploration.
 ```
 
