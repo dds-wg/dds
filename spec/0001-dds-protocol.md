@@ -68,9 +68,9 @@ flowchart TB
 
 ## 3. Ownership vs Convenience
 
-> **The Walkaway Test**: If all providers vanish, users retain sovereign control of their cryptographic identity and can recover their data from decentralized archives. DDS is designed to pass this test: users control their `did:plc` Rotation Keys (not just Signing Keys), and data is archived to censorship-resistant storage. Users can achieve walkaway by self-hosting their PDS, choosing a provider they trust, or keeping their own rotation key backup. The optional Encrypted Key Vault (§3.3) adds a convenience layer: automatic encrypted backup of rotation keys in the repository.
+> **The Walkaway Test**: If all providers vanish, users retain sovereign control of their cryptographic identity and can recover their data from decentralized archives. DDS is designed to pass this test: users control their `did:plc` Rotation Keys (not just Signing Keys), and data is archived to censorship-resistant storage. Users can achieve walkaway by self-hosting their PDS, choosing a provider they trust, or keeping their own rotation key backup. The optional Encrypted Key Vault ([§3.3](#33-the-encrypted-key-vault-optional)) adds a convenience layer: automatic encrypted backup of rotation keys in the repository.
 >
-> **Why AT Protocol here**: `did:plc` provides portable identity with separate Signing Keys (convenience: PDS manages posting) and Rotation Keys (ownership: user controls migration). Nostr ties identity to a single keypair with no recovery or migration. Logos Messaging has no identity layer. This separation is what makes walkaway possible: users can migrate to any PDS (or self-host) using their Rotation Key. The optional Encrypted Key Vault (§3.3) builds on this by removing the need to manage keys directly.
+> **Why AT Protocol here**: `did:plc` provides portable identity with separate Signing Keys (convenience: PDS manages posting) and Rotation Keys (ownership: user controls migration). Nostr ties identity to a single keypair with no recovery or migration. Logos Messaging has no identity layer. This separation is what makes walkaway possible: users can migrate to any PDS (or self-host) using their Rotation Key. The optional Encrypted Key Vault ([§3.3](#33-the-encrypted-key-vault-optional)) builds on this by removing the need to manage keys directly.
 
 ### 3.1 Flexible Authentication
 
