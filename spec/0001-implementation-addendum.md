@@ -15,7 +15,7 @@ This addendum contains implementation-level details for DDS. These are prelimina
 
 ## 1. Encrypted Key Vault: Cryptographic Design (Optional)
 
-> **Status**: Optional enhancement. This pattern is not required for DDS to function — AT Protocol's `did:plc` rotation keys already enable walkaway. The vault adds automatic encrypted backup, removing the burden of manual key management. This pattern could be proposed as a standardized AT Protocol feature.
+> **Status**: Optional enhancement. This pattern is not required for DDS to function. AT Protocol's `did:plc` rotation keys already enable walkaway. The vault adds automatic encrypted backup, removing the burden of manual key management. This pattern could be proposed as a standardized AT Protocol feature.
 >
 > **Draft**: The vault designs below (Type A and Type B) are a first proposal. The specific cryptographic primitives (HKDF-SHA256, AES-GCM, did:key exchange keys), key derivation flows, and Lockbox protocol need formal security review before implementation.
 
@@ -150,14 +150,14 @@ Managed PDS hosts can technically access user data (signing keys, posts). Users 
 
 On-chain re-execution is infeasible for heavy analysis algorithms (PCA, LLM inference) on standard EVM chains. The emerging solution is **zkML (Zero-Knowledge Machine Learning)**.
 
-**The core idea — asymmetric verification**: With zkML, proving is expensive (done once, by the Analyzer), but **verifying is cheap** (done by anyone, instantly, without access to the original data). This is the key property:
+**The core idea, asymmetric verification**: With zkML, proving is expensive (done once, by the Analyzer), but **verifying is cheap** (done by anyone, instantly, without access to the original data). This is the key property:
 
 1. **Analyzer** (expensive, done once): Runs the full analysis on the dataset, then generates a small cryptographic proof (~kilobytes) alongside the result.
 2. **Any client** (cheap, done by anyone): Fetches the result + the proof. Runs a verification function in ~50 milliseconds. No data access needed, no re-running the algorithm, no infrastructure. Just math.
 
 Without zkML, verifying an Analyzer's result requires downloading ALL the input data from the Firehose and re-running the entire computation (the Spot Check level). With zkML, you just check the proof. The proof is self-contained and mathematically guarantees that the Analyzer ran the claimed algorithm on the claimed inputs and got the claimed output.
 
-**How it works in practice**: An Analyzer Agent converts its analysis pipeline (e.g., an ONNX model) into an arithmetic circuit using a framework like [EZKL](https://github.com/zkonduit/ezkl). It runs the computation and generates a ZK proof (e.g., using Halo2 or zkSTARKs). The proof, along with commitments to the inputs and outputs, is posted on-chain. Anyone can verify the proof cheaply — on a phone, in a browser — with mathematical certainty that the computation was faithful.
+**How it works in practice**: An Analyzer Agent converts its analysis pipeline (e.g., an ONNX model) into an arithmetic circuit using a framework like [EZKL](https://github.com/zkonduit/ezkl). It runs the computation and generates a ZK proof (e.g., using Halo2 or zkSTARKs). The proof, along with commitments to the inputs and outputs, is posted on-chain. Anyone can verify the proof cheaply (on a phone, in a browser) with mathematical certainty that the computation was faithful.
 
 **Practical feasibility (as of early 2025):**
 
@@ -179,7 +179,7 @@ Without zkML, verifying an Analyzer's result requires downloading ALL the input 
 2. **Near-term**: Add zkML proofs for vote tallying and clustering verification. These are feasible today and cover the most critical audit need: "was the consensus computed correctly?"
 3. **Future**: zkML proofs for LLM-based analysis as the technology matures.
 
-**Alternative approach — Optimistic Dispute:**
+**Alternative approach, Optimistic Dispute:**
 For analysis types where zkML is not yet feasible (e.g., LLM summaries), an optimistic dispute mechanism remains an option: results are presumed correct unless challenged, and a committee of independent parties re-runs the computation off-chain to resolve disputes. This is less elegant than zkML but practical today.
 
 **Relationship to result commitment:**
@@ -366,10 +366,10 @@ This connects to the [Anonymity Addendum](./0001-anonymity-addendum.md):
 
 - **Pseudonymous (Level 1)**: One `did:plc`, full history, credentials attached, best for committed users
 - **Anonymous (Level 1b)**: One `did:plc` + nullifier, no credentials attached, persistent but unidentifiable. User verifies eligibility once.
-- **Per-deliberation anonymous (Level 1c)**: Ephemeral identifier per context (DID method TBD), needed for ticket-gated events and external imports. User must re-verify eligibility for each deliberation — the core UX trade-off vs Level 1b.
+- **Per-deliberation anonymous (Level 1c)**: Ephemeral identifier per context (DID method TBD), needed for ticket-gated events and external imports. User must re-verify eligibility for each deliberation, which is the core UX trade-off vs Level 1b.
 - These are NOT competing models. They serve different use cases. DDS needs all of them, with a bridge between them.
 
-The pseudonymous model remains the right **default**. Per-deliberation anonymity is not just a future "hardcore mode" — it's a practical need for ticket-gated events and external data integration today. The specific DID method for per-deliberation identifiers is an open design question (see [§5.2](#52-design-approaches)).
+The pseudonymous model remains the right **default**. Per-deliberation anonymity is not just a future "hardcore mode". It's a practical need for ticket-gated events and external data integration today. The specific DID method for per-deliberation identifiers is an open design question (see [§5.2](#52-design-approaches)).
 
 ## 6. Result Commitment Protocol
 
