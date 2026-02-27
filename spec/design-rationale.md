@@ -94,7 +94,7 @@ Result commitment and zkML address different trust concerns. Result commitment (
 
 DDS is inspired by [Vocdoni](https://vocdoni.io/)'s approach to notarizing election results on Ethereum. In their latest architecture (DAVINCI), raw votes are stored in Ethereum data blobs or IPFS, sequencers process votes off-chain and submit ZK proofs on-chain, and Ethereum smart contracts serve as the coordination layer, with no custom blockchain needed. DDS follows a similar pattern: AT Protocol is the data layer, Ethereum is the commitment layer, and verification is by deterministic re-execution on public data.
 
-More broadly, DDS is designed to complement voting protocols, DAVINCI being one example. DDS consultation results published as AT Protocol records could inform ballot design, and voting protocols could publish election metadata and results back into the shared data lake via AT Protocol lexicons, with each system keeping its own infrastructure while sharing semantic data.
+More broadly, DDS is designed to complement voting protocols, whether [Vocdoni's DAVINCI](https://vocdoni.io/) for on-chain vote tallying, [Freedom Tool](https://freedomtool.org/) for ZK-based voter eligibility via biometric passports, [CarbonVote](https://www.carbonvote.com/) for Ethereum community sentiment, or others. DDS consultation results published as AT Protocol records could inform ballot design, and voting protocols could publish election metadata and results back into the shared data lake via AT Protocol lexicons, with each system keeping its own infrastructure while sharing semantic data.
 
 ## 4. Interoperability Rationale
 

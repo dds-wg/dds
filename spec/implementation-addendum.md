@@ -497,7 +497,7 @@ SHARED INFRASTRUCTURE:
     could feed DAVINCI voter eligibility / census
 ```
 
-Voting has requirements that deliberation doesn't: ballot secrecy, coercion resistance, exact tallying with ZK proofs. DAVINCI's architecture is purpose-built for these constraints. The collaboration pattern is at the data layer (shared lexicons, shared identity), not infrastructure merging, and it generalizes beyond Vocdoni to any voting protocol that could publish metadata and results as AT Protocol records.
+Voting has requirements that deliberation doesn't: ballot secrecy, coercion resistance, exact tallying with ZK proofs. DAVINCI's architecture is purpose-built for these constraints. The collaboration pattern is at the data layer (shared lexicons, shared identity), not infrastructure merging, and it generalizes beyond Vocdoni to any voting protocol (e.g. [Freedom Tool](https://freedomtool.org/), [CarbonVote](https://www.carbonvote.com/)) that could publish metadata and results as AT Protocol records.
 
 ### 6.5 Open Questions
 
