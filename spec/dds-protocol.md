@@ -192,7 +192,7 @@ Because inputs (data on the Firehose) and algorithm (open-source) are public, **
 | -------------- | ----------------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Reputation** | Analyzer publishes results to Firehose                                               | Free for users           | Trust the Analyzer's reputation                                                                                                            |
 | **Spot check** | Any party re-runs computation independently                                         | Moderate (compute costs) | Deterministic verification                                                                                                                 |
-| **Trustless**  | Analyzer submits proof on-chain; clients verify cheaply (e.g., ZK proof verification) | Gas fees               | Cryptographic proof: no trust required (see [Implementation Addendum, Fraud Proving Mechanism](./implementation-addendum.md#41-fraud-proving-mechanism)) |
+| **Trustless**  | Analyzer submits proof on-chain; clients verify cheaply (e.g., ZK proof verification) | Gas fees               | Cryptographic proof: no trust required (see [Implementation Addendum, Fraud Proving Mechanism](./implementation-addendum.md#41-fraud-proving-mechanism-zkml)) |
 
 See the [Design Rationale, zkML](./design-rationale.md#31-zkml-the-trustless-level) for the Trustless level and the [Design Rationale, Vocdoni / DAVINCI Comparison](./design-rationale.md#32-vocdoni--davinci-comparison) for verification layer context.
 
@@ -393,7 +393,7 @@ See the [Implementation Addendum, Security Considerations](./implementation-adde
 The following areas require further design work:
 
 - **Guest identity and account upgrade**: How guests transition from ephemeral to persistent identity. See [Implementation Addendum, Guest Identity](./implementation-addendum.md#5-guest-identity-and-account-upgrade).
-- **zkML feasibility**: Which analysis types can be cryptographically proved and on what timeline. See [Implementation Addendum, Fraud Proving Mechanism](./implementation-addendum.md#41-fraud-proving-mechanism).
+- **zkML feasibility**: Which analysis types can be cryptographically proved and on what timeline. See [Implementation Addendum, Fraud Proving Mechanism](./implementation-addendum.md#41-fraud-proving-mechanism-zkml).
 - **Chain selection**: Ethereum L1 vs L2 for result commitments. See [Implementation Addendum, Result Commitment Open Questions](./implementation-addendum.md#65-open-questions).
 - **Restricted deliberation encryption**: Key format, revocation strategy, analyzer key distribution. See [Implementation Addendum, Deliberation Access](./implementation-addendum.md#7-deliberation-access).
 - **Lexicon formalization**: Concrete schema definitions for base and product lexicons.
