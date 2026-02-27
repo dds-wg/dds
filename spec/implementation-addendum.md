@@ -512,7 +512,7 @@ Voting has requirements that deliberation doesn't: ballot secrecy, coercion resi
 
 ## 7. Deliberation Access
 
-> **Note**: The two access modes are defined in the [main specification, Deliberation Access](./dds-protocol.md#9-deliberation-access). This section provides mechanism details and open questions.
+> **Note**: The three access modes are defined in the [main specification, Deliberation Access](./dds-protocol.md#9-deliberation-access). This section provides mechanism details and open questions.
 >
 > **Status**: Open design question
 >
@@ -524,7 +524,7 @@ Organizers often need frictionless deliberations (no login required) restricted 
 
 On AT Protocol, records are published to the Firehose. A cleartext password/token in the data would be visible to any Firehose consumer.
 
-### 7.2 Two Modes
+### 7.2 Access Modes
 
 #### Participation-gated (common need)
 
