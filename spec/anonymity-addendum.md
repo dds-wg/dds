@@ -185,8 +185,14 @@ These levels describe **what other participants see about you**. This is indepen
 * Threat model: Protects against casual deanonymization by peers. The PDS
   operator knows the user's identifiers; pseudonymity is from the
   participant perspective, not from the operator perspective.
-* Note: Guest accounts (no login) operate at Level 2 or Level 3, not Level 1,
-  since no personal data is associated with the account.
+* Note: "Guest" describes an account status (no hard credentials), not a single
+  identity level. Guest participation spans a spectrum:
+  - Unverified guests (no credentials at all, device-bound identity) operate
+    outside Levels 0-3, since they have no form of verification. They participate
+    in open deliberations without sybil resistance.
+  - Soft-verified guests (e.g., Zupass ticket holders with ZK proofs) operate at
+    Level 2 (persistent identifier) or Level 3 (per-deliberation identifier).
+    No hard personal data is associated with their account.
   See [Implementation Addendum §5](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for design exploration.
 ```
 

@@ -103,7 +103,7 @@ flowchart TD
 
 A single Managed PDS instance is multi-tenant, capable of hosting thousands of accounts (similar to Bluesky PDS architecture).
 
-> **Note**: Guest participation (no login) is an orthogonal credential/identity concern, not a hosting tier. See [§5](#5-guest-identity-and-account-upgrade) (Guest Identity and Account Upgrade) for detailed analysis of the trade-offs between managed `did:plc` and `did:key` for guest participation.
+> **Note**: Guest participation is an orthogonal credential/identity concern, not a hosting tier. "Guest" is an account status encompassing both unverified participants (no credentials, device-bound identity) and soft-verified participants (e.g., ZK-verified event tickets). See [§5](#5-guest-identity-and-account-upgrade) (Guest Identity and Account Upgrade) for detailed analysis.
 
 ### 2.2 Authentication
 
@@ -220,13 +220,25 @@ sequenceDiagram
 
 > **Status**: Open design question, first priority to resolve
 >
-> This is a problem worth solving at the AT Protocol level, not just for DDS. A standardized Guest Mode pattern, potentially as a Lexicon, would be reusable by any AT Protocol application that needs to support lightweight participation with upgrade to persistent accounts.
+> **Scope**: This section describes a pattern intended for AT Protocol itself, not specific to DDS. Any AT Protocol application that needs lightweight participation (event apps, polls, feedback forms, onboarding flows) faces the same guest identity and account upgrade problem. A standardized Guest Mode pattern, potentially as a Lexicon, would be reusable across the ecosystem. The design exploration lives in the DDS spec for now because DDS is the motivating use case.
 
 ### 5.1 The Problem
 
 In centralized deliberation platforms, guest accounts are straightforward: a temporary identifier is created, and when a guest later upgrades to a verified account (e.g., adds phone or ZK passport), the platform transfers all their data to the new account. This works because records aren't cryptographically bound to the guest's identity.
 
 On AT Protocol, records are signed by the originating DID. The protocol doesn't currently account for this kind of identity merge.
+
+In practice, "guest" encompasses at least two distinct participation modes with very different properties:
+
+1. **Unverified guest (pure guest)**: Zero credentials. The application creates a device-bound identity (e.g., a UUID and random username). The participant can contribute only to unrestricted, open deliberations. No ZK verification, no sybil resistance. This mode is useful for low-stakes public participation where ease of access matters more than identity guarantees.
+
+2. **Soft-verified guest (e.g., ticket-gated)**: The participant holds a soft credential, such as a Zupass event ticket, verified via ZK proof. This establishes eligibility for a specific context (e.g., "holds a ticket for Event X") without requiring registration with a hard credential (phone, email, passport). Per-event ZK nullifiers provide sybil resistance scoped to the deliberation. The participant is verified but not registered.
+
+Both are "guests" (absence of hard credentials), but they differ fundamentally: unverified guests have no sybil resistance and no verification, while soft-verified guests have context-scoped sybil resistance via ZK proofs. The identity levels from the [main specification](./dds-protocol.md#participant-identity-levels) apply as follows:
+
+- Unverified guests do not map to Levels 0-3 (all of which assume some form of verification or authentication). They represent open participation without identity guarantees.
+- Soft-verified guests with a persistent identifier operate at Level 2.
+- Soft-verified guests with a per-deliberation identifier operate at Level 3.
 
 Three factors complicate the design:
 
@@ -366,11 +378,17 @@ Guest participation is orthogonal to hosting tiers. Guests use Managed hosting (
 
 ```
 GUEST PARTICIPATION (WORK IN PROGRESS):
+  • Two distinct guest modes:
+    - Unverified guest: device-bound identity, no credentials, open
+      deliberations only, no sybil resistance
+    - Soft-verified guest: ZK-verified via soft credential (e.g., event
+      ticket), context-scoped sybil resistance, can participate in
+      credential-gated deliberations
   • Guest identity may be did:key (for per-deliberation anonymity, external data)
     OR managed did:plc (for persistent pseudonymous guest participation)
   • AppView manages guest records in its PDS
   • Standardized Lexicon for guest identity lifecycle:
-    - Guest creation
+    - Guest creation (unverified or soft-verified)
     - Credential attachment
     - Upgrade to full account (merge/attestation)
   • Per-deliberation identifiers coexist with persistent guest identity
@@ -380,6 +398,7 @@ GUEST PARTICIPATION (WORK IN PROGRESS):
 
 This connects to the [Anonymity Addendum](./anonymity-addendum.md):
 
+- **Unverified (no level)**: Device-bound identity, no credentials, no verification. Open participation only. Does not map to Levels 0-3.
 - **Pseudonymous (Level 1)**: One `did:plc`, full history, credentials attached, best for committed users
 - **Anonymous (Level 2)**: One `did:plc` + nullifier, no credentials attached, persistent but unidentifiable. User verifies eligibility once.
 - **Per-deliberation anonymous (Level 3)**: Ephemeral identifier per context (DID method TBD), needed for contexts requiring unlinkability (e.g., sensitive consultations, activist coordination) and external imports. User must re-verify eligibility for each deliberation, which is the core UX cost vs Level 2.

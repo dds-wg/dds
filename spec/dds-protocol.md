@@ -59,7 +59,12 @@ These levels describe what other participants see about a user. They are indepen
 | **2** | Anonymous, ZK-verified (persistent)    | Persistent DID with ZK nullifier. No strong identifiers attached. Linkable by DID but no credential-based deanonymization path. In practice, closer to pseudonymity with credential hiding than true anonymity (see [Anonymity Addendum, Level 2 caveat](./anonymity-addendum.md#level-2-anonymous-zk-verified-participation-persistent) for limitations). |
 | **3** | Anonymous, ZK-verified (per-deliberation) | Fresh ephemeral identifier per deliberation (DID method TBD). Unlinkable across deliberations. ZK nullifiers scoped per context. Requires re-verification per deliberation. |
 
-> **On Guest Participation:** Guests (no login) participate at Level 2 or 3: no personal data is associated with their account, and eligibility is verified via ZK proofs. "Anonymous" in these levels means **verified but private**: the system confirms you qualify while mathematically guaranteeing it learns nothing else about you. Guest participation is trivial to use but must be supported by the protocol. See [Implementation Addendum, Guest Identity](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for the design exploration.
+> **On Guest Participation:** "Guest" is an account status, not a single identity level. It describes participants who have not registered with a hard credential (email, phone, passport). Guest participation spans a spectrum:
+>
+> - **Unverified guests** have no credentials at all. They receive a device-bound identity and can participate in open deliberations. No sybil resistance is provided. This mode does not map to Levels 0-3, all of which assume some form of verification.
+> - **Soft-verified guests** (e.g., Zupass ticket holders) verify eligibility via ZK proofs without registering. They participate at Level 2 (persistent identifier) or Level 3 (per-deliberation identifier with unlinkable nullifiers). "Anonymous" in these levels means **verified but private**: the system confirms you qualify while mathematically guaranteeing it learns nothing else about you.
+>
+> Both types are "guests" (not registered), but they have fundamentally different verification and sybil-resistance properties. Guest participation must be trivial to use. Guest Mode is intended as a broader AT Protocol pattern, not specific to DDS: any AT Protocol application that needs lightweight participation with upgrade to persistent accounts would benefit from a standardized solution. The design exploration lives in the DDS spec for now. See [Implementation Addendum, Guest Identity](./implementation-addendum.md#5-guest-identity-and-account-upgrade).
 
 ### Hosting Tiers
 
@@ -68,7 +73,7 @@ These levels describe what other participants see about a user. They are indepen
 | **2** | Self-Hosted | User brings their own PDS. Direct authentication.                                                                                               |
 | **1** | Managed     | User authenticates via any accepted credential. Application auto-provisions a PDS account.                                                      |
 
-See the [Implementation Addendum, PDS Hosting & Authentication](./implementation-addendum.md#2-pds-hosting--authentication) for details. Guest participation (no login) is an orthogonal credential/identity concern; see [Implementation Addendum, Guest Identity and Account Upgrade](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for the design exploration.
+See the [Implementation Addendum, PDS Hosting & Authentication](./implementation-addendum.md#2-pds-hosting--authentication) for details. Guest participation is an orthogonal credential/identity concern spanning a spectrum from unverified (device-bound, no credentials) to soft-verified (e.g., ZK-verified event tickets); see [Implementation Addendum, Guest Identity and Account Upgrade](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for the design exploration.
 
 ## 3. Architecture Overview
 
