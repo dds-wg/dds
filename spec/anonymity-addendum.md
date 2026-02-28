@@ -57,7 +57,7 @@ This is not specific to AT Protocol:
 | **Pure IPFS** | Yes | Request patterns observable, no crowd |
 | **Centralized** | Different | Single trust point, but simpler threat model |
 
-The choice of AT Protocol vs. alternatives should be made on **other criteria** (usability, interoperability, ecosystem maturity, sovereignty guarantees), **not** on privacy, because privacy challenges are inherent to the trust-minimized public infrastructure model itself.
+The correlation *challenges* are inherent to the trust-minimized public infrastructure model, not to any specific protocol. However, the *difficulty* of solving them varies: on Nostr and Logos Messaging, anonymity flows naturally from the architecture (no server knows your identity), while on AT Protocol, the PDS inherently knows the user's identity, so anonymity requires workarounds (see [Design Rationale, Anonymity-First Protocols](./design-rationale.md#22-anonymity-first-protocols)). For anonymity-first applications, those protocols may be a better foundation. DDS builds on AT Protocol for other reasons (usability, interoperability, ecosystem maturity, sovereignty guarantees) and handles participant anonymity at the identity layer rather than the transport layer.
 
 ---
 
@@ -101,6 +101,8 @@ Regardless of the underlying protocol, these correlation vectors exist:
 
 ## 3. Specific Challenges
 
+The challenges below apply specifically to **cross-deliberation unlinkability** (Level 3, per-deliberation identity). For Levels 0-2, the user has a single persistent DID, so there is no multi-DID linkage problem: history views, PDS origin, and behavioral patterns all attach to one known identifier by design.
+
 ### 3.1 The History View Problem
 
 The most fundamental challenge: **users want to see their participation history**.
@@ -112,7 +114,7 @@ Users expect to see "all deliberations I've participated in" and "my votes acros
 3. **Encrypted on server**: access patterns still reveal linkage.
 4. **No history view**: unacceptable UX.
 
-**Note on cross-device sync:** Privacy-preserving sync IS possible via local-first / device-to-device direct sync (similar to the Type B device sync in the Implementation Addendum). However:
+**Note on cross-device sync:** Privacy-preserving sync is possible via local-first / device-to-device direct sync (similar to the Type B device sync in the [Implementation Addendum](./implementation-addendum.md#12-type-b-device-graph-vault)). However:
 - Must ensure any relay/proxy server doesn't learn the DID linkage
 - Non-trivial to implement correctly
 - Adds significant complexity to achieve both privacy AND sync
@@ -121,7 +123,7 @@ Users expect to see "all deliberations I've participated in" and "my votes acros
 
 ### 3.2 Self-Hosted PDS: Sovereignty ≠ Privacy
 
-A counterintuitive finding:
+Expanding on the self-hosted PDS vector from [§2.4](#24-infrastructure-linkage-trust-minimization-specific):
 
 A self-hosted PDS provides maximum sovereignty (you control everything) and is fully trust-minimized (you are the operator), but it is **worse for privacy**. Your PDS has only your accounts, so the Firehose sees "pds.alice.com committed for did:plc:a1, b2, c3," making correlation trivial: all DIDs belong to Alice. There is no crowd to hide in.
 
@@ -153,11 +155,6 @@ These levels describe **what other participants see about you**. This is indepen
 - Trust-minimized: can walkaway from any operator.
 - Appropriate for: most deliberation use cases.
 - Threat model: protects against casual deanonymization by peers. The PDS operator knows the user's identifiers; pseudonymity is from the participant perspective, not from the operator perspective.
-- Note: "Guest" describes an account status (no hard credentials), not a single identity level. Guest participation spans a spectrum:
-  - Unverified guests (no credentials at all, device-bound identity) operate at Level 2 (persistent identifier) or Level 3 (per-deliberation identifier), but without sybil resistance.
-  - Soft-verified guests (e.g., Zupass ticket holders with ZK proofs) also operate at Level 2 or Level 3, but with sybil resistance via per-context ZK nullifiers.
-  - Both types are anonymous to other participants. The difference is sybil resistance, not anonymity level.
-  - See [Implementation Addendum §5](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for design exploration.
 
 ### Level 2: Anonymous, ZK-verified Participation (Persistent)
 
@@ -176,6 +173,13 @@ These levels describe **what other participants see about you**. This is indepen
 - Appropriate for: sensitive consultations, whistleblower platforms, political dissent, any context requiring unlinkability.
 - Trade-off: because each deliberation uses a fresh identity, no prior eligibility proof carries over. The user must re-present their credential (e.g., re-scan ticket, re-do ZK proof) for every deliberation they join. This is the core UX cost compared to Level 2, where a single verification persists across contexts.
 - Limitation: protects against other participants and public observers, but not against infrastructure operators (PDS, relay) who can correlate via IP, timing, and session metadata. For protection from operators, metadata privacy measures are needed (see [§5](#5-metadata-privacy)).
+
+> **On Guest Participation:** "Guest" describes an account status (no hard credentials), not a single identity level. Guest participation spans a spectrum:
+>
+> - **Unverified guests** (no credentials at all, device-bound identity) operate at Level 2 (persistent identifier) or Level 3 (per-deliberation identifier), but without sybil resistance.
+> - **Soft-verified guests** (e.g., Zupass ticket holders with ZK proofs) also operate at Level 2 or Level 3, but with sybil resistance via per-context ZK nullifiers.
+>
+> Both types are anonymous to other participants. The difference is sybil resistance, not anonymity level. See [Implementation Addendum §5](./implementation-addendum.md#5-guest-identity-and-account-upgrade) for design exploration.
 
 ---
 
