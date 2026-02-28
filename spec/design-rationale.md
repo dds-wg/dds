@@ -39,7 +39,7 @@ DDS is organized around four design tensions. The table below expands on each wi
 
 The spectrum from self-hosted PDS to lightweight guest raises an open design question. Provisioning a full `did:plc` (with PLC directory registration, PDS account, and repository) is appropriate for committed users but heavyweight for ephemeral participants. Importantly, "guest" is not a single concept. It encompasses at least two distinct modes:
 
-- **Unverified guests**: Zero credentials. A device-bound identity (e.g., UUID and random username) is created, and the participant can contribute to open, unrestricted deliberations. No ZK proofs, no sybil resistance. Useful for low-stakes, open participation (e.g., a public brainstorming session with no eligibility requirements).
+- **Unverified guests**: Zero credentials. A device-bound identity (e.g., UUID and random username) is created, and the participant can contribute with no login or signup. No ZK proofs, no sybil resistance. The goal is minimal friction: common use cases include no-login public Polis-like deliberations, in-person sessions at conferences or citizen assemblies, and link-gated deliberations shared via a trusted group chat.
 - **Soft-verified guests**: A ZK proof-based credential (e.g., a Zupass event ticket) establishes eligibility for a specific context, but the participant holds no "hard" credential (phone, email, passport). Per-event ZK nullifiers provide sybil resistance scoped to the deliberation. The participant is verified but not registered.
 
 Both modes are "guests" in the sense that no hard credential binds the participant to a persistent registered account, but they differ fundamentally in verification properties. Whether guests should use managed `did:plc` or `did:key` "soft accounts" within the data is an active design question. Both approaches require a merge/upgrade mechanism when a guest becomes a permanent user. This is a problem worth solving at the AT Protocol level, not just for DDS. See [Implementation Addendum, Guest Identity and Account Upgrade](./implementation-addendum.md#5-guest-identity-and-account-upgrade).
@@ -117,7 +117,7 @@ Deliberation access restricts _who_ can participate in a deliberation. This is o
 
 ### 4.4 On Participant Anonymity
 
-Participant anonymity, hiding _who_ said what, is often important even outside hard-anonymity scenarios. Many participants want to share opinions without them being permanently tied to their identity. DDS supports this at multiple levels: pseudonymity (one DID, not linked to real name) as the default, per-deliberation unlinkability (ephemeral identifier, DID method TBD) for credential-gated or sensitive contexts, and hard anonymity (Tor, mixnets) as future work for high-threat users. See [Anonymity Addendum](./anonymity-addendum.md) for detailed analysis.
+Participant anonymity, hiding _who_ said what, is often important even outside hard-anonymity scenarios. Many participants want to share opinions without them being permanently tied to their identity. DDS supports this at multiple levels: pseudonymity (one DID, not linked to real name) as the default, per-deliberation unlinkability (ephemeral identifier per context) for credential-gated or sensitive scenarios, and hard anonymity (Tor, mixnets) as future work for high-threat users. See [Anonymity Addendum](./anonymity-addendum.md) for detailed analysis.
 
 ### 4.5 On the Deliberation Lifecycle
 

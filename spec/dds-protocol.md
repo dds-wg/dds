@@ -57,14 +57,14 @@ These levels describe what other participants see about a user. They are indepen
 | **0** | Identified                | Credentials attached to DID reveal real-world identity. Fully linkable across deliberations.                 |
 | **1** | Pseudonymous (default)    | User authenticates with identifiers (e.g., email, phone, social login) or linkable credentials (e.g., [EUDI wallet](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/), [W3C VC](https://www.w3.org/TR/vc-data-model-2.0/) without ZK), but the AppView does not expose them to other participants. Same DID across deliberations (linkable by DID). |
 | **2** | Anonymous, ZK-verified (persistent)    | Persistent DID with ZK nullifier. No strong identifiers attached. Linkable by DID but no credential-based deanonymization path. In practice, closer to pseudonymity with credential hiding than true anonymity (see [Anonymity Addendum, Level 2 caveat](./anonymity-addendum.md#level-2-anonymous-zk-verified-participation-persistent) for limitations). |
-| **3** | Anonymous, ZK-verified (per-deliberation) | Fresh ephemeral identifier per deliberation (DID method TBD). Unlinkable across deliberations. ZK nullifiers scoped per context. Requires re-verification per deliberation. |
+| **3** | Anonymous, ZK-verified (per-deliberation) | Fresh ephemeral identifier per deliberation. Unlinkable across deliberations. ZK nullifiers scoped per context. Requires re-verification per deliberation. |
 
 > **On Guest Participation:** "Guest" is an account status, not a single identity level. It describes participants who have not registered with a hard credential (email, phone, passport). Guest participation spans a spectrum:
 >
-> - **Unverified guests** have no credentials at all. They receive a device-bound identity and can participate in open deliberations. No sybil resistance is provided. This mode does not map to Levels 0-3, all of which assume some form of verification.
-> - **Soft-verified guests** (e.g., Zupass ticket holders) verify eligibility via ZK proofs without registering. They participate at Level 2 (persistent identifier) or Level 3 (per-deliberation identifier with unlinkable nullifiers). "Anonymous" in these levels means **verified but private**: the system confirms you qualify while mathematically guaranteeing it learns nothing else about you.
+> - **Unverified guests** have no credentials at all. They receive a device-bound identity and participate with no login or signup. They operate at Level 2 (persistent identifier) or Level 3 (per-deliberation identifier), but without sybil resistance.
+> - **Soft-verified guests** (e.g., Zupass ticket holders) verify eligibility via ZK proofs without registering. They also operate at Level 2 or Level 3, but with sybil resistance via per-context ZK nullifiers.
 >
-> Both types are "guests" (not registered), but they have fundamentally different verification and sybil-resistance properties. Guest participation must be trivial to use. Guest Mode is intended as a broader AT Protocol pattern, not specific to DDS: any AT Protocol application that needs lightweight participation with upgrade to persistent accounts would benefit from a standardized solution. The design exploration lives in the DDS spec for now. See [Implementation Addendum, Guest Identity](./implementation-addendum.md#5-guest-identity-and-account-upgrade).
+> Both types are anonymous to other participants. The difference is sybil resistance, not anonymity level. Guest participation must be trivial to use. Guest Mode is intended as a broader AT Protocol pattern, not specific to DDS: any AT Protocol application that needs lightweight participation with upgrade to persistent accounts would benefit from a standardized solution. See [Implementation Addendum, Guest Identity](./implementation-addendum.md#5-guest-identity-and-account-upgrade).
 
 ### Hosting Tiers
 
@@ -178,7 +178,7 @@ The spectrum ranges from simple auth to cryptographic proofs:
 - **Simple authentication**: e.g., email, phone, social login. A way to connect to the PDS. No cryptographic binding to a real-world attribute.
 - **Cryptographic proofs**: e.g., ZK passport, ZKPass, [Rarimo](https://rarimo.com/), Zupass event tickets, [W3C Verifiable Credentials](https://www.w3.org/TR/vc-data-model-2.0/), [eIDAS](https://eudi.dev/2.4.0/architecture-and-reference-framework-main/) eWallets, wallet signatures. Two-way binding with verifiable properties (e.g., "is a citizen," "holds an event ticket," "is over 18").
 
-Apps choose which credential types to accept for each deliberation. Users range from self-hosted (own PDS) to lightweight guests (no login required, DID method TBD). Every participant has a DID and can attach credentials from any accepted method.
+Apps choose which credential types to accept for each deliberation. Users range from self-hosted (own PDS) to lightweight guests (no login required, managed or ephemeral DID depending on participation context). Every participant has a DID and can attach credentials from any accepted method.
 
 ### 5.2 Shared Organizations
 

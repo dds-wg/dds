@@ -111,7 +111,7 @@ All tiers use standard **AT Protocol OAuth**.
 
 - **Signing**: The PDS manages the Signing Key and signs posts/votes on behalf of the user.
 - **Benefit**: Simplified client architecture, compatibility with standard AT Proto clients.
-- **Trade-off**: OAuth may be "heavy" for ephemeral Guests. Whether to retain it for a unified auth path or use a lighter mechanism for Guests is TBD.
+- **Trade-off**: OAuth may be "heavy" for ephemeral guests. Whether to retain it for a unified auth path or use a lighter mechanism for guests is an open question.
 
 ### 2.3 The 72h Safety Net
 
@@ -224,186 +224,54 @@ sequenceDiagram
 
 ### 5.1 The Problem
 
-In centralized deliberation platforms, guest accounts are straightforward: a temporary identifier is created, and when a guest later upgrades to a verified account (e.g., adds phone or ZK passport), the platform transfers all their data to the new account. This works because records aren't cryptographically bound to the guest's identity.
+In centralized deliberation platforms, guest accounts are straightforward: a temporary identifier is created, and when a guest later upgrades to a verified account (e.g., adds email or phone), the platform transfers all their data to the new account. This works because records aren't cryptographically bound to the guest's identity.
 
 On AT Protocol, records are signed by the originating DID. The protocol doesn't currently account for this kind of identity merge.
 
 In practice, "guest" encompasses at least two distinct participation modes with very different properties:
 
-1. **Unverified guest (pure guest)**: Zero credentials. The application creates a device-bound identity (e.g., a UUID and random username). The participant can contribute only to unrestricted, open deliberations. No ZK verification, no sybil resistance. This mode is useful for low-stakes public participation where ease of access matters more than identity guarantees.
+1. **Unverified guest (pure guest)**: Zero credentials. The application creates a device-bound identity (e.g., a UUID and random username). No ZK verification, no sybil resistance. The goal is to minimize friction: no login, no signup, immediate participation. Common use cases include no-login public Polis-like deliberations, in-person sessions at conferences or citizen assemblies, and link-gated deliberations shared via a trusted private group chat.
 
-2. **Soft-verified guest (e.g., ticket-gated)**: The participant holds a soft credential, such as a Zupass event ticket, verified via ZK proof. This establishes eligibility for a specific context (e.g., "holds a ticket for Event X") without requiring registration with a hard credential (phone, email, passport). Per-event ZK nullifiers provide sybil resistance scoped to the deliberation. The participant is verified but not registered.
+2. **Soft-verified guest (e.g., ticket-gated)**: The participant holds a soft credential, such as a Zupass event ticket, verified via ZK proof. No hard credential (phone, email, passport) is required. ZK nullifiers add sybil resistance, scoped either per deliberation or network-wide. Common use cases include event-scoped deliberations at conferences, membership-gated consultations, and any context where eligibility must be proven without registration.
 
 Both are "guests" (absence of hard credentials), but they differ fundamentally: unverified guests have no sybil resistance and no verification, while soft-verified guests have context-scoped sybil resistance via ZK proofs. The identity levels from the [main specification](./dds-protocol.md#participant-identity-levels) apply as follows:
 
-- Unverified guests do not map to Levels 0-3 (all of which assume some form of verification or authentication). They represent open participation without identity guarantees.
-- Soft-verified guests with a persistent identifier operate at Level 2.
-- Soft-verified guests with a per-deliberation identifier operate at Level 3.
+- Both unverified and soft-verified guests operate at Level 2 (persistent identifier) or Level 3 (per-deliberation identifier). The identity level describes what other participants see, and both guest types are anonymous.
+- The difference is sybil resistance: soft-verified guests have it (via ZK nullifiers), unverified guests do not.
 
-Three factors complicate the design:
+Two factors complicate the design:
 
-```
-1. INFRASTRUCTURE OVERHEAD:
-   AT Protocol requires: PLC directory entry + PDS account + repository
-   Nostr requires:       Generate secp256k1 keypair (client-side only,
-                          but secp256k1 not in Web Crypto API, private
-                          key unavoidably exposed to JS for guests)
-   Logos Messaging requires: Nothing (P2P, no identity infrastructure,
-                          but ecosystem uses secp256k1, same Web Crypto
-                          limitation as Nostr)
+1. **Infrastructure overhead.** AT Protocol requires a PLC directory entry, a PDS account, and a repository. `did:plc` is the standard identity method, giving full compatibility with Labelers, Firehose, moderation, and OAuth. But for a conference attendee who votes once via a Zupass ticket, this is disproportionate: rotation keys, recovery vaults, and PDS provisioning serve no purpose in a one-off interaction. `did:key` (a DID that directly encodes a public key) is lightweight, with no directory registration or PDS provisioning, but it is second-class in the AT Protocol ecosystem: moderation tools, Firehose indexing, and OAuth all assume `did:plc`.
 
-   For a conference attendee who votes once via Zupass ticket,
-   did:plc is overengineered. Rotation keys, recovery vaults,
-   PDS provisioning: none of this matters for a one-off interaction.
+2. **Per-deliberation anonymity.** Some deliberation contexts require unlinkability across sessions. For example, ZK nullifiers can be scoped per event (e.g., `externalNullifier = "dds-${eventSlug}-v1"`), ensuring one credential maps to one participant per deliberation, unlinkable across deliberations. A single `did:plc` is linkable across deliberations, defeating this purpose. Per-deliberation anonymity requires a fresh identifier per context.
 
-2. PER-DELIBERATION ANONYMITY:
-   Ticket-gated deliberations use ZK nullifiers scoped per event/deliberation
-   (e.g., externalNullifier = "dds-${eventSlug}-v1").
-   Design: 1 ticket = 1 person for THIS deliberation, unlinkable across deliberations.
-   A single did:plc is linkable across deliberations, defeating the purpose.
-   Per-deliberation anonymity requires per-deliberation identifiers (DID method TBD; did:key is one candidate).
+### 5.2 Guest Representation
 
-3. EXTERNAL DATA:
-   Data arrives from other tools (deliberation platforms, voting apps, social media APIs)
-   via SDK integration. These participants don't have AT Protocol accounts.
-   Their contributions need representation in the lexicon data
-   without requiring PDS provisioning.
-```
+All use cases, whether unverified participants, soft-verified participants, or imported external data, need a guest representation in the lexicon. The question is: what identifier to use?
 
-### 5.2 Design Approaches
+| Option | Weight | AT Protocol compatibility | Records live in | Upgrade |
+|--------|--------|--------------------------|-----------------|---------|
+| **Plain UUID** | Lightest | None (opaque identifier in lexicon data) | Managed PDS | Re-attribute internally |
+| **`did:key`** | Light | Second-class (Labelers, Firehose, OAuth assume `did:plc`) | Managed PDS, attributed to `did:key` in record data | Mutual attestation or re-signing |
+| **Managed `did:plc`** | Heavy (PLC directory, PDS, rotation keys) | Full (Labelers, Firehose, OAuth, moderation) | Guest's own repository | Add credentials to same account |
 
-```
-APPROACH A: Managed did:plc for guests
-  • AppView manages a multi-tenant PDS, auto-provisions did:plc for every participant
-  • Full AT Protocol compatibility (Labelers, Firehose, moderation)
-  • Records properly attributed from day one
-  ✅ If guest adds credentials to SAME account: trivial upgrade (no merge)
-  ❌ If guest later creates SEPARATE verified account: merge still needed
-     (guest did:plc:A proved ticket → email account did:plc:B can't re-prove
-      same ticket → nullifier collision → two accounts, same person, stuck)
-  ❌ PLC directory overhead, rotation keys unnecessary for ephemeral use
-  ❌ Single did:plc is linkable across deliberations, breaks per-deliberation anonymity
-  ❌ Doesn't work for external data imports (participants without PDS)
+With `did:plc`, guest records are first-class: they live in the guest's own repository, appear on the Firehose under the guest's DID, and work with standard moderation tools. With `did:key` or UUID, records live in the Managed PDS, attributed to the guest in the record data. This makes them second-class for Firehose indexing and moderation, but lighter.
 
-APPROACH B: did:key "soft accounts" within lexicon data
-  • Guests use client-generated did:key (or app-generated on their behalf)
-  • Records stored in app's PDS, attributed to guest's did:key in the data
-  • Per-deliberation did:key enables unlinkable ticket-gated participation
-  • Works for external data imports (assign did:key to external participants)
-  ✅ Lightweight: no PDS provisioning, no PLC directory
-  ✅ Supports per-deliberation anonymity (different did:key per context)
-  ✅ Works for external data (Twitter/X users, other app SDK data)
-  ❌ did:key is second-class in AT Protocol ecosystem
-  ❌ Moderation tools (Labelers) need adaptation for did:key actors
-  ❌ Upgrade to did:plc requires attestation or re-publication of records
-  ❌ Records signed with did:key cannot be re-signed with did:plc
-  ❌ Different auth mechanism than standard AT Protocol OAuth
+For per-deliberation anonymity (Level 3), the identifier must be fresh per context. `did:key` (new keypair per deliberation) or UUID works. `did:plc` is linkable across deliberations by design, so it is wrong for this case.
 
-APPROACH C: Hybrid (likely direction)
-  • did:key for guest/ephemeral/ticket-gated/external participation
-  • did:plc for committed users
-  • AppView manages guest did:key records in its own PDS
-  • Standardized attestation/merge to link did:key history to did:plc on upgrade
-  ✅ Right tool for each use case
-  ❌ Two identity formats in the system
-  ❌ Attestation/merge protocol needs careful design
-```
+### 5.3 Account Upgrade
 
-### 5.3 The Merge Problem
+**Account creation from guest.** The guest decides to register (e.g., verifies an email). With `did:plc` guests, credentials are added to the existing account. With `did:key` or UUID guests, a new `did:plc` is created and the guest history is merged into it automatically. The mechanism differs, but the UX is the same: sign up, and previous contributions follow.
 
-The merge problem exists regardless of approach. It's inherent to any system where a user may interact before creating a persistent identity.
+**Merge into existing account.** The user already has a `did:plc` account with its own history and wants to absorb guest history into it. This is the harder problem:
 
-```
-SCENARIO: Guest proves ticket, later creates real account
+- **UUID → existing `did:plc`**: Easiest. The PDS re-signs the records with the participant field updated to the new DID. Since UUIDs are opaque app-level identifiers with no cryptographic binding, nothing external needs to change.
+- **`did:key` → existing `did:plc`**: Mutual attestation. The `did:plc` signs that it now owns `did:key`, `did:key` signs that it agrees. Records signed by `did:key` are now claimed by `did:plc`. Alternatively, `did:plc` re-signs everything.
+- **`did:plc` (guest) → existing `did:plc`**: Same mutual attestation pattern. Both DIDs sign that they recognize the merge. This is only valid when one account is a guest (no hard credentials). The managed PDS operator facilitates the merge, which places significant trust in the operator and should not be taken lightly.
 
-WITH did:plc (Approach A):
-  1. Guest proves Zupass ticket → did:plc:guest created
-  2. Later, same person logs in with email → did:plc:email created
-  3. Tries to prove same ticket on email account
-  4. Nullifier already used by did:plc:guest → REJECTED
-  5. Need: merge did:plc:guest INTO did:plc:email
-  6. Problem: Records in guest's repository signed by did:plc:guest
-     Cannot be moved to email's repository (different DID)
-  7. Options:
-     a. Application-level merge (AppView treats both DIDs as same user)
-     b. AT Protocol account merge (not natively supported)
-     c. Re-publish records from new DID (lose original signatures/CIDs)
+For soft-verified guests, the ZK nullifier serves as the proof mechanism for merge authorization: the `did:plc` account re-verifies the same ticket, producing the same nullifier, which proves they are the same person as the guest. This authorizes the merge.
 
-WITH did:key (Approach B):
-  1. Guest proves ticket → did:key:guest (ephemeral)
-  2. Later, same person creates account → did:plc:email
-  3. Tries to prove same ticket on real account
-  4. Nullifier already used → REJECTED
-  5. Need: link did:key:guest to did:plc:email
-  6. Problem: Records attributed to did:key:guest in app's PDS
-  7. Options:
-     a. Signed attestation: did:plc:email claims did:key:guest history
-     b. App-level linkage (simpler but less verifiable)
-     c. Re-publish under did:plc:email (lose original attribution)
-
-BOTH APPROACHES require merge/link design.
-Neither eliminates it entirely.
-```
-
-### 5.4 Current Assessment
-
-This is an open design question requiring prototyping. Current thinking:
-
-**Per-deliberation anonymous participation → ephemeral per-deliberation identifier (DID method TBD; `did:key` is the current candidate, but managed `did:plc` or other approaches remain possible).**
-A single persistent identifier is linkable across deliberations and defeats the purpose of per-deliberation anonymity. The ZK nullifier model aligns with ephemeral per-deliberation identifiers.
-
-**External data imports → DID method TBD (same open question as guest identity).**
-Participants from other tools and SDK integrations don't have AT Protocol accounts. Their contributions must be representable in the system, whether via managed `did:plc`, `did:key`, or reference identifiers.
-
-**Persistent accounts → `did:plc`.**
-Full moderation compatibility, walkaway capability, Firehose integration.
-
-**Upgrade path → needs design work regardless.**
-- `did:plc` approach: needs application-level or AT Protocol-level account merge
-- `did:key` approach: needs attestation protocol for linking ephemeral to persistent identity
-- Trade-off: `did:plc` merge preserves more AT Protocol compatibility; `did:key` attestation may be simpler but requires moderation tool adaptation
-
-**Guest Mode as AT Protocol pattern:**
-The likely solution is a "Guest Mode" managed by an AppView, a standardized Lexicon pattern where:
-- The AppView manages guest identities (whether `did:plc` or `did:key`)
-- Guest records are properly represented and discoverable on the Firehose
-- Upgrade to a full account follows a standardized attestation/merge protocol
-- Moderation tools can operate on guest records
-
-This is a contribution to the AT Protocol ecosystem, not just a DDS implementation detail.
-
-### 5.5 Relationship to Hosting Tiers
-
-Guest participation is orthogonal to hosting tiers. Guests use Managed hosting (Tier 1), but the credential/identity question is separate. The analysis above shows that guest identity is a richer concept than hosting:
-
-```
-GUEST PARTICIPATION (WORK IN PROGRESS):
-  • Two distinct guest modes:
-    - Unverified guest: device-bound identity, no credentials, open
-      deliberations only, no sybil resistance
-    - Soft-verified guest: ZK-verified via soft credential (e.g., event
-      ticket), context-scoped sybil resistance, can participate in
-      credential-gated deliberations
-  • Guest identity may be did:key (for per-deliberation anonymity, external data)
-    OR managed did:plc (for persistent pseudonymous guest participation)
-  • AppView manages guest records in its PDS
-  • Standardized Lexicon for guest identity lifecycle:
-    - Guest creation (unverified or soft-verified)
-    - Credential attachment
-    - Upgrade to full account (merge/attestation)
-  • Per-deliberation identifiers coexist with persistent guest identity
-```
-
-### 5.6 Connection to Privacy Model
-
-This connects to the [Anonymity Addendum](./anonymity-addendum.md):
-
-- **Unverified (no level)**: Device-bound identity, no credentials, no verification. Open participation only. Does not map to Levels 0-3.
-- **Pseudonymous (Level 1)**: One `did:plc`, full history, credentials attached, best for committed users
-- **Anonymous (Level 2)**: One `did:plc` + nullifier, no credentials attached, persistent but unidentifiable. User verifies eligibility once.
-- **Per-deliberation anonymous (Level 3)**: Ephemeral identifier per context (DID method TBD), needed for contexts requiring unlinkability (e.g., sensitive consultations, activist coordination) and external imports. User must re-verify eligibility for each deliberation, which is the core UX cost vs Level 2.
-
-The Anonymity Addendum defines two architecturally distinct implementation paths: a **pseudonymity path** (Levels 0-2, persistent identity, standard AT Protocol) and a **strong anonymity path** (Level 3 + metadata privacy, Tor, local-first sync). These paths should not be mixed in the same application because their infrastructure choices are opposed. Most deliberation use cases lean towards pseudonymity. Per-deliberation anonymity addresses serious privacy needs (journalists, activists, whistleblowers), but requires a fundamentally different architecture. The specific DID method for per-deliberation identifiers is an open design question (see [§5.2](#52-design-approaches)).
+When records are re-signed or re-published during upgrade, they may appear as new records on the Firehose (new CIDs, new timestamps), potentially affecting indexers, moderation history, and audit trails. This needs investigation.
 
 ## 6. Result Commitment Protocol
 
@@ -421,31 +289,29 @@ This is distinct from the fraud proving problem ([§4.1](#41-fraud-proving-mecha
 
 ### 6.2 Protocol
 
-```
-WHEN: After Analyze phase completes
+After the Analyze phase completes:
 
-ANALYZER AGENT:
-  1. Publishes result record to AT Protocol (e.g., org.dds.result.pca, org.dds.result.summary)
-  2. Constructs commitment record:
-     - deliberation_uri: AT Protocol URI of the deliberation process
-     - scope: { start_time, end_time } (time window of analysis)
-     - input_hash: Merkle root of all input records in scope
-       (e.g., org.dds.module.polis.vote + opinion, or any module's records)
-     - algorithm: identifier + version (e.g., "reddwarf@2.1.0", "summarizer@1.0.0")
-     - output_hash: SHA-256 of the result record
-     - analyzer_did: Analyzer Agent's DID
-  3. Submits commitment hash to Ethereum smart contract
+**Analyzer Agent:**
 
-  Note: The commitment transaction can be submitted by the Analyzer,
-  the Organizer, or any party, as the data is public on the Firehose.
+1. Publishes result record to AT Protocol (e.g., `org.dds.result.pca`, `org.dds.result.summary`).
+2. Constructs a commitment record containing:
+   - `deliberation_uri`: AT Protocol URI of the deliberation process
+   - `scope`: `{ start_time, end_time }` (time window of analysis)
+   - `input_hash`: Merkle root of all input records in scope (e.g., `org.dds.module.polis.vote` + opinion, or any module's records)
+   - `algorithm`: identifier + version (e.g., `reddwarf@2.1.0`, `summarizer@1.0.0`)
+   - `output_hash`: SHA-256 of the result record
+   - `analyzer_did`: Analyzer Agent's DID
+3. Submits commitment hash to Ethereum smart contract.
 
-VERIFIER (any party):
-  1. Downloads all input records from AT Protocol Firehose for the scope
-  2. Computes input Merkle root, verifies against on-chain input_hash
-  3. Runs algorithm (open-source) on the inputs
-  4. Hashes the output, compares against on-chain output_hash
-  5. If mismatch → Analyzer either computed incorrectly or results were modified
-```
+The commitment transaction can be submitted by the Analyzer, the Organizer, or any party, as the data is public on the Firehose.
+
+**Verifier (any party):**
+
+1. Downloads all input records from AT Protocol Firehose for the scope.
+2. Computes input Merkle root, verifies against on-chain `input_hash`.
+3. Runs algorithm (open-source) on the inputs.
+4. Hashes the output, compares against on-chain `output_hash`.
+5. If mismatch: the Analyzer either computed incorrectly or results were modified.
 
 ```mermaid
 sequenceDiagram
@@ -472,49 +338,28 @@ sequenceDiagram
 
 ### 6.3 Comparison with Vocdoni (DAVINCI)
 
-```
-VOCDONI (DAVINCI):
-  Data: Raw votes in Ethereum data blobs (EIP-4844) or IPFS
-  Coordination: Ethereum smart contracts
-  Processing: Off-chain sequencers submit ZK proofs on-chain
-  Verification: ZK-SNARKs prove vote validity + state transitions
+| Aspect | Vocdoni (DAVINCI) | DDS |
+|--------|-------------------|-----|
+| **Data** | Raw votes in Ethereum data blobs (EIP-4844) or IPFS | Participant input as AT Protocol Firehose records (any `org.dds.module.*`) |
+| **Coordination** | Ethereum smart contracts | Ethereum smart contract (commitment hash) |
+| **Processing** | Off-chain sequencers submit ZK proofs on-chain | Analyzer Agents run analysis off-chain (clustering, LLM, etc.) |
+| **Verification** | ZK-SNARKs prove vote validity + state transitions | Deterministic re-execution on public Firehose data |
 
-DDS:
-  Data: Participant input as AT Protocol Firehose records (any org.dds.module.*)
-  Coordination: Ethereum smart contract (commitment hash)
-  Processing: Analyzer Agents run analysis off-chain (clustering, LLM, etc.)
-  Verification: Deterministic re-execution on public Firehose data
-
-SIMILARITY:
-  Both use Ethereum as coordination/commitment layer
-  Both store raw data off-chain (blobs/IPFS vs AT Protocol)
-  Both enable public verification without trusting operators
-
-KEY DIFFERENCE:
-  Vocdoni uses ZK proofs for computation correctness (trustless)
-  DDS uses deterministic re-execution (spot-check, ZK future work)
-  Vocdoni is purpose-built for voting
-  DDS reuses AT Protocol, a general-purpose social data layer
-```
+Both use Ethereum as a coordination/commitment layer, both store raw data off-chain (blobs/IPFS vs. AT Protocol), and both enable public verification without trusting operators. The key differences: Vocdoni uses ZK proofs for computation correctness (trustless), while DDS uses deterministic re-execution (spot-check, with ZK as future work). Vocdoni is purpose-built for voting; DDS reuses AT Protocol, a general-purpose social data layer.
 
 ### 6.4 Potential Collaboration
 
 DDS and DAVINCI address different phases of governance: DDS handles deliberation (surfacing opinions, clustering, sensemaking), DAVINCI handles voting (secure, anonymous, verifiable decisions). They're complementary, and the most natural collaboration point is shared semantic data on AT Protocol.
 
-```
-DATA INTEROPERABILITY:
-  • DDS publishes consultation results as AT Protocol records (lexicons)
-  • DAVINCI could publish election configs, census criteria, and results
-    as AT Protocol records, creating a shared data lake with voting-specific infra
-  • DDS analysis results inform ballot design (what gets voted on)
-  • Vote results flow back as records that DDS apps can reference
+**Data interoperability:**
+- DDS publishes consultation results as AT Protocol records (lexicons).
+- DAVINCI could publish election configs, census criteria, and results as AT Protocol records, creating a shared data lake with voting-specific infrastructure.
+- DDS analysis results inform ballot design (what gets voted on).
+- Vote results flow back as records that DDS apps can reference.
 
-SHARED INFRASTRUCTURE:
-  • Ethereum: Both use it as coordination/commitment layer
-    (DDS for result hashes, DAVINCI for election settlement)
-  • AT Protocol identity: DDS credentials (Zupass, ZK passport, DIDs)
-    could feed DAVINCI voter eligibility / census
-```
+**Shared infrastructure:**
+- Ethereum: Both use it as a coordination/commitment layer (DDS for result hashes, DAVINCI for election settlement).
+- AT Protocol identity: DDS credentials (Zupass, ZK passport, DIDs) could feed DAVINCI voter eligibility / census.
 
 Voting has requirements that deliberation doesn't: ballot secrecy, coercion resistance, exact tallying with ZK proofs. DAVINCI's architecture is purpose-built for these constraints. The collaboration pattern is at the data layer (shared lexicons, shared identity), not infrastructure merging, and it generalizes beyond Vocdoni to any voting protocol (e.g. [Freedom Tool](https://freedomtool.org/), [CarbonVote](https://www.carbonvote.com/)) that could publish metadata and results as AT Protocol records.
 
@@ -549,59 +394,47 @@ On AT Protocol, records are published to the Firehose. A cleartext password/toke
 
 The deliberation is publicly viewable, viewing is fine. Only people with the link can submit opinions and votes.
 
-```
-MECHANISM:
-  • Organizer generates a signing keypair
-  • Private key embedded in share link (URL fragment after #,
-    never sent to server)
-  • Public key published in deliberation metadata (not secret)
-  • Participants sign their submissions with the private key
-  • Analyzer/AppView only accepts records with valid signatures
-  • Signing key never appears in AT Protocol records,
-    only signatures do
+**Mechanism:**
 
-PROPERTIES:
-  ✅ Deliberation content remains public and verifiable
-  ✅ No encryption complexity
-  ✅ Signing key never leaves the client (URL fragment)
-  ✅ Anyone can verify signatures against the public key
-  ❌ If the link leaks, anyone with it can participate
-  ❌ Revoking access requires new keypair + new link
-```
+1. Organizer generates a signing keypair.
+2. Private key is embedded in the share link (URL fragment after `#`, never sent to the server).
+3. Public key is published in deliberation metadata (not secret).
+4. Participants sign their submissions with the private key.
+5. Analyzer/AppView only accepts records with valid signatures.
+6. The signing key never appears in AT Protocol records, only signatures do.
+
+**Properties:**
+- Deliberation content remains public and verifiable.
+- No encryption complexity.
+- Signing key never leaves the client (URL fragment).
+- Anyone can verify signatures against the public key.
+- If the link leaks, anyone with it can participate.
+- Revoking access requires a new keypair and a new link.
 
 #### Restricted (rare, not a current need)
 
 The deliberation can't even be viewed by outsiders.
 
-```
-MECHANISM:
-  • Organizer generates a symmetric encryption key K
-  • K embedded in share link (URL fragment after #)
-  • All records encrypted with K before writing to PDS
-  • Firehose sees ciphertext only
-  • Having K = having access (no gatekeeper)
+**Mechanism:**
 
-PROPERTIES:
-  ✅ Trust-minimized: PDS/Firehose see nothing
-  ❌ Analyzer Agent needs K (organizer must share explicitly)
-  ❌ Revoking access is impossible (key is symmetric,
-     already distributed)
-  ❌ Not a current need, no use case observed yet
-```
+1. Organizer generates a symmetric encryption key K.
+2. K is embedded in the share link (URL fragment after `#`).
+3. All records are encrypted with K before writing to the PDS.
+4. Firehose sees ciphertext only.
+5. Having K = having access (no gatekeeper).
+
+**Properties:**
+- Trust-minimized: PDS/Firehose see nothing.
+- Analyzer Agent needs K (organizer must share explicitly).
+- Revoking access is impossible (the key is symmetric and already distributed).
+- Not a current need; no use case observed yet.
 
 ### 7.3 Link Structure
 
-```
-Participation-gated:
-  https://app.example.com/deliberation/slug-id#key=<base64url(signingPrivateKey)>
+- **Participation-gated**: `https://app.example.com/deliberation/slug-id#key=<base64url(signingPrivateKey)>`
+- **Restricted**: `https://app.example.com/deliberation/slug-id#secret=<base64url(encryptionKey)>`
 
-Restricted:
-  https://app.example.com/deliberation/slug-id#secret=<base64url(encryptionKey)>
-
-URL fragment (after #) is:
-  • Never sent to the server in HTTP requests
-  • Available to client-side JavaScript only
-```
+The URL fragment (after `#`) is never sent to the server in HTTP requests and is available to client-side JavaScript only.
 
 ### 7.4 Open Questions
 
