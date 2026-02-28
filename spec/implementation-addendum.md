@@ -390,7 +390,7 @@ On AT Protocol, records are published to the Firehose. A cleartext password/toke
 
 ### 7.2 Access Modes
 
-#### Participation-gated (common need)
+#### Link-gated (common need)
 
 The deliberation is publicly viewable, viewing is fine. Only people with the link can submit opinions and votes.
 
@@ -431,14 +431,14 @@ The deliberation can't even be viewed by outsiders.
 
 ### 7.3 Link Structure
 
-- **Participation-gated**: `https://app.example.com/deliberation/slug-id#key=<base64url(signingPrivateKey)>`
+- **Link-gated**: `https://app.example.com/deliberation/slug-id#key=<base64url(signingPrivateKey)>`
 - **Restricted**: `https://app.example.com/deliberation/slug-id#secret=<base64url(encryptionKey)>`
 
 The URL fragment (after `#`) is never sent to the server in HTTP requests and is available to client-side JavaScript only.
 
 ### 7.4 Open Questions
 
-- **Key format**: Which signing algorithm for the participation-gated key? Ed25519 (Web Crypto compatible, non-exportable storage possible) or P-256?
+- **Key format**: Which signing algorithm for the link-gated key? Ed25519 (Web Crypto compatible, non-exportable storage possible) or P-256?
 - **Revocation**: If the link leaks, the deliberation is compromised. Acceptable for many use cases (same as password-protected links), but not all.
 - **Analyzer key distribution** (restricted mode only): How does the Analyzer Agent get K? Options: organizer sends it out-of-band, or K is encrypted for the Analyzer's public key in deliberation metadata.
 - **Record format**: How are signed/encrypted records structured in the Lexicon?
