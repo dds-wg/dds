@@ -16,19 +16,19 @@
   "dependencies": {
     "@astrojs/starlight": "^0.37.6",
     "@astrojs/svelte": "^7.0.0",
-    "astro": "^5.5.0",
+    "astro": "^5.18.0",
     "mermaid": "^11.12.3",
-    "svelte": "^5.53.2"
+    "svelte": "^5.53.6"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@iconify-json/lucide": "^1.2.93",
+    "@iconify-json/lucide": "^1.2.95",
     "@iconify-json/simple-icons": "^1.2.70",
     "@iconify/tailwind4": "^1.2.1",
     "@tailwindcss/typography": "^0.5.19",
-    "@tailwindcss/vite": "^4.1.0",
+    "@tailwindcss/vite": "^4.2.1",
     "@vitest/coverage-v8": "^4.0.18",
-    "eslint": "^10.0.1",
+    "eslint": "^10.0.2",
     "eslint-config-prettier": "^10.1.0",
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "eslint-plugin-svelte": "^3.15.0",
@@ -37,9 +37,9 @@
     "prettier": "^3.8.0",
     "prettier-plugin-astro": "^0.14.0",
     "prettier-plugin-svelte": "^3.4.0",
-    "tailwindcss": "^4.1.0",
+    "tailwindcss": "^4.2.1",
     "typescript": "^5.9.0",
-    "typescript-eslint": "^8.55.0",
+    "typescript-eslint": "^8.56.1",
     "vitest": "^4.0.18"
   }
 }
