@@ -1,0 +1,192 @@
+# Development compose. Hot reload for all four services + opt-in Postgres.
+# Run from the monorepo root:
+#   docker compose -f docker/compose.dev.yml up
+
+name: dds-dev
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    profiles: [postgres]
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dds
+      POSTGRES_PASSWORD: dds
+      POSTGRES_DB: dds
+    ports:
+      - "5432:5432"
+    volumes:
+      - dds-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dds"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Owns the @dds/client build. Runs tsup --watch so changes to packages/client-ts/src are
+  # rebuilt automatically. The other services depend on this being "healthy" (dist/index.js
+  # exists) before they start.
+  client-builder:
+    build:
+      context: ..
+      dockerfile: docker/sveltekit.dev.Dockerfile
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        cd /workspace
+        if [ ! -d packages/client-ts/src/lexicon/types ]; then
+          pnpm --filter @dds/client codegen
+        fi
+        pnpm --filter @dds/client dev
+    volumes:
+      - ../:/workspace
+      - /workspace/node_modules
+      - /workspace/packages/client-ts/node_modules
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /workspace/packages/client-ts/dist/index.js"]
+      interval: 2s
+      timeout: 2s
+      retries: 60
+      start_period: 120s
+
+  # The DDS appview: subscribes to jetstream, persists records, serves project-scoped queries.
+  indexer:
+    build:
+      context: ..
+      dockerfile: docker/indexer.dev.Dockerfile
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        cd /workspace/apps/indexer
+        pnpm db:migrate
+        exec pnpm dev
+    environment:
+      INDEXER_DATABASE_URL: ${INDEXER_DATABASE_URL:-file:/var/lib/dds/indexer.db}
+      INDEXER_HOST: 0.0.0.0
+      INDEXER_PORT: 8001
+      INDEXER_JETSTREAM_ENDPOINT: ${INDEXER_JETSTREAM_ENDPOINT:-wss://jetstream1.us-east.bsky.network/subscribe}
+    volumes:
+      - ../:/workspace
+      - /workspace/node_modules
+      - /workspace/apps/indexer/node_modules
+      - dds-indexer-data:/var/lib/dds
+    ports:
+      - "8001:8001"
+    depends_on:
+      client-builder:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8001/api/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  clustering-server:
+    build:
+      context: ..
+      dockerfile: docker/clustering-server.dev.Dockerfile
+    environment:
+      DDS_CS_DATABASE_URL: ${DDS_CS_DATABASE_URL:-sqlite+aiosqlite:////var/lib/dds/clustering.db}
+      DDS_CS_BSKY_SERVICE: ${DDS_CS_BSKY_SERVICE:-https://bsky.social}
+      DDS_CS_JETSTREAM_ENDPOINT: ${DDS_CS_JETSTREAM_ENDPOINT:-wss://jetstream1.us-east.bsky.network/subscribe}
+      DDS_CS_INDEXER_URL: ${DDS_CS_INDEXER_URL:-http://indexer:8001}
+      DDS_CS_DEFAULT_RERUN_THRESHOLD: ${DDS_CS_DEFAULT_RERUN_THRESHOLD:-10}
+      DDS_CS_SERVICE_HANDLE: ${DDS_CS_SERVICE_HANDLE:-stuartlynn.bsky.social}
+      DDS_CS_SERVICE_APP_PASSWORD: ${DDS_CS_SERVICE_APP_PASSWORD:-o2fb-chev-ju7k-llyy}
+      DDS_CS_CORS_ORIGINS: '["http://localhost:5173","http://localhost:5174","http://localhost:5175","http://127.0.0.1:5173","http://127.0.0.1:5174","http://127.0.0.1:5175"]'
+      DDS_CS_LOG_LEVEL: ${DDS_CS_LOG_LEVEL:-INFO}
+    volumes:
+      - ../python:/workspace/python
+      - ../lexicons:/workspace/lexicons:ro
+      - dds-cs-data:/var/lib/dds
+    ports:
+      - "8000:8000"
+    depends_on:
+      indexer:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/api/health').getcode()==200 else 1)"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  polis-interface:
+    build:
+      context: ..
+      dockerfile: docker/sveltekit.dev.Dockerfile
+    command: pnpm --filter @dds/polis-interface dev
+    environment:
+      NODE_ENV: development
+      HOST: 0.0.0.0
+      PUBLIC_INDEXER_API_URL: ${PUBLIC_INDEXER_API_URL:-http://127.0.0.1:8001}
+    volumes:
+      - ../:/workspace
+      - /workspace/node_modules
+      - /workspace/apps/polis-interface/node_modules
+      - /workspace/apps/polis-interface/.svelte-kit
+      - /workspace/packages/client-ts/node_modules
+      - /workspace/packages/ui/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      client-builder:
+        condition: service_healthy
+      indexer:
+        condition: service_started
+
+  clustering-admin:
+    build:
+      context: ..
+      dockerfile: docker/sveltekit.dev.Dockerfile
+    command: pnpm --filter @dds/clustering-admin dev
+    environment:
+      NODE_ENV: development
+      HOST: 0.0.0.0
+      CLUSTERING_API_URL: http://clustering-server:8000
+    volumes:
+      - ../:/workspace
+      - /workspace/node_modules
+      - /workspace/apps/clustering-admin/node_modules
+      - /workspace/apps/clustering-admin/.svelte-kit
+      - /workspace/packages/client-ts/node_modules
+      - /workspace/packages/ui/node_modules
+    ports:
+      - "5174:5174"
+    depends_on:
+      client-builder:
+        condition: service_healthy
+      clustering-server:
+        condition: service_started
+
+  visualisation:
+    build:
+      context: ..
+      dockerfile: docker/sveltekit.dev.Dockerfile
+    command: pnpm --filter @dds/visualisation dev
+    environment:
+      NODE_ENV: development
+      HOST: 0.0.0.0
+      PUBLIC_INDEXER_API_URL: ${PUBLIC_INDEXER_API_URL:-http://127.0.0.1:8001}
+    volumes:
+      - ../:/workspace
+      - /workspace/node_modules
+      - /workspace/apps/visualisation/node_modules
+      - /workspace/apps/visualisation/.svelte-kit
+      - /workspace/packages/client-ts/node_modules
+      - /workspace/packages/ui/node_modules
+    ports:
+      - "5175:5175"
+    depends_on:
+      client-builder:
+        condition: service_healthy
+      indexer:
+        condition: service_started
+
+volumes:
+  dds-postgres-data:
+  dds-cs-data:
+  dds-indexer-data:

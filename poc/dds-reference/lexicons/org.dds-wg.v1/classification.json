@@ -1,0 +1,31 @@
+{
+  "lexicon": 1,
+  "id": "org.dds-wg.v1.classification",
+  "description": "A label applied by an agent to a subject, with an optional confidence (0-10000 representing 0.0000-1.0000).",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["creator", "subject", "label", "createdAt"],
+        "properties": {
+          "schemaVersion": { "type": "string", "maxLength": 32 },
+          "creator": {
+            "type": "union",
+            "refs": ["org.dds-wg.v1.defs#userAgent", "org.dds-wg.v1.defs#algorithmAgent"]
+          },
+          "subject": { "type": "ref", "ref": "com.atproto.repo.strongRef" },
+          "label": { "type": "string", "maxLength": 200 },
+          "confidence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000,
+            "description": "Fixed-point confidence: integer in [0, 10000] representing [0.0000, 1.0000]. ATProto lexicon does not support native floats."
+          },
+          "createdAt": { "type": "string", "format": "datetime" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+packages:
+  - packages/*
+  - apps/*
+
+allowBuilds:
+  core-js: false
+  esbuild: true
+  better-sqlite3: true
+
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - "@tailwindcss/oxide"
+  - better-sqlite3

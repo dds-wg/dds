@@ -1,0 +1,21 @@
+{
+  "name": "@dds/reference-root",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.10.0",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "scripts": {
+    "codegen:ts": "pnpm --filter @dds/client codegen",
+    "build": "pnpm -r build",
+    "dev:polis": "pnpm --filter @dds/polis-interface dev",
+    "dev:vis": "pnpm --filter @dds/visualisation dev",
+    "dev:clustering-admin": "pnpm --filter @dds/clustering-admin dev",
+    "check": "pnpm -r check"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

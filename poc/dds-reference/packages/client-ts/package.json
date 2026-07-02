@@ -1,0 +1,60 @@
+{
+  "name": "@dds/client",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "TypeScript client library for the DDS reference implementation. Bluesky auth + typed records + feed consumer.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./auth/browser": {
+      "types": "./dist/auth/browser.d.ts",
+      "import": "./dist/auth/browser.js"
+    },
+    "./auth/node": {
+      "types": "./dist/auth/node.d.ts",
+      "import": "./dist/auth/node.js"
+    },
+    "./feed": {
+      "types": "./dist/feed.d.ts",
+      "import": "./dist/feed.js"
+    },
+    "./replay": {
+      "types": "./dist/replay.d.ts",
+      "import": "./dist/replay.js"
+    },
+    "./indexer": {
+      "types": "./dist/indexer.d.ts",
+      "import": "./dist/indexer.js"
+    },
+    "./lexicon": {
+      "types": "./dist/lexicon/index.d.ts",
+      "import": "./dist/lexicon/index.js"
+    }
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "codegen": "node ./scripts/codegen.mjs",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@atproto/api": "^0.20.22",
+    "@atproto/lexicon": "^0.7.3",
+    "@atproto/oauth-client-browser": "^0.4.3",
+    "@atproto/oauth-client-node": "^0.4.3",
+    "@atproto/syntax": "^0.6.3",
+    "@atproto/xrpc": "^0.8.2",
+    "@skyware/jetstream": "^0.2.5",
+    "multiformats": "^14.0.2"
+  },
+  "devDependencies": {
+    "@atproto/lex-cli": "^0.10.2",
+    "@types/node": "^22.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
+}

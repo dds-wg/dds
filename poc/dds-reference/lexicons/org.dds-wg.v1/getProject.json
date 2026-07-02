@@ -1,0 +1,21 @@
+{
+  "lexicon": 1,
+  "id": "org.dds-wg.v1.getProject",
+  "description": "App-view query: fetch a project record by AT-URI.",
+  "defs": {
+    "main": {
+      "type": "query",
+      "parameters": {
+        "type": "params",
+        "required": ["uri"],
+        "properties": {
+          "uri": { "type": "string", "format": "at-uri" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": { "type": "ref", "ref": "org.dds-wg.v1.defs#recordView" }
+      }
+    }
+  }
+}

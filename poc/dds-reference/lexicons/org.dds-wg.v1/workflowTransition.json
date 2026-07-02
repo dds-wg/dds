@@ -1,0 +1,26 @@
+{
+  "lexicon": 1,
+  "id": "org.dds-wg.v1.workflowTransition",
+  "description": "A transition between two phases of a project, with a trigger type.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["project", "from", "to", "trigger", "createdAt"],
+        "properties": {
+          "schemaVersion": { "type": "string", "maxLength": 32 },
+          "project": { "type": "ref", "ref": "com.atproto.repo.strongRef" },
+          "from": { "type": "string", "maxLength": 200 },
+          "to": { "type": "string", "maxLength": 200 },
+          "trigger": {
+            "type": "string",
+            "knownValues": ["time", "voteThreshold", "algorithmDecision", "manual"]
+          },
+          "createdAt": { "type": "string", "format": "datetime" }
+        }
+      }
+    }
+  }
+}
