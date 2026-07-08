@@ -1,0 +1,54 @@
+{
+  "lexicon": 1,
+  "id": "org.dds-wg.v1.group",
+  "description": "A group of subjects: statements, users, or other groups. Created by a user or algorithm.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["creator", "members", "createdAt"],
+        "properties": {
+          "schemaVersion": { "type": "string", "maxLength": 32 },
+          "name": { "type": "string", "maxLength": 200 },
+          "description": { "type": "string", "maxLength": 5000 },
+          "creator": {
+            "type": "union",
+            "refs": ["org.dds-wg.v1.defs#userAgent", "org.dds-wg.v1.defs#algorithmAgent"]
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "union",
+              "refs": ["#statementMember", "#userMember", "#groupMember"]
+            }
+          },
+          "step": { "type": "ref", "ref": "org.dds-wg.v1.defs#projectStepRef" },
+          "createdAt": { "type": "string", "format": "datetime" }
+        }
+      }
+    },
+    "statementMember": {
+      "type": "object",
+      "required": ["statement"],
+      "properties": {
+        "statement": { "type": "ref", "ref": "com.atproto.repo.strongRef" }
+      }
+    },
+    "userMember": {
+      "type": "object",
+      "required": ["did"],
+      "properties": {
+        "did": { "type": "string", "format": "did" }
+      }
+    },
+    "groupMember": {
+      "type": "object",
+      "required": ["group"],
+      "properties": {
+        "group": { "type": "ref", "ref": "com.atproto.repo.strongRef" }
+      }
+    }
+  }
+}

@@ -1,0 +1,136 @@
+# Production compose. Caddy fronts everything on :8080 and routes to internal services.
+# Run from the monorepo root:
+#   docker compose -f docker/compose.prod.yml --env-file docker/.env up -d --build
+
+name: dds-prod
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dds}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?must be set in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-dds}
+    volumes:
+      - dds-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dds}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  indexer:
+    build:
+      context: ..
+      dockerfile: docker/indexer.prod.Dockerfile
+    restart: unless-stopped
+    environment:
+      INDEXER_DATABASE_URL: file:/var/lib/dds/indexer.db
+      INDEXER_HOST: 0.0.0.0
+      INDEXER_PORT: 8001
+      INDEXER_JETSTREAM_ENDPOINT: ${INDEXER_JETSTREAM_ENDPOINT:-wss://jetstream1.us-east.bsky.network/subscribe}
+      INDEXER_CORS_ORIGINS: '["${PUBLIC_BASE_URL:-http://localhost:8080}"]'
+    volumes:
+      - dds-indexer-data:/var/lib/dds
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8001/api/health >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+
+  clustering-server:
+    build:
+      context: ..
+      dockerfile: docker/clustering-server.prod.Dockerfile
+    restart: unless-stopped
+    environment:
+      DDS_CS_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-dds}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-dds}
+      DDS_CS_BSKY_SERVICE: ${DDS_CS_BSKY_SERVICE:-https://bsky.social}
+      DDS_CS_JETSTREAM_ENDPOINT: ${DDS_CS_JETSTREAM_ENDPOINT:-wss://jetstream1.us-east.bsky.network/subscribe}
+      DDS_CS_INDEXER_URL: http://indexer:8001
+      DDS_CS_DEFAULT_RERUN_THRESHOLD: ${DDS_CS_DEFAULT_RERUN_THRESHOLD:-10}
+      DDS_CS_SERVICE_HANDLE: ${DDS_CS_SERVICE_HANDLE:-}
+      DDS_CS_SERVICE_APP_PASSWORD: ${DDS_CS_SERVICE_APP_PASSWORD:-}
+      DDS_CS_CORS_ORIGINS: '["${PUBLIC_BASE_URL:-http://localhost:8080}"]'
+      DDS_CS_LOG_LEVEL: ${DDS_CS_LOG_LEVEL:-INFO}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/api/health').getcode()==200 else 1)"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+
+  polis-interface:
+    build:
+      context: ..
+      dockerfile: docker/sveltekit.prod.Dockerfile
+      args:
+        APP_NAME: "@dds/polis-interface"
+        APP_DIR: "apps/polis-interface"
+        BASE_PATH: ""
+    restart: unless-stopped
+    environment:
+      ORIGIN: ${PUBLIC_BASE_URL:-http://localhost:8080}
+      PROTOCOL_HEADER: x-forwarded-proto
+      HOST_HEADER: x-forwarded-host
+      # Browser hits same-origin /indexer/* (Caddy routes it to the indexer service).
+      PUBLIC_INDEXER_API_URL: /indexer
+
+  clustering-admin:
+    build:
+      context: ..
+      dockerfile: docker/sveltekit.prod.Dockerfile
+      args:
+        APP_NAME: "@dds/clustering-admin"
+        APP_DIR: "apps/clustering-admin"
+        BASE_PATH: "/clustering"
+    restart: unless-stopped
+    environment:
+      ORIGIN: ${PUBLIC_BASE_URL:-http://localhost:8080}
+      PROTOCOL_HEADER: x-forwarded-proto
+      HOST_HEADER: x-forwarded-host
+      # The browser hits same-origin /api/* (proxied by Caddy to clustering-server).
+      PUBLIC_CLUSTERING_API_URL: ""
+
+  visualisation:
+    build:
+      context: ..
+      dockerfile: docker/sveltekit.prod.Dockerfile
+      args:
+        APP_NAME: "@dds/visualisation"
+        APP_DIR: "apps/visualisation"
+        BASE_PATH: "/vis"
+    restart: unless-stopped
+    environment:
+      ORIGIN: ${PUBLIC_BASE_URL:-http://localhost:8080}
+      PROTOCOL_HEADER: x-forwarded-proto
+      HOST_HEADER: x-forwarded-host
+      PUBLIC_INDEXER_API_URL: /indexer
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "${HOST_HTTP_PORT:-8080}:80"
+      - "${HOST_HTTPS_PORT:-8443}:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - dds-caddy-data:/data
+      - dds-caddy-config:/config
+    environment:
+      PUBLIC_HOST: ${PUBLIC_HOST:-:80}
+    depends_on:
+      - polis-interface
+      - clustering-admin
+      - visualisation
+      - clustering-server
+      - indexer
+
+volumes:
+  dds-postgres-data:
+  dds-caddy-data:
+  dds-caddy-config:
+  dds-indexer-data:

@@ -1,0 +1,40 @@
+# Caddy front door for the production stack.
+#
+# By default we listen on plain HTTP via the PUBLIC_HOST env (e.g. `:80` or `dds.example.com`).
+# To enable TLS, set PUBLIC_HOST to a hostname and ensure ports 80 + 443 are reachable; Caddy
+# will provision Let's Encrypt certs automatically.
+
+{$PUBLIC_HOST:-:80} {
+	encode zstd gzip
+
+	# Indexer (appview) REST API. `/indexer/api/foo` -> indexer service `/api/foo`.
+	handle_path /indexer/* {
+		reverse_proxy indexer:8001
+	}
+
+	# Clustering REST API (backs the clustering-admin UI's same-origin /api calls)
+	handle /api/* {
+		reverse_proxy clustering-server:8000
+	}
+
+	# Clustering admin UI, mounted at /clustering/ (SvelteKit built with BASE_PATH=/clustering)
+	handle /clustering/* {
+		reverse_proxy clustering-admin:3000
+	}
+
+	# Visualisation app, mounted at /vis/ (SvelteKit built with BASE_PATH=/vis)
+	handle /vis/* {
+		reverse_proxy visualisation:3000
+	}
+
+	# Everything else: the Polis interface at the root
+	handle {
+		reverse_proxy polis-interface:3000
+	}
+
+	log {
+		output stdout
+		format console
+		level INFO
+	}
+}

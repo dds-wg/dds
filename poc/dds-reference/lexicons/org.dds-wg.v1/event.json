@@ -1,0 +1,25 @@
+{
+  "lexicon": 1,
+  "id": "org.dds-wg.v1.event",
+  "description": "A generic event in the DDS workflow: who did what to which subject when.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["type", "actor", "subject", "timestamp"],
+        "properties": {
+          "schemaVersion": { "type": "string", "maxLength": 32 },
+          "type": { "type": "string", "maxLength": 200 },
+          "actor": {
+            "type": "union",
+            "refs": ["org.dds-wg.v1.defs#userAgent", "org.dds-wg.v1.defs#algorithmAgent"]
+          },
+          "subject": { "type": "ref", "ref": "com.atproto.repo.strongRef" },
+          "timestamp": { "type": "string", "format": "datetime" }
+        }
+      }
+    }
+  }
+}

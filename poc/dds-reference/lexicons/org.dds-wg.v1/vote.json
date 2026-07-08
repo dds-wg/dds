@@ -1,0 +1,72 @@
+{
+  "lexicon": 1,
+  "id": "org.dds-wg.v1.vote",
+  "description": "A vote cast by an agent against a target subject. The vote payload is one of several value-shapes (ordinal, continuous, quadratic, approval, ranked).",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["author", "target", "value", "createdAt"],
+        "properties": {
+          "schemaVersion": { "type": "string", "maxLength": 32 },
+          "author": {
+            "type": "union",
+            "refs": ["org.dds-wg.v1.defs#userAgent", "org.dds-wg.v1.defs#algorithmAgent"]
+          },
+          "target": { "type": "ref", "ref": "com.atproto.repo.strongRef" },
+          "value": {
+            "type": "union",
+            "refs": ["#ordinal", "#continuous", "#quadratic", "#approval", "#ranked"]
+          },
+          "step": { "type": "ref", "ref": "org.dds-wg.v1.defs#projectStepRef" },
+          "createdAt": { "type": "string", "format": "datetime" }
+        }
+      }
+    },
+    "ordinal": {
+      "type": "object",
+      "description": "Polis-style trinary vote: -1 disagree, 0 pass, +1 agree.",
+      "required": ["value"],
+      "properties": {
+        "value": { "type": "integer", "minimum": -1, "maximum": 1 }
+      }
+    },
+    "continuous": {
+      "type": "object",
+      "description": "A continuous-valued vote represented as fixed-point integer in [-10000, 10000] (= [-1.0, 1.0] with 4 decimal places). ATProto lexicon does not support native floats.",
+      "required": ["value"],
+      "properties": {
+        "value": { "type": "integer", "minimum": -10000, "maximum": 10000 }
+      }
+    },
+    "quadratic": {
+      "type": "object",
+      "description": "Quadratic voting: an integer number of credits (can be negative).",
+      "required": ["credits"],
+      "properties": {
+        "credits": { "type": "integer" }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "description": "Boolean approval vote.",
+      "required": ["approve"],
+      "properties": {
+        "approve": { "type": "boolean" }
+      }
+    },
+    "ranked": {
+      "type": "object",
+      "description": "A ranked vote that orders subject URIs by preference (most preferred first).",
+      "required": ["order"],
+      "properties": {
+        "order": {
+          "type": "array",
+          "items": { "type": "string", "format": "at-uri" }
+        }
+      }
+    }
+  }
+}

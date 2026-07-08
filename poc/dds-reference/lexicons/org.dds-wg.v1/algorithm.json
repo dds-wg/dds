@@ -1,0 +1,27 @@
+{
+  "lexicon": 1,
+  "id": "org.dds-wg.v1.algorithm",
+  "description": "A registered instance of an algorithm. Other agent-bearing records can reference this as an algorithmAgent.",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["name", "creator", "createdAt"],
+        "properties": {
+          "schemaVersion": { "type": "string", "maxLength": 32 },
+          "name": { "type": "string", "maxLength": 200 },
+          "description": { "type": "string", "maxLength": 10000 },
+          "creator": { "type": "string", "format": "did" },
+          "metadata": {
+            "type": "string",
+            "description": "JSON-encoded parameters of this algorithm instance.",
+            "maxLength": 100000
+          },
+          "createdAt": { "type": "string", "format": "datetime" }
+        }
+      }
+    }
+  }
+}

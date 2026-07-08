@@ -1,0 +1,25 @@
+{
+  "lexicon": 1,
+  "id": "org.dds-wg.v1.response",
+  "description": "A free-form textual response targeted at a DDS subject (e.g. a statement, proposal, or summary).",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["text", "target", "createdAt"],
+        "properties": {
+          "schemaVersion": { "type": "string", "maxLength": 32 },
+          "text": { "type": "string", "maxLength": 5000 },
+          "target": { "type": "ref", "ref": "com.atproto.repo.strongRef" },
+          "author": {
+            "type": "union",
+            "refs": ["org.dds-wg.v1.defs#userAgent", "org.dds-wg.v1.defs#algorithmAgent"]
+          },
+          "createdAt": { "type": "string", "format": "datetime" }
+        }
+      }
+    }
+  }
+}

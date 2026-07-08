@@ -1,0 +1,120 @@
+/*
+ * Shared design tokens for the DDS reference apps. Imported by every SvelteKit app via
+ * `@import "@dds/ui/theme.css";` in `app.css`.
+ *
+ * Two coordinate systems coexist:
+ *   1. `--color-dds-*` legacy tokens kept for direct utility usage like `bg-dds-surface`.
+ *   2. shadcn-svelte's semantic vars (`--background`, `--primary`, etc) mapped onto the
+ *      same palette so primitives drop in without a separate color regime.
+ *
+ * App is dark-only, so the palette lives at :root rather than under a `.dark` class.
+ */
+
+@import "tailwindcss";
+
+@theme {
+  /* Legacy DDS palette, still used by app-level utilities. */
+  --color-dds-bg: #0f1419;
+  --color-dds-surface: #1a2027;
+  --color-dds-surface-elevated: #232a32;
+  --color-dds-border: #2f3742;
+  --color-dds-text: #e6edf3;
+  --color-dds-text-muted: #8b949e;
+  --color-dds-text-subtle: #6e7681;
+  --color-dds-accent: #58a6ff;
+  --color-dds-accent-hover: #79b8ff;
+  --color-dds-success: #3fb950;
+  --color-dds-warning: #d29922;
+  --color-dds-danger: #f85149;
+  --color-dds-agree: #3fb950;
+  --color-dds-disagree: #f85149;
+  --color-dds-pass: #8b949e;
+
+  --font-family-display: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-family-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-family-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --radius-dds-sm: 0.375rem;
+  --radius-dds-md: 0.5rem;
+  --radius-dds-lg: 0.75rem;
+
+  --shadow-dds-card: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+}
+
+/*
+ * shadcn-svelte semantic tokens. Components reference them via Tailwind utilities like
+ * `bg-background`, `text-foreground`, `border-border`, `bg-primary text-primary-foreground`.
+ * The @theme inline block below exposes those utility names; the :root block sets the
+ * actual values onto the existing DDS palette.
+ */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  color-scheme: dark;
+
+  --background: #0f1419;
+  --foreground: #e6edf3;
+  --card: #1a2027;
+  --card-foreground: #e6edf3;
+  --popover: #232a32;
+  --popover-foreground: #e6edf3;
+  --primary: #58a6ff;
+  --primary-foreground: #0f1419;
+  --secondary: #232a32;
+  --secondary-foreground: #e6edf3;
+  --muted: #232a32;
+  --muted-foreground: #8b949e;
+  --accent: #232a32;
+  --accent-foreground: #e6edf3;
+  --destructive: #f85149;
+  --destructive-foreground: #ffffff;
+  --border: #2f3742;
+  --input: #2f3742;
+  --ring: #58a6ff;
+  --radius: 0.5rem;
+}
+
+html,
+body {
+  background-color: var(--color-dds-bg);
+  color: var(--color-dds-text);
+  font-family: var(--font-family-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: var(--color-dds-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-dds-accent-hover);
+  text-decoration: underline;
+}
