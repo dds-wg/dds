@@ -1,10 +1,11 @@
 <img src=".github/assets/logo.svg" alt="DDS Logo" width="160" />
 
-# Decentralized Deliberation Standard (DDS)
+# Decentralized Deliberation Stack (DDS)
 
-An open protocol for sovereign, verifiable, interoperable, and resilient deliberation.
+An open stack for sovereign, verifiable, interoperable, and resilient deliberation.
 
-Part of the [DDS Working Group](https://github.com/dds-wg/.github).
+Maintained in the [DDS GitHub organization](https://github.com/dds-wg) and
+developed through the [W3C DDS Community Group](https://www.w3.org/community/dds/).
 
 ## Structure
 
@@ -21,7 +22,8 @@ pnpm dev
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) and the [working group governance](https://github.com/dds-wg/.github).
+See [CONTRIBUTING.md](./CONTRIBUTING.md) and the
+[community group governance](https://github.com/dds-wg/.github/blob/main/GOVERNANCE.md).
 
 ## License
 

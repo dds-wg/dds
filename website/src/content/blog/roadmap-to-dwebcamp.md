@@ -1,11 +1,11 @@
 ---
 title: "Roadmap to DWebCamp: Building DDS in the Open"
-description: "The DDS Working Group has set its governance, technical direction, and a phased roadmap toward a first public presentation at DWebCamp in July 2026."
+description: "The DDS Community Group has set its governance, technical direction, and a phased roadmap toward a first public presentation at DWebCamp in July 2026."
 author: "Nicolas Gimenez"
 date: "2026-02-22"
 ---
 
-The DDS Working Group aims for [DWebCamp](https://dwebcamp.org/) in July 2026 as its first public milestone. Here's the roadmap.
+The DDS Community Group aims for [DWebCamp](https://dwebcamp.org/) in July 2026 as its first public milestone. Here's the roadmap.
 
 ## Phase 1: Foundation (February -- March)
 

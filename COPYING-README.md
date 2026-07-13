@@ -5,7 +5,7 @@ and tests. No single licence covers the entire repository.
 
 | Content | Licence | Notes |
 | --- | --- | --- |
-| Specification text in [`spec/`](./spec/) | [W3C Community Contributor License Agreement](https://www.w3.org/community/about/process/cla/) | New specification contributions should be made through the W3C Community Group process. |
+| Specification text in [`spec/`](./spec/) | W3C Community Group specification terms, see [`spec/COPYING`](./spec/COPYING) | Specification material is developed through the [W3C DDS Community Group](https://www.w3.org/community/dds/). |
 | Other Community Group reports | [W3C Software and Document License](https://www.w3.org/copyright/software-license/) | Applies to non-specification reports unless another licence is explicitly stated. |
 | Normative schemas or vocabularies that form part of the specification | W3C specification or report terms | Treat these as specification material, not implementation code. |
 | Source code, reference implementations, SDKs, libraries, and development tools | [Mozilla Public License 2.0](./COPYING) | Applies unless another licence is explicitly stated. Existing MPL-covered files keep their MPL notices. |
@@ -18,12 +18,12 @@ The complete MPL-2.0 text is available in [`COPYING`](./COPYING). MPL-2.0 is
 used for software in this repository, including reference implementations,
 libraries, and development tooling, unless a more specific notice says otherwise.
 
-## Existing Material
+## Licence Notices
 
-Do not remove MPL-2.0 notices from files that already received MPL-covered
-contributions. MPL-2.0 is a file-level licence, and modifications to covered
-files remain within its scope.
+Files may include their own licence notices. If a file states a specific
+licence, that notice controls for that file.
 
-Existing specification text can only be relicensed where the contributors have
-the necessary rights or have agreed to the relicensing. New specification work
-should follow the W3C Community Group contribution process.
+Specification material should follow the
+[W3C DDS Community Group](https://www.w3.org/community/dds/) contribution
+process. Software should keep MPL-2.0 wherever MPL-2.0 is the applicable file
+licence.

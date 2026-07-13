@@ -1,6 +1,6 @@
 # DDS Reference Implementation
 
-A reference implementation of the [DDS](../..) standard built on top of the ATProto network
+A reference implementation of [DDS](../..) built on top of the ATProto network
 (Bluesky-only auth for now). Comprised of three apps and two client libraries that all communicate
 through the canonical `org.dds-wg.*` lexicon.
 

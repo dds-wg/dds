@@ -15,7 +15,7 @@ order: 1
 
 ## 1. Introduction
 
-The **Decentralized Deliberation Standard (DDS)** is an open protocol for sovereign, verifiable, interoperable, and resilient deliberation. The protocol leverages **AT Protocol** for transport, **Arweave/Filecoin/Logos Storage** for archival, and **Ethereum** for verification.
+The **Decentralized Deliberation Stack (DDS)** is an open stack for sovereign, verifiable, interoperable, and resilient deliberation. The protocol leverages **AT Protocol** for transport, **Arweave/Filecoin/Logos Storage** for archival, and **Ethereum** for verification.
 
 DDS is organized around four design tensions:
 
