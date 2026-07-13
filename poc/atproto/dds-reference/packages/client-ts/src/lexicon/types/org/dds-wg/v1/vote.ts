@@ -68,7 +68,7 @@ export function validateOrdinal<V>(v: V) {
   return validate<Ordinal & V>(v, id, hashOrdinal)
 }
 
-/** A continuous-valued vote represented as fixed-point integer in [-10000, 10000] (= [-1.0, 1.0] with 4 decimal places). ATProto lexicon does not support native floats. */
+/** A continuous-valued vote represented as fixed-point integer in [-10000, 10000] (= [-1.0, 1.0] with 4 decimal places). AT Protocol lexicon does not support native floats. */
 export interface Continuous {
   $type?: 'org.dds-wg.v1.vote#continuous'
   value: number

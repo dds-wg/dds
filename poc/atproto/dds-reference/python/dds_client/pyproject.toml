@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Python client library for the DDS reference implementation. Mirrors @dds/client."
 readme = "README.md"
 requires-python = ">=3.11"
-authors = [{ name = "DDS WG" }]
+authors = [{ name = "DDS Community Group" }]
 license = { text = "MPL-2.0" }
 dependencies = [
     "atproto>=0.0.55",

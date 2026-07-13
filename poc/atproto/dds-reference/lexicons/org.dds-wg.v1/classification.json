@@ -21,7 +21,7 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 10000,
-            "description": "Fixed-point confidence: integer in [0, 10000] representing [0.0000, 1.0000]. ATProto lexicon does not support native floats."
+            "description": "Fixed-point confidence: integer in [0, 10000] representing [0.0000, 1.0000]. AT Protocol lexicon does not support native floats."
           },
           "createdAt": { "type": "string", "format": "datetime" }
         }

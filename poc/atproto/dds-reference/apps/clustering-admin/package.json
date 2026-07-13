@@ -2,6 +2,7 @@
   "name": "@dds/clustering-admin",
   "version": "0.1.0",
   "private": true,
+  "license": "MPL-2.0",
   "type": "module",
   "description": "Admin UI for the DDS clustering server. List/pause/configure analyses.",
   "scripts": {

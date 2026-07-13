@@ -25,7 +25,7 @@ export interface Main {
     | { $type: string }
   subject: ComAtprotoRepoStrongRef.Main
   label: string
-  /** Fixed-point confidence: integer in [0, 10000] representing [0.0000, 1.0000]. ATProto lexicon does not support native floats. */
+  /** Fixed-point confidence: integer in [0, 10000] representing [0.0000, 1.0000]. AT Protocol lexicon does not support native floats. */
   confidence?: number
   createdAt: string
   [k: string]: unknown

@@ -2,6 +2,7 @@
   "name": "@dds/indexer",
   "version": "0.1.0",
   "private": true,
+  "license": "MPL-2.0",
   "type": "module",
   "description": "DDS indexer: subscribes to jetstream, persists records, serves project-scoped queries.",
   "scripts": {

@@ -35,7 +35,7 @@
     },
     "continuous": {
       "type": "object",
-      "description": "A continuous-valued vote represented as fixed-point integer in [-10000, 10000] (= [-1.0, 1.0] with 4 decimal places). ATProto lexicon does not support native floats.",
+      "description": "A continuous-valued vote represented as fixed-point integer in [-10000, 10000] (= [-1.0, 1.0] with 4 decimal places). AT Protocol lexicon does not support native floats.",
       "required": ["value"],
       "properties": {
         "value": { "type": "integer", "minimum": -10000, "maximum": 10000 }

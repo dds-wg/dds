@@ -1,7 +1,7 @@
 {
   "lexicon": 1,
   "id": "org.dds-wg.v1.defs",
-  "description": "Shared definitions used across the DDS v1 lexicon. agentRef and subjectRef are conventions, expressed inline at each use-site (see README), because ATProto lexicon does not permit top-level union or ref defs.",
+  "description": "Shared definitions used across the DDS v1 lexicon. agentRef and subjectRef are conventions, expressed inline at each use-site (see README), because AT Protocol lexicon does not permit top-level union or ref defs.",
   "defs": {
     "userAgent": {
       "type": "object",

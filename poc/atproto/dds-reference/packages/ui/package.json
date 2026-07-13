@@ -2,6 +2,7 @@
   "name": "@dds/ui",
   "version": "0.1.0",
   "private": true,
+  "license": "MPL-2.0",
   "type": "module",
   "description": "Shared Tailwind theme tokens and shadcn-svelte components for the DDS reference apps.",
   "svelte": "./src/index.ts",

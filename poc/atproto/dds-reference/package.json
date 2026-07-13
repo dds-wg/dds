@@ -1,6 +1,7 @@
 {
   "name": "@dds/reference-root",
   "private": true,
+  "license": "MPL-2.0",
   "type": "module",
   "packageManager": "pnpm@10.10.0",
   "engines": {

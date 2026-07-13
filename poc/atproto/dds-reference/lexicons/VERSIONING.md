@@ -1,8 +1,8 @@
 # Lexicon Versioning Policy
 
-ATProto has no built-in lexicon version; the network treats NSIDs as opaque identifiers and assumes
-they evolve only additively. This is too narrow for the DDS lexicon, which we expect to evolve over
-years. The DDS WG uses the following two-tier policy.
+AT Protocol has no built-in lexicon version; the network treats NSIDs as opaque identifiers and
+assumes they evolve only additively. This is too narrow for the DDS lexicon, which we expect to
+evolve over years. The DDS Community Group uses the following two-tier policy.
 
 ## Tier 1: major version baked into the NSID
 
@@ -48,11 +48,12 @@ Consumers MAY gate behavior on this field, e.g.:
 Old major versions are **soft-deprecated**: they remain readable AND writable indefinitely. Clients
 may continue to author new records against them, and the network must continue to surface them.
 
-The DDS WG publishes a migration guide alongside each new major (e.g. `MIGRATION-v1-to-v2.md`) so
-that operators of long-running services can convert at their own pace.
+The DDS Community Group publishes a migration guide alongside each new major
+(e.g. `MIGRATION-v1-to-v2.md`) so that operators of long-running services can
+convert at their own pace.
 
-Removing a major version requires explicit DDS WG decision and a published timeline. As of v1, no
-deprecation is planned.
+Removing a major version requires an explicit DDS Community Group decision and a published timeline.
+As of v1, no deprecation is planned.
 
 ## Authoring rules for libraries
 

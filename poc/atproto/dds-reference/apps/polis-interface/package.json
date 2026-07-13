@@ -2,6 +2,7 @@
   "name": "@dds/polis-interface",
   "version": "0.1.0",
   "private": true,
+  "license": "MPL-2.0",
   "type": "module",
   "description": "Polis-like SvelteKit interface for creating DDS polls, statements, and votes.",
   "scripts": {

@@ -2,6 +2,7 @@
   "name": "@dds/visualisation",
   "version": "0.1.0",
   "private": true,
+  "license": "MPL-2.0",
   "type": "module",
   "description": "SvelteKit + Layer Cake visualisation of a DDS project step, in the style of a classic Polis report.",
   "scripts": {

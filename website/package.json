@@ -1,6 +1,7 @@
 {
   "name": "@dds-wg/website",
   "private": true,
+  "license": "MPL-2.0",
   "type": "module",
   "version": "0.0.1",
   "scripts": {

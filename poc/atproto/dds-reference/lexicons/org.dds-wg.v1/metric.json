@@ -39,7 +39,7 @@
     },
     "decimalValue": {
       "type": "object",
-      "description": "A decimal metric value. ATProto has no native float type, so this is encoded as a JSON-number string (e.g. '0.4231').",
+      "description": "A decimal metric value. AT Protocol has no native float type, so this is encoded as a JSON-number string (e.g. '0.4231').",
       "required": ["decimal"],
       "properties": { "decimal": { "type": "string", "maxLength": 64 } }
     },

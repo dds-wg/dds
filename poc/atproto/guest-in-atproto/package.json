@@ -8,7 +8,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MPL-2.0",
   "packageManager": "pnpm@10.29.3",
   "dependencies": {
     "@atproto/lex": "^0.0.19"

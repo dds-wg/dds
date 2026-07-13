@@ -2,6 +2,7 @@
   "name": "@dds/client",
   "version": "0.1.0",
   "private": true,
+  "license": "MPL-2.0",
   "type": "module",
   "description": "TypeScript client library for the DDS reference implementation. Bluesky auth + typed records + feed consumer.",
   "exports": {

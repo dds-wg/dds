@@ -4,7 +4,7 @@
  *
  * The original lex-cli output here builds an XrpcClient that depends on com.atproto.* lexicons
  * we don't bundle. The DDSClient in this package wraps @atproto/api's Agent instead, which
- * already provides full ATProto coverage. Consumers should import types from here.
+ * already provides full AT Protocol coverage. Consumers should import types from here.
  */
 export * as OrgDdsWgV1Algorithm from "./types/org/dds-wg/v1/algorithm.js";
 export * as OrgDdsWgV1Classification from "./types/org/dds-wg/v1/classification.js";

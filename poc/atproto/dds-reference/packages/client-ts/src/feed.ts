@@ -6,7 +6,7 @@ import { COLLECTIONS, type DDSCollection } from "./version.js";
 export interface DDSFeedEvent {
   /** Source of this event: live jetstream stream, or PDS catch-up. */
   source: "jetstream" | "catchup";
-  /** ATProto repo DID this record belongs to. */
+  /** AT Protocol repo DID this record belongs to. */
   did: string;
   /** Collection NSID. */
   collection: DDSCollection | string;

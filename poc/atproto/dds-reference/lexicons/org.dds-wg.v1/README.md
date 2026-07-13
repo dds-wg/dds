@@ -1,6 +1,6 @@
 # `org.dds-wg.v1.*` Lexicons
 
-Canonical, formal ATProto lexicon for the DDS reference implementation, **major version 1**.
+Canonical, formal AT Protocol lexicon for the DDS reference implementation, **major version 1**.
 
 See [`../VERSIONING.md`](../VERSIONING.md) for the versioning policy that governs this directory.
 
@@ -42,8 +42,9 @@ See [`../VERSIONING.md`](../VERSIONING.md) for the versioning policy that govern
 - Records that belong to a project step embed an optional `step` field of
   `org.dds-wg.v1.defs#projectStepRef` so consumers can filter without resolving the parent project.
 
-## Note: `dsl` vs. lexicon
+## Note: AT Protocol Binding
 
-These lexicons are derived from the design DSL in [`spec/lexicon/`](../../../../spec/lexicon).
-That DSL remains the human-readable source-of-truth for the shape of the protocol; this directory
-is the machine-readable form used for codegen and on-the-wire validation.
+These lexicons are the machine-readable AT Protocol binding used for codegen
+and on-the-wire validation in the reference implementation. The main DDS
+specification is expected to evolve toward a transport-agnostic core with
+protocol-specific bindings, starting with this AT Protocol track.

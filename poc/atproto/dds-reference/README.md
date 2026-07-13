@@ -1,7 +1,11 @@
 # DDS Reference Implementation
 
-A reference implementation of [DDS](../..) built on top of the ATProto network
-(Bluesky-only auth for now). Comprised of three apps and two client libraries that all communicate
+A reference implementation of [DDS](../../..) built on top of AT Protocol
+(Bluesky-only auth for now). It is the current focus of the
+[AT Protocol proof-of-concept track](../) while the main DDS specification moves
+toward a transport-agnostic core with protocol-specific bindings.
+
+It is comprised of three apps and two client libraries that all communicate
 through the canonical `org.dds-wg.*` lexicon.
 
 ## Apps
@@ -23,7 +27,7 @@ through the canonical `org.dds-wg.*` lexicon.
 
 ## Lexicons
 
-The canonical, formal ATProto lexicon files live in [`lexicons/org.dds-wg/`](./lexicons/org.dds-wg).
+The canonical, formal AT Protocol lexicon files live in [`lexicons/org.dds-wg/`](./lexicons/org.dds-wg).
 Run `pnpm codegen` from this directory to regenerate types in both languages.
 
 ## Getting started

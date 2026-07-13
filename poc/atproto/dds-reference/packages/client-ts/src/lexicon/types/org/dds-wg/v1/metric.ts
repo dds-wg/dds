@@ -71,7 +71,7 @@ export function validateIntegerValue<V>(v: V) {
   return validate<IntegerValue & V>(v, id, hashIntegerValue)
 }
 
-/** A decimal metric value. ATProto has no native float type, so this is encoded as a JSON-number string (e.g. '0.4231'). */
+/** A decimal metric value. AT Protocol has no native float type, so this is encoded as a JSON-number string (e.g. '0.4231'). */
 export interface DecimalValue {
   $type?: 'org.dds-wg.v1.metric#decimalValue'
   decimal: string

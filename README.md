@@ -11,7 +11,7 @@ developed through the [W3C DDS Community Group](https://www.w3.org/community/dds
 
 - `spec/`, protocol specification documents
 - `website/`, community website (Astro + Svelte 5)
-- `poc/`, proof-of-concept explorations
+- `poc/`, proof-of-concept explorations, currently focused on AT Protocol
 
 ## Development
 
@@ -27,11 +27,11 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) and the
 
 ## License
 
-This repository is not covered by a single licence.
+This repository does not have a repository-wide licence.
 
 Specification contributions are governed by the
 [W3C Community Contributor License Agreement](https://www.w3.org/community/about/process/cla/).
-Software, reference implementations, libraries, and development tools are
-licensed under [MPL-2.0](./COPYING) unless another licence is explicitly stated.
+The website and proof-of-concept software are licensed under MPL-2.0, see
+[`website/COPYING`](./website/COPYING) and [`poc/COPYING`](./poc/COPYING).
 
 See [COPYING-README.md](./COPYING-README.md) for the licence map.

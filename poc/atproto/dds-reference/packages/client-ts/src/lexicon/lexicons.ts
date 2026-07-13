@@ -91,7 +91,7 @@ export const schemaDict = {
               minimum: 0,
               maximum: 10000,
               description:
-                'Fixed-point confidence: integer in [0, 10000] representing [0.0000, 1.0000]. ATProto lexicon does not support native floats.',
+                'Fixed-point confidence: integer in [0, 10000] representing [0.0000, 1.0000]. AT Protocol lexicon does not support native floats.',
             },
             createdAt: {
               type: 'string',
@@ -158,7 +158,7 @@ export const schemaDict = {
     lexicon: 1,
     id: 'org.dds-wg.v1.defs',
     description:
-      'Shared definitions used across the DDS v1 lexicon. agentRef and subjectRef are conventions, expressed inline at each use-site (see README), because ATProto lexicon does not permit top-level union or ref defs.',
+      'Shared definitions used across the DDS v1 lexicon. agentRef and subjectRef are conventions, expressed inline at each use-site (see README), because AT Protocol lexicon does not permit top-level union or ref defs.',
     defs: {
       userAgent: {
         type: 'object',
@@ -499,7 +499,7 @@ export const schemaDict = {
       decimalValue: {
         type: 'object',
         description:
-          "A decimal metric value. ATProto has no native float type, so this is encoded as a JSON-number string (e.g. '0.4231').",
+          "A decimal metric value. AT Protocol has no native float type, so this is encoded as a JSON-number string (e.g. '0.4231').",
         required: ['decimal'],
         properties: {
           decimal: {
@@ -945,7 +945,7 @@ export const schemaDict = {
       continuous: {
         type: 'object',
         description:
-          'A continuous-valued vote represented as fixed-point integer in [-10000, 10000] (= [-1.0, 1.0] with 4 decimal places). ATProto lexicon does not support native floats.',
+          'A continuous-valued vote represented as fixed-point integer in [-10000, 10000] (= [-1.0, 1.0] with 4 decimal places). AT Protocol lexicon does not support native floats.',
         required: ['value'],
         properties: {
           value: {
