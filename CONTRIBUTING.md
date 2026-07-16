@@ -1,6 +1,8 @@
 # Contributing
 
 See the [DDS community contributing guide](https://github.com/dds-wg/.github/blob/main/CONTRIBUTING.md).
+Contributors must follow the [Code of Conduct](https://github.com/dds-wg/.github/blob/main/CODE_OF_CONDUCT.md)
+and [GOVERNANCE.md](https://github.com/dds-wg/.github/blob/main/GOVERNANCE.md).
 
 Specification contributions should be made through the
 [W3C DDS Community Group](https://www.w3.org/community/dds/) process and are

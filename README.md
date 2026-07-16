@@ -4,8 +4,8 @@
 
 An open stack for sovereign, verifiable, interoperable, and resilient deliberation.
 
-Maintained in the [DDS GitHub organization](https://github.com/dds-wg) and
-developed through the [W3C DDS Community Group](https://www.w3.org/community/dds/).
+This repository hosts DDS specifications, website source, and proof-of-concept work.
+Specification development happens through the [W3C DDS Community Group](https://www.w3.org/community/dds/).
 
 ## Structure
 
@@ -22,8 +22,8 @@ pnpm dev
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) and the
-[community group governance](https://github.com/dds-wg/.github/blob/main/GOVERNANCE.md).
+See [CONTRIBUTING.md](./CONTRIBUTING.md) and the W3C Community Group
+[GOVERNANCE.md](https://github.com/dds-wg/.github/blob/main/GOVERNANCE.md).
 
 ## License
 
