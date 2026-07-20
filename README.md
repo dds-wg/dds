@@ -10,7 +10,8 @@ Specification development happens through the [W3C DDS Community Group](https://
 ## Join the Community
 
 [Join the W3C DDS Community Group](https://www.w3.org/community/dds/),
-[chat with us in the DDS Matrix room](https://matrix.to/#/#dds-wg:matrix.org), or
+[chat with us in the DDS Matrix room](https://matrix.to/#/#dds-wg:matrix.org),
+[see upcoming calls on the DDS W3C Community Group calendar](https://luma.com/dds-wg), or
 [see all support and community channels](https://github.com/dds-wg/.github/blob/main/SUPPORT.md).
 
 ## Structure
