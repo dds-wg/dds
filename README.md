@@ -7,6 +7,12 @@ An open stack for sovereign, verifiable, interoperable, and resilient deliberati
 This repository hosts DDS specifications, website source, and proof-of-concept work.
 Specification development happens through the [W3C DDS Community Group](https://www.w3.org/community/dds/).
 
+## Join the Community
+
+[Join the W3C DDS Community Group](https://www.w3.org/community/dds/),
+[chat with us in the DDS Matrix room](https://matrix.to/#/#dds-wg:matrix.org), or
+[see all support and community channels](https://github.com/dds-wg/.github/blob/main/SUPPORT.md).
+
 ## Structure
 
 - `spec/`, protocol specification documents
