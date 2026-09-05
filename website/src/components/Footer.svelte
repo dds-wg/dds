@@ -10,7 +10,7 @@
   <p class="mt-2">
     <a href="https://github.com/dds-wg" class="hover:text-gray-700">GitHub</a>
     <span class="mx-1">&middot;</span>
-    <a href="https://www.w3.org/community/dds/" class="hover:text-gray-700"
+    <a href="https://www.w3.org/groups/cg/dds/" class="hover:text-gray-700"
       >W3C Community Group</a
     >
     <span class="mx-1">&middot;</span>

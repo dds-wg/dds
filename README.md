@@ -5,14 +5,20 @@
 An open stack for sovereign, verifiable, interoperable, and resilient deliberation.
 
 This repository hosts DDS specifications, website source, and proof-of-concept work.
-Specification development happens through the [W3C DDS Community Group](https://www.w3.org/community/dds/).
+Specification development happens through the [W3C DDS Community Group](https://www.w3.org/groups/cg/dds/).
 
 ## Join the Community
 
-[Join the W3C DDS Community Group](https://www.w3.org/community/dds/),
+[Join the W3C DDS Community Group](https://www.w3.org/groups/cg/dds/),
 [chat with us in the DDS Matrix room](https://matrix.to/#/#dds-wg:matrix.org),
-[join the monthly call on the first Thursday at 14:00 UTC](https://luma.com/dds-wg), or
+[join the public monthly plenary on the first Thursday, 14:00 to 15:00 UTC](https://www.w3.org/groups/cg/dds/calendar/), or
 [see all support and community channels](https://github.com/dds-wg/.github/blob/main/SUPPORT.md).
+
+The W3C calendar is the source for meeting dates, agendas, and public joining links.
+[Subscribe to its iCalendar feed](https://www.w3.org/groups/cg/dds/calendar/export/)
+to receive future meetings and updates in your personal calendar. See the
+[subscription instructions](https://github.com/dds-wg/.github/blob/main/SUPPORT.md#open-calls).
+Attendance is open to everyone; no W3C account is required to view joining information.
 
 ## Structure
 

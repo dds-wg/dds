@@ -218,10 +218,10 @@ Specifications, profile recommendations, and publication follow Community Group 
 
 # Join. Then self-organize.
 
-**Join.** [Join the W3C DDS Community Group](https://www.w3.org/community/dds/join).
+**Join.** [Join the W3C DDS Community Group](https://www.w3.org/groups/cg/dds/).
 
 **Start.** Open a [GitHub issue](https://github.com/dds-wg) or a [Matrix thread](https://matrix.to/#/#dds-wg:matrix.org) for a specific need.
 
-**Meet.** Chairs can help Contributors and Maintainers create track-specific or work-item-specific open calls on the [shared Luma calendar](https://luma.com/dds-wg) when needed. Contributors may also meet in their existing communities.
+**Meet.** Chairs can help Contributors and Maintainers create track-specific or work-item-specific open calls on the [W3C DDS calendar](https://www.w3.org/groups/cg/dds/calendar/) when needed. Contributors may also meet in their existing communities.
 
 **Return.** Bring learning back through GitHub and plenary calls. Shared specifications emerge through public consensus and the W3C Community Group process.

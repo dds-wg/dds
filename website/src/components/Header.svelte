@@ -77,8 +77,11 @@
       >
       <a href="/blog/" class="text-sm text-gray-700 hover:text-gray-900">Blog</a
       >
+      <a href="/#meetings" class="text-sm text-gray-700 hover:text-gray-900"
+        >Meetings</a
+      >
       <a
-        href="https://www.w3.org/community/dds/"
+        href="https://www.w3.org/groups/cg/dds/"
         target="_blank"
         rel="noopener noreferrer"
         class="text-sm text-gray-700 hover:text-gray-900"
@@ -164,6 +167,13 @@
         Blog
       </a>
       <a
+        href="/#meetings"
+        class="block rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+        onclick={() => (menuOpen = false)}
+      >
+        Meetings
+      </a>
+      <a
         href="https://github.com/dds-wg/dds"
         target="_blank"
         rel="noopener noreferrer"
@@ -173,7 +183,7 @@
         GitHub
       </a>
       <a
-        href="https://www.w3.org/community/dds/"
+        href="https://www.w3.org/groups/cg/dds/"
         target="_blank"
         rel="noopener noreferrer"
         class="block rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
