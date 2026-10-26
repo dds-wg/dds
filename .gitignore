@@ -31,3 +31,6 @@ CLAUDE_*.md
 # Astro (generated)
 website/.astro/
 website/dist/
+
+# Local drafts and working files
+/.local/
