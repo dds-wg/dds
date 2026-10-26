@@ -1,0 +1,38 @@
+name: User story
+description: Propose a deliberation need for discussion by the DDS Community Group.
+title: "[User story] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe one need in everyday language, without assuming a particular tool or protocol.
+        Rough drafts are welcome. Only the first question is required.
+        Related stories: https://github.com/dds-wg/dds/issues?q=is%3Aissue%20in%3Atitle%20%22%5BUser%20story%5D%22
+  - type: textarea
+    id: story
+    attributes:
+      label: 1. What does someone need to do, and why?
+      description: Use the suggested sentence or a short narrative.
+      placeholder: "As a [person or role], I want to [do something], so that [benefit]."
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: 2. In what situation does this need arise?
+      description: Explain what is difficult today. Is this from your experience, user feedback, or a hypothetical example?
+  - type: textarea
+    id: actors
+    attributes:
+      label: 3. Who is involved?
+      description: Name the roles involved and explain any unfamiliar terms.
+  - type: textarea
+    id: requirements
+    attributes:
+      label: 4. What would need to be true for this to work?
+      description: List a few essential conditions and how you would know they were met. Include relevant access or participation rules.
+  - type: textarea
+    id: references
+    attributes:
+      label: 5. What examples, related work, or open questions would help?
+      description: Share relevant links, related stories, or questions. This can be left blank.
